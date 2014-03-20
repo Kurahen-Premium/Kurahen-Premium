@@ -26,10 +26,13 @@
 	];
 
 	var KurahenPremium = function () {
-		if (this.getCurrentBoardName() === 'b') {
+		var currentBoardName = this.getCurrentBoardName();
+		if (currentBoardName === '') {
+			return; // We are not on any useful page
+		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
 		}
-
+		this.updatePageTitle();
 		this.setCookie('regulamin', 'accepted');
 		this.changeFonts();
 		this.insertButtonBar();
@@ -38,6 +41,24 @@
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
 		document.title = newTitle;
 		document.getElementsByClassName('boardTitle')[0].textContent = newTitle;
+	};
+
+	KurahenPremium.prototype.updatePageTitle = function () {
+		var pathArray = window.location.pathname.split('/');
+		var page = parseInt(pathArray[2]);
+		var prefix = '';
+
+		if (pathArray[2] === 'res') {
+			prefix = this.getTopicFromFirstPostContent();
+		} else if (!isNaN(page)) {
+			prefix = 'Strona ' + page;
+		}
+
+		if (prefix.length > 0) {
+			prefix += ' - ';
+		}
+
+		document.title = prefix + document.title;
 	};
 
 	KurahenPremium.prototype.setCookie = function (name, value) {
@@ -55,6 +76,11 @@
 
 	KurahenPremium.prototype.getCurrentBoardName = function () {
 		return window.location.pathname.split('/')[1];
+	};
+
+	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
+		var postContent = document.querySelector('.thread .postMessage').textContent;
+		return postContent.substr(0, Math.min(postContent.length, 70)) + '...';
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
