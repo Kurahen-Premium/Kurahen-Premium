@@ -11,6 +11,7 @@
 (function () {
 	'use strict';
 
+	var customBBoardTitle = '/b/ - Random';
 	var bbCodes = ['b', 'i', 'u', 's', 'small', 'code', 'spoiler'];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
@@ -25,6 +26,13 @@
 	];
 
 	var KurahenPremium = function () {
+		if (this.getCurrentBoardName() === 'b') {
+			this.changeBoardTitle(customBBoardTitle);
+		}
+
+		this.setCookie('regulamin', 'accepted');
+		this.changeFonts();
+		this.insertButtonBar();
 	};
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
@@ -43,6 +51,10 @@
 		var existingLink = document.getElementsByTagName('link')[0];
 		existingLink.parentNode.insertBefore(newLink, existingLink);
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
+	};
+
+	KurahenPremium.prototype.getCurrentBoardName = function () {
+		return window.location.pathname.split('/')[1];
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
@@ -123,4 +135,7 @@
 
 		buttonBar.appendChild(wordfiltersSelect);
 	};
+
+	// Initialize script
+	window.KurahenPremium = new KurahenPremium();
 })();
