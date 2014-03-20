@@ -29,7 +29,7 @@
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
 		document.title = newTitle;
-		document.getElementsByClassName('boardTitle')[0].innerHTML = newTitle;
+		document.getElementsByClassName('boardTitle')[0].textContent = newTitle;
 	};
 
 	KurahenPremium.prototype.setCookie = function (name, value) {
