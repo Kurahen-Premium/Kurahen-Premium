@@ -99,6 +99,7 @@
 		wordfiltersSelect.appendChild(defaultOption);
 
 		wordfiltersSelect.addEventListener('change', function () {
+			//noinspection JSPotentiallyInvalidUsageOfThis
 			var textToInsert = this.options[this.selectedIndex].value;
 			var textBeforeEndOfSelection = textarea.value.substring(0, textarea.selectionEnd);
 			var textAfterEndOfSelection = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
@@ -109,6 +110,7 @@
 			textarea.selectionStart = textBeforeEndOfSelection.length + textToInsert.length;
 			textarea.selectionEnd = textarea.selectionStart;
 
+			//noinspection JSPotentiallyInvalidUsageOfThis
 			this.selectedIndex = 0;
 		}, false);
 
