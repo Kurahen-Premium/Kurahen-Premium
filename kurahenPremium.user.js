@@ -9,5 +9,14 @@
 // ==/UserScript==
 
 (function () {
+	'use strict';
+
+	var KurahenPremium = function () {
+	};
+
+	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
+		document.title = newTitle;
+		document.getElementsByClassName('boardTitle')[0].innerHTML = newTitle;
+	};
 
 })();
