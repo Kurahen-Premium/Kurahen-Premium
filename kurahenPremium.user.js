@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name        Kurahen Premium
+// @namespace   karachan.org
+// @version     1.0
+// @include     http://www.karachan.org/*
+// @include     http://karachan.org/*
+// @exclude     http://www.karachan.org/*/src/*
+// @exclude     http://karachan.org/*/src/*
+// ==/UserScript==
+
+(function () {
+
+})();
