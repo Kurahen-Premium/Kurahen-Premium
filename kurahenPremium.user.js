@@ -19,4 +19,8 @@
 		document.getElementsByClassName('boardTitle')[0].innerHTML = newTitle;
 	};
 
+	KurahenPremium.prototype.setCookie = function (name, value) {
+		document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + '; path=/; max-age=2592000';
+	};
+
 })();
