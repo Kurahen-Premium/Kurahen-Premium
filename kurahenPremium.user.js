@@ -12,7 +12,11 @@
 (function () {
 	'use strict';
 
+	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
+	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
+
+	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 's', 'small', 'code', 'spoiler'];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
@@ -59,11 +63,14 @@
 		}
 		this.updatePageTitle();
 		this.setCookie('regulamin', 'accepted');
-		this.changeFonts();
 		this.insertButtonBar();
 
 		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
+		}
+
+		if (enableBetterFonts) {
+			this.changeFonts();
 		}
 	};
 
