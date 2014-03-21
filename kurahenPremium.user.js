@@ -44,11 +44,10 @@
 	};
 
 	KurahenPremium.prototype.updatePageTitle = function () {
-		var pathArray = window.location.pathname.split('/');
-		var page = parseInt(pathArray[2]);
+		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (pathArray[2] === 'res') {
+		if (this.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;
@@ -76,6 +75,10 @@
 
 	KurahenPremium.prototype.getCurrentBoardName = function () {
 		return window.location.pathname.split('/')[1];
+	};
+
+	KurahenPremium.prototype.isCurrentWebpageThread = function () {
+		return window.location.pathname.split('/')[2] === 'res';
 	};
 
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
