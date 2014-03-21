@@ -24,6 +24,29 @@
 		['#korwinkrulempolski', 'kongres nowej prawicy'],
 		['#1%', 'groźny LEWAK wykryty']
 	];
+	var boardsWithId = ['b', 'fz', 'z'];
+	var colors = [
+		'#FF8080',
+		'#FFDD80',
+		'#80FFB7',
+		'#80D0FF',
+		'#C680FF',
+		'#FFAE80',
+		'#D5FF80',
+		'#80FFFD',
+		'#8097FF',
+		'#FF80CA',
+		"#ff7f7f",
+		"#779aef",
+		"#b0de6f",
+		"#cc66c0",
+		"#5cb9a9",
+		"#f3bb79",
+		"#8d71e2",
+		"#6dd168",
+		"#be5f7e",
+		"#7bc8f6"
+	];
 
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
@@ -38,7 +61,7 @@
 		this.changeFonts();
 		this.insertButtonBar();
 
-		if (this.isCurrentWebpageThread()) {
+		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 	};
@@ -92,6 +115,57 @@
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
+		var postersIds = document.getElementsByClassName("posteruid");
+		var postersStats = {};
+
+		var opId;
+		for (var i = 0; i < postersIds.length; i++) {
+			var posterId = this.parsePosterId(postersIds[i].textContent);
+			if (i === 0) {
+				opId = posterId;
+			}
+
+			postersIds[i].className += ' poster-id-' + posterId;
+			if (posterId === opId) {
+				postersIds[i].textContent = '\u00a0OP nitki';
+			} else {
+				postersIds[i].textContent = '\u00a0' + posterId;
+			}
+
+			if (isNaN(postersStats[posterId])) {
+				postersStats[posterId] = 1;
+			} else {
+				postersStats[posterId]++;
+			}
+		}
+
+		var style = document.createElement('style');
+		style.type = 'text/css';
+		for (var id in postersStats) {
+			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
+				style.textContent += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}';
+				style.textContent += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}';
+			}
+		}
+		document.getElementsByTagName('head')[0].appendChild(style);
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.getNextColor = function () {
+		if (colors.length > 0) {
+			return colors.shift();
+		} else {
+			return "#"+((1<<24)*Math.random()|0).toString(16); // Random color
+		}
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.parsePosterId = function (text) {
+		return text.trim().substr(5, 8).replace(/[\.|\/|\+|\-]/g, '_');
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
