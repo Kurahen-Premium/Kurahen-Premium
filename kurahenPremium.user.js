@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name        Kurahen Premium
 // @namespace   karachan.org
+// @description Zestaw dodatkowych opcji dla forum młodzieżowo-katolickiego
 // @version     1.0
 // @include     http://www.karachan.org/*
 // @include     http://karachan.org/*
