@@ -83,7 +83,7 @@
 
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
 		var postContent = document.querySelector('.thread .postMessage').textContent;
-		return postContent.substr(0, Math.min(postContent.length, 70)) + '...';
+		return postContent.substr(0, Math.min(postContent.length, 70));
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
