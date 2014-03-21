@@ -27,6 +27,7 @@
 
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
+
 		if (currentBoardName === '') {
 			return; // We are not on any useful page
 		} else if (currentBoardName === 'b') {
@@ -36,6 +37,10 @@
 		this.setCookie('regulamin', 'accepted');
 		this.changeFonts();
 		this.insertButtonBar();
+
+		if (this.isCurrentWebpageThread()) {
+			this.colorizeAndNamePosters();
+		}
 	};
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
@@ -84,6 +89,9 @@
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
 		var postContent = document.querySelector('.thread .postMessage').textContent;
 		return postContent.substr(0, Math.min(postContent.length, 70));
+	};
+
+	KurahenPremium.prototype.colorizeAndNamePosters = function () {
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
