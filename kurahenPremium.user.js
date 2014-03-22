@@ -76,6 +76,8 @@
 		if (enableBetterFonts) {
 			this.changeFonts();
 		}
+
+		this.threadsWatcher = new ThreadsWatcher();
 	};
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
@@ -393,6 +395,9 @@
 		}
 
 		buttonBar.appendChild(wordfiltersSelect);
+	};
+
+	var ThreadsWatcher = function () {
 	};
 
 	// Initialize script
