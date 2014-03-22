@@ -411,6 +411,14 @@
 		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(this.watchedThreads));
 	};
 
+	ThreadsWatcher.prototype.getThreadObject = function (postId) {
+		return this.threadsList[postId];
+	};
+
+	ThreadsWatcher.prototype.threadObjectExists = function (postId) {
+		return typeof this.threadsList[postId] === 'object';
+	};
+
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
 		this.threadsList = document.createElement('div');
 		this.threadsList.id = 'watcher_box';
@@ -432,7 +440,7 @@
 			watchButton.setAttribute('data-post-id', postId);
 			watchButton.addEventListener('click', this.addRemoveWatchedThread, false);
 
-			if (typeof this.threadsList[postId] !== 'undefined') {
+			if (this.threadObjectExists(postId)) {
 				watchButton.innerText = ' Nie obserwuj';
 			} else {
 				watchButton.innerText = ' Obserwuj';
@@ -446,7 +454,7 @@
 		var postId = parseInt(this.getAttribute('data-post-id'));
 
 		// Add new thread to watchlist
-		if (typeof this.threadsList[postId] === 'undefined') {
+		if (this.threadObjectExists(postId)) {
 			// TODO
 		} else { // Remove existing thread from watchlist
 			// TODO
