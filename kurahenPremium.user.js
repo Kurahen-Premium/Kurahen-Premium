@@ -398,6 +398,20 @@
 	};
 
 	var ThreadsWatcher = function () {
+		this.watchedThreads = JSON.parse(localStorage.getItem('KurahenPremium_WatchedThreads'));
+		this.insertThreadsList();
+	};
+
+	ThreadsWatcher.prototype.insertThreadsList = function () {
+		this.threadsList = document.createElement('div');
+		this.threadsList.id = 'watcher_box';
+		this.threadsList.className = 'movable';
+		this.threadsList.style.height = 'auto';
+		this.threadsList.style.minHeight = '100px';
+		this.threadsList.style.top = '35px';
+		this.threadsList.style.left = '4px';
+
+		document.body.appendChild(this.threadsList);
 	};
 
 	// Initialize script
