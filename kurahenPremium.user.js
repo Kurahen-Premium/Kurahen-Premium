@@ -399,8 +399,8 @@
 
 	var ThreadsWatcher = function () {
 		this.loadWatchedThreads();
-		this.insertThreadsList();
-		this.addWatchButtons();
+		this.insertThreadsListWindow();
+		this.addWatchButtonsToPosts();
 	};
 
 	ThreadsWatcher.prototype.loadWatchedThreads = function () {
@@ -411,7 +411,7 @@
 		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(this.watchedThreads));
 	};
 
-	ThreadsWatcher.prototype.insertThreadsList = function () {
+	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
 		this.threadsList = document.createElement('div');
 		this.threadsList.id = 'watcher_box';
 		this.threadsList.className = 'movable';
@@ -423,14 +423,14 @@
 		document.body.appendChild(this.threadsList);
 	};
 
-	ThreadsWatcher.prototype.addWatchButtons = function () {
+	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		for (var i = 0; i < postsBars.length; i++) {
 			var postId = parseInt(postsBars[i].id.substr(2));
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
 			watchButton.setAttribute('data-post-id', postId);
-			watchButton.addEventListener('click', this.addRemoveWatcherThread, false);
+			watchButton.addEventListener('click', this.addRemoveWatchedThread, false);
 
 			if (typeof this.threadsList[postId] !== 'undefined') {
 				watchButton.innerText = ' Nie obserwuj';
@@ -442,7 +442,7 @@
 		}
 	};
 
-	ThreadsWatcher.prototype.addRemoveWatcherThread = function () {
+	ThreadsWatcher.prototype.addRemoveWatchedThread = function () {
 		var postId = parseInt(this.getAttribute('data-post-id'));
 	};
 
