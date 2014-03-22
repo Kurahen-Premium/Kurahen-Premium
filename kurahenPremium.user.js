@@ -202,6 +202,8 @@
 			links[i].setAttribute('target', '_blank');
 			links[i].setAttribute('rel', 'noreferrer');
 		}
+
+		this.inlineVideoAndAudioLinks(links);
 	};
 
 	/**
@@ -209,6 +211,46 @@
 	 */
 	KurahenPremium.prototype.parseMailto = function (mailto) {
 		return mailto.replace('mailto:', '');
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.inlineVideoAndAudioLinks = function (links) {
+		for (var i = 0; i < links.length; i++) {
+			var url = links[i].getAttribute('href');
+
+			if (url.indexOf('youtu') > -1) {
+				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
+				if (urlParameters === null || urlParameters.length !== 2) {
+					continue;
+				}
+
+				var youtubeContainer = document.createElement('div');
+				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
+					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
+
+				if (links[i].nextSibling) {
+					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
+				} else {
+					links[i].parentNode.appendChild(youtubeContainer);
+				}
+				links[i].style.display = 'none';
+			} else if (url.indexOf('http://vocaroo.com') > -1) {
+				var vocarooId = url.substr(url.length - 12, 12);
+
+				var vocarooContainer = document.createElement('div');
+				vocarooContainer.innerHTML = '<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId +
+					'&autoplay=0" width="148" height="44" wmode="transparent" type="application/x-shockwave-flash"></embed>';
+
+				if (links[i].nextSibling) {
+					links[i].parentNode.insertBefore(vocarooContainer, links[i].nextSibling);
+				} else {
+					links[i].parentNode.appendChild(vocarooContainer);
+				}
+				links[i].style.display = 'none';
+			}
+		}
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
