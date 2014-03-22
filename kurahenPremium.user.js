@@ -404,7 +404,12 @@
 	};
 
 	ThreadsWatcher.prototype.loadWatchedThreads = function () {
-		this.watchedThreads = JSON.parse(localStorage.getItem('KurahenPremium_WatchedThreads'));
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads');
+		if (item === null) {
+			this.watchedThreads = [];
+		} else {
+			this.watchedThreads = JSON.parse(item);
+		}
 	};
 
 	ThreadsWatcher.prototype.saveWatchedThreads = function () {
