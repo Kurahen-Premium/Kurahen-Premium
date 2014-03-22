@@ -444,6 +444,13 @@
 
 	ThreadsWatcher.prototype.addRemoveWatchedThread = function () {
 		var postId = parseInt(this.getAttribute('data-post-id'));
+
+		// Add new thread to watchlist
+		if (typeof this.threadsList[postId] === 'undefined') {
+			// TODO
+		} else { // Remove existing thread from watchlist
+			// TODO
+		}
 	};
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
