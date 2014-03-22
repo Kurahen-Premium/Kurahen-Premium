@@ -121,7 +121,19 @@
 	};
 
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
-		var postContent = document.querySelector('.thread .postMessage').textContent;
+		var postMessage = document.querySelector('.thread .postMessage').cloneNode(true);
+
+		var backlinks = postMessage.getElementsByClassName('backlinks');
+		if (backlinks.length > 0) {
+			postMessage.removeChild(backlinks[0]);
+		}
+
+		var links = postMessage.getElementsByClassName('postlink');
+		for (var i = 0; i < links.length; i++) {
+			postMessage.removeChild(links[i]);
+		}
+
+		var postContent = postMessage.textContent;
 		return postContent.substr(0, Math.min(postContent.length, 70));
 	};
 
