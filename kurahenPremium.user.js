@@ -434,7 +434,7 @@
 	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		for (var i = 0; i < postsBars.length; i++) {
-			var postId = parseInt(postsBars[i].id.substr(2));
+			var postId = this.parsePostId(postsBars[i]);
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
 			watchButton.setAttribute('data-post-id', postId);
@@ -476,7 +476,8 @@
 			var postsContainers = request.response.getElementsByClassName('postContainer');
 			var numberOfNewPosts = 0;
 			for (var i = 0; i < postsContainers.length; i++) {
-				if (parseInt(postsContainers[i].id.substr(2)) === lastPostId) {
+				//noinspection JSPotentiallyInvalidUsageOfThis
+				if (this.parsePostId(postsContainers[i]) === lastPostId) {
 					numberOfNewPosts = postsContainers.length - 1 - i;
 					break;
 				}
@@ -484,6 +485,13 @@
 			callback(boardName, threadId, numberOfNewPosts, 200);
 		};
 		request.send();
+	};
+
+	/**
+	 * @private
+	 */
+	ThreadsWatcher.prototype.parsePostId = function (htmlElement) {
+		return parseInt(htmlElement.id.substr(2));
 	};
 
 	// Initialize script
