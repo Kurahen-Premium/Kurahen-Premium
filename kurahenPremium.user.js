@@ -398,9 +398,17 @@
 	};
 
 	var ThreadsWatcher = function () {
-		this.watchedThreads = JSON.parse(localStorage.getItem('KurahenPremium_WatchedThreads'));
+		this.loadWatchedThreads();
 		this.insertThreadsList();
 		this.addWatchButtons();
+	};
+
+	ThreadsWatcher.prototype.loadWatchedThreads = function () {
+		this.watchedThreads = JSON.parse(localStorage.getItem('KurahenPremium_WatchedThreads'));
+	};
+
+	ThreadsWatcher.prototype.saveWatchedThreads = function () {
+		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(this.watchedThreads));
 	};
 
 	ThreadsWatcher.prototype.insertThreadsList = function () {
