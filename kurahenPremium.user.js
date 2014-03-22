@@ -254,7 +254,7 @@
 		if (colors.length > 0) {
 			return colors.shift();
 		} else {
-			return "#"+((1<<24)*Math.random()|0).toString(16); // Random color
+			return '#' + Math.random().toString(16).substr(-6); // Random color
 		}
 	};
 
