@@ -461,6 +461,8 @@
 		} else { // Remove existing thread from watchlist
 			// TODO
 		}
+
+		this.saveWatchedThreads();
 	};
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
