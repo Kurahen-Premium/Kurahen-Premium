@@ -435,6 +435,7 @@
 	};
 
 	ThreadsWatcher.prototype.addRemoveWatcherThread = function () {
+		var postId = parseInt(this.getAttribute('data-post-id'));
 	};
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
