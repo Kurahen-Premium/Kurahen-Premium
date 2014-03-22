@@ -65,6 +65,7 @@
 		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.insertButtonBar();
+		this.replaceEmailFieldWithSelect();
 
 		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
@@ -126,6 +127,48 @@
 	KurahenPremium.prototype.disableNightStyle = function () {
 		var option = document.querySelector('#stylechanger option[value$="night.css"]');
 		option.disabled = true;
+	};
+
+	KurahenPremium.prototype.replaceEmailFieldWithSelect = function () {
+		var emailField = document.querySelector('#postform input[name="email"]');
+
+		var select = document.createElement('select');
+		select.name = 'email';
+		select.style.margin = '0';
+		select.style.width = '236px';
+		select.addEventListener('change', function () {
+			if (this.options[this.selectedIndex].value === 'custom') {
+				var textField = document.createElement('input');
+				textField.type = 'text';
+				textField.className = 'board-input';
+				textField.name = 'email';
+				select.parentNode.replaceChild(textField, select);
+				textField.focus();
+			}
+		}, false);
+
+		var optionBump = document.createElement('option');
+		optionBump.value = '';
+		optionBump.selected = true;
+		optionBump.textContent = 'Podbij';
+		select.appendChild(optionBump);
+
+		var optionSage = document.createElement('option');
+		optionSage.value = 'sage';
+		optionSage.textContent = 'Saguj';
+		select.appendChild(optionSage);
+
+		var optionSpoiler = document.createElement('option');
+		optionSpoiler.value = 'spoiler';
+		optionSpoiler.textContent = 'Ukryj obrazek';
+		select.appendChild(optionSpoiler);
+
+		var optionCustom = document.createElement('option');
+		optionCustom.value = 'custom';
+		optionCustom.textContent = 'Wpisz własny...';
+		select.appendChild(optionCustom);
+
+		emailField.parentNode.replaceChild(select, emailField);
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
