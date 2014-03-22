@@ -292,6 +292,10 @@
 			}
 		}
 		document.getElementsByTagName('head')[0].appendChild(style);
+
+		var firstPostBar = document.querySelector('.opContainer .postInfo');
+		firstPostBar.innerHTML += ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
+			' anonów)';
 	};
 
 	/**
