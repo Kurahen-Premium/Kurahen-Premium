@@ -67,6 +67,7 @@
 		this.insertButtonBar();
 		this.replaceEmailFieldWithSelect();
 		this.showAllPostersEmails();
+		this.fixAllExternalLinks();
 
 		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
@@ -191,6 +192,15 @@
 		for (var i = 0; i < postersEmails.length; i++) {
 			postersEmails[i].textContent += ' (' + this.parseMailto(postersEmails[i].getAttribute('href')) + ') ';
 			postersEmails[i].removeAttribute('href');
+		}
+	};
+
+	KurahenPremium.prototype.fixAllExternalLinks = function () {
+		var links = document.getElementsByClassName('postlink');
+		for (var i = 0; i < links.length; i++) {
+			links[i].setAttribute('href', links[i].getAttribute('href').replace('https://href.li/?', ''));
+			links[i].setAttribute('target', '_blank');
+			links[i].setAttribute('rel', 'noreferrer');
 		}
 	};
 
