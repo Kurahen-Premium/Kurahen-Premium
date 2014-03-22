@@ -400,6 +400,7 @@
 	var ThreadsWatcher = function () {
 		this.watchedThreads = JSON.parse(localStorage.getItem('KurahenPremium_WatchedThreads'));
 		this.insertThreadsList();
+		this.addWatchButtons();
 	};
 
 	ThreadsWatcher.prototype.insertThreadsList = function () {
@@ -412,6 +413,28 @@
 		this.threadsList.style.left = '4px';
 
 		document.body.appendChild(this.threadsList);
+	};
+
+	ThreadsWatcher.prototype.addWatchButtons = function () {
+		var postsBars = document.querySelectorAll('.opContainer .postInfo');
+		for (var i = 0; i < postsBars.length; i++) {
+			var postId = parseInt(postsBars[i].id.substr(2));
+			var watchButton = document.createElement('a');
+			watchButton.style.cursor = 'pointer';
+			watchButton.setAttribute('data-post-id', postId);
+			watchButton.addEventListener('click', this.addRemoveWatcherThread, false);
+
+			if (typeof this.threadsList[postId] !== 'undefined') {
+				watchButton.innerText = ' Nie obserwuj';
+			} else {
+				watchButton.innerText = ' Obserwuj';
+			}
+
+			postsBars[i].appendChild(watchButton);
+		}
+	};
+
+	ThreadsWatcher.prototype.addRemoveWatcherThread = function () {
 	};
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
