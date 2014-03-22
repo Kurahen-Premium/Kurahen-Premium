@@ -414,6 +414,31 @@
 		document.body.appendChild(this.threadsList);
 	};
 
+	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
+		var request = new XMLHttpRequest();
+		request.responseType = 'document';
+		request.open('GET', 'http://karachan.org/' + boardName + '/res/' + threadId + '.html', true);
+		request.onload = function () {
+			// On error
+			if (request.status !== 200) {
+				callback(boardName, threadId, -1, request.status);
+				return;
+			}
+
+			// On success
+			var postsContainers = request.response.getElementsByClassName('postContainer');
+			var numberOfNewPosts = 0;
+			for (var i = 0; i < postsContainers.length; i++) {
+				if (parseInt(postsContainers[i].id.substr(2)) === lastPostId) {
+					numberOfNewPosts = postsContainers.length - 1 - i;
+					break;
+				}
+			}
+			callback(boardName, threadId, numberOfNewPosts, 200);
+		};
+		request.send();
+	};
+
 	// Initialize script
 	window.KurahenPremium = new KurahenPremium();
 })();
