@@ -438,7 +438,11 @@
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
 			watchButton.setAttribute('data-post-id', postId);
-			watchButton.addEventListener('click', this.addRemoveWatchedThread, false);
+
+			var self = this;
+			watchButton.addEventListener('click', function () {
+				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')));
+			}, false);
 
 			if (this.threadObjectExists(postId)) {
 				watchButton.innerText = ' Nie obserwuj';
@@ -450,9 +454,7 @@
 		}
 	};
 
-	ThreadsWatcher.prototype.addRemoveWatchedThread = function () {
-		var postId = parseInt(this.getAttribute('data-post-id'));
-
+	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId) {
 		// Add new thread to watchlist
 		if (this.threadObjectExists(postId)) {
 			// TODO
