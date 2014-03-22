@@ -124,7 +124,7 @@
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
 		var postMessage = document.querySelector('.thread .postMessage').cloneNode(true);
 
-		var backlinks = postMessage.getElementsByClassName('backlinks');
+		var backlinks = postMessage.getElementsByClassName('backlink');
 		if (backlinks.length > 0) {
 			postMessage.removeChild(backlinks[0]);
 		}
