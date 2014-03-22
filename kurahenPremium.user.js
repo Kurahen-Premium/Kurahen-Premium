@@ -137,6 +137,7 @@
 		select.style.margin = '0';
 		select.style.width = '236px';
 		select.addEventListener('change', function () {
+			//noinspection JSPotentiallyInvalidUsageOfThis
 			if (this.options[this.selectedIndex].value === 'custom') {
 				var textField = document.createElement('input');
 				textField.type = 'text';
