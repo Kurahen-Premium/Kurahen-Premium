@@ -134,6 +134,11 @@
 			postMessage.removeChild(links[i]);
 		}
 
+		var quoteLinks = postMessage.getElementsByClassName('quotelink');
+		for (var j = 0; j < quoteLinks.length; j++) {
+			postMessage.removeChild(quoteLinks[i]);
+		}
+
 		var postContent = postMessage.textContent;
 		return postContent.substr(0, Math.min(postContent.length, 70));
 	};
