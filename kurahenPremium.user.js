@@ -62,6 +62,7 @@
 			this.changeBoardTitle(customBBoardTitle);
 		}
 		this.updatePageTitle();
+		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.insertButtonBar();
 
@@ -120,6 +121,11 @@
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
 		var postContent = document.querySelector('.thread .postMessage').textContent;
 		return postContent.substr(0, Math.min(postContent.length, 70));
+	};
+
+	KurahenPremium.prototype.disableNightStyle = function () {
+		var option = document.querySelector('#stylechanger option[value$="night.css"]');
+		option.disabled = true;
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
