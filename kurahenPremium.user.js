@@ -421,11 +421,12 @@
 		return this.watchedThreads['th_' + boardName + '_' + postId];
 	};
 
-	ThreadsWatcher.prototype.addThreadObject = function (postId, boardName, lastReadPostId) {
+	ThreadsWatcher.prototype.addThreadObject = function (postId, boardName, lastReadPostId, topic) {
 		this.watchedThreads['th_' + boardName + '_' + postId] = {
 			'id': postId,
 			'boardName': boardName,
-			'lastReadPostId': lastReadPostId
+			'lastReadPostId': lastReadPostId,
+			'topic': topic
 		};
 	};
 
@@ -465,14 +466,15 @@
 		var threads = this.getWatchedThreadsList();
 		for (var item in threads) {
 			if (threads.hasOwnProperty(item)) {
-				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].lastReadPostId, -1);
+				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].lastReadPostId,
+					-1, threads[item].topic);
 			}
 		}
 
 		document.body.appendChild(this.threadsListWindow);
 	};
 
-	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
+	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber, topic) {
 		var entry = document.createElement('li');
 		entry.id = 'wl_' + boardName + '_' + id;
 
@@ -486,7 +488,7 @@
 		link.appendChild(unreadPostsSpan);
 
 		var linkTextSpan = document.createElement('span');
-		linkTextSpan.textContent = '>>/' + boardName + '/' + id;
+		linkTextSpan.textContent = '/' + boardName + '/' + id + ': ' + topic;
 		link.appendChild(linkTextSpan);
 
 		this.threadsHtmlList.appendChild(entry);
@@ -515,7 +517,7 @@
 	ThreadsWatcher.prototype.updateThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
 		if (entry === null) {
-			this.addThreadListWindowEntry(id, boardName, lastReadPostId, unreadPostsNumber);
+			console.error('Cannot update nonexistent thread /' + boardName + '/' + id);
 			return;
 		}
 
@@ -545,6 +547,11 @@
 
 			var self = this;
 			watchButton.addEventListener('click', function () {
+				if (this.innerText === ' Nie obserwuj') {
+					this.innerText = ' Obserwuj';
+				} else {
+					this.innerText = ' Nie obserwuj';
+				}
 				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 			}, false);
 
@@ -562,8 +569,9 @@
 		// Add new thread to watchlist
 		if (!this.threadObjectExists(postId, boardName)) {
 			var newestPostId = this.getNewestPostIdFromThread(postId);
-			this.addThreadObject(postId, boardName, newestPostId);
-			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0);
+			var topic = this.getTopicOfThread(postId);
+			this.addThreadObject(postId, boardName, newestPostId, topic);
+			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0, topic);
 		} else { // Remove existing thread from watchlist
 			var thread = this.getThreadObject(postId, boardName);
 			this.removeThreadListWindowEntry(postId, boardName);
@@ -627,6 +635,28 @@
 			return -1;
 		}
 		return parseInt(document.querySelector('.thread .opContainer').id.substr(2));
+	};
+
+	ThreadsWatcher.prototype.getTopicOfThread = function (threadId) {
+		var postMessage = document.querySelector('.thread[id$="' + threadId + '"] .postMessage').cloneNode(true);
+
+		var backlinks = postMessage.getElementsByClassName('backlink');
+		if (backlinks.length > 0) {
+			postMessage.removeChild(backlinks[0]);
+		}
+
+		var links = postMessage.getElementsByClassName('postlink');
+		for (var i = 0; i < links.length; i++) {
+			postMessage.removeChild(links[i]);
+		}
+
+		var quoteLinks = postMessage.getElementsByClassName('quotelink');
+		for (var j = 0; j < quoteLinks.length; j++) {
+			postMessage.removeChild(quoteLinks[i]);
+		}
+
+		var postContent = postMessage.textContent;
+		return postContent.substr(0, Math.min(postContent.length, 25));
 	};
 
 	// Initialize script
