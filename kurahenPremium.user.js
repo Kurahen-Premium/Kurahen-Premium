@@ -397,6 +397,12 @@
 		buttonBar.appendChild(wordfiltersSelect);
 	};
 
+
+
+
+
+
+
 	var ThreadsWatcher = function () {
 		this.loadWatchedThreads();
 		this.insertThreadsListWindow();
@@ -406,7 +412,7 @@
 	ThreadsWatcher.prototype.loadWatchedThreads = function () {
 		var item = localStorage.getItem('KurahenPremium_WatchedThreads');
 		if (item === null) {
-			this.watchedThreads = [];
+			this.watchedThreads = {};
 		} else {
 			this.watchedThreads = JSON.parse(item);
 		}
@@ -417,18 +423,30 @@
 	};
 
 	ThreadsWatcher.prototype.getThreadObject = function (postId) {
-		return this.watchedThreads[postId];
+		return this.watchedThreads['th_' + postId];
+	};
+
+	ThreadsWatcher.prototype.addThreadObject = function (postId, boardName, lastReadPostId) {
+		this.watchedThreads['th_' + postId] = {
+			'id': postId,
+			'boardName': boardName,
+			'lastReadPostId': lastReadPostId
+		};
+	};
+
+	ThreadsWatcher.prototype.removeThreadObject = function (postId) {
+		delete this.watchedThreads[this.watchedThreads.indexOf('th_' + postId)];
 	};
 
 	ThreadsWatcher.prototype.threadObjectExists = function (postId) {
-		return typeof this.watchedThreads[postId] === 'object';
+		return typeof this.watchedThreads['th_' + postId] === 'object';
 	};
 
 	ThreadsWatcher.prototype.threadsSize = function () {
-		return this.watchedThreads.length;
+		return Object.keys(this.watchedThreads).length;
 	};
 
-	ThreadsWatcher.prototype.getWatchedThreadsArray = function () {
+	ThreadsWatcher.prototype.getWatchedThreadsList = function () {
 		return this.watchedThreads;
 	};
 
@@ -445,7 +463,7 @@
 		this.threadsHtmlList.id = 'watched_list';
 		this.threadsListWindow.appendChild(this.threadsHtmlList);
 
-		var threads = this.getWatchedThreadsArray();
+		var threads = this.getWatchedThreadsList();
 		for (var item in threads) {
 			if (threads.hasOwnProperty(item)) {
 				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].id, -1);
@@ -455,7 +473,7 @@
 		document.body.appendChild(this.threadsListWindow);
 	};
 
-	KurahenPremium.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
+	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
 		var entry = document.createElement('li');
 		entry.id = 'wl_' + boardName + '_' + id;
 
@@ -475,7 +493,7 @@
 		this.threadsHtmlList.appendChild(entry);
 	};
 
-	KurahenPremium.prototype.updateThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
+	ThreadsWatcher.prototype.updateThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
 		if (entry === null) {
 			this.addThreadListWindowEntry(id, boardName, lastReadPostId, unreadPostsNumber);
@@ -489,7 +507,7 @@
 		unreadPostsSpan.textContent = '[' + (unreadPostsNumber >= 0 ? unreadPostsNumber : 'Ładowanie...') + '] ';
 	};
 
-	KurahenPremium.prototype.removeThreadListWindowEntry = function (id, boardName) {
+	ThreadsWatcher.prototype.removeThreadListWindowEntry = function (id, boardName) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
 		if (entry === null) {
 			return;
@@ -507,7 +525,7 @@
 
 			var self = this;
 			watchButton.addEventListener('click', function () {
-				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')));
+				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 			}, false);
 
 			if (this.threadObjectExists(postId)) {
@@ -520,15 +538,24 @@
 		}
 	};
 
-	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId) {
+	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId, boardName) {
 		// Add new thread to watchlist
-		if (this.threadObjectExists(postId)) {
-			// TODO
+		if (!this.threadObjectExists(postId)) {
+			var newestPostId = this.getNewestPostIdFromThread(postId);
+			this.addThreadObject(postId, boardName, newestPostId);
+			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0);
 		} else { // Remove existing thread from watchlist
-			// TODO
+			var thread = this.getThreadObject(postId);
+			this.removeThreadListWindowEntry(postId.id, postId.boardName);
+			this.removeThreadObject(postId);
 		}
 
 		this.saveWatchedThreads();
+	};
+
+	ThreadsWatcher.prototype.getNewestPostIdFromThread = function (threadId) {
+		var posts = document.querySelectorAll('.thread[id$="' + threadId + '"] .postContainer');
+		return parseInt(posts[posts.length - 1].id.substr(2));
 	};
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
@@ -562,6 +589,13 @@
 	 */
 	ThreadsWatcher.prototype.parsePostId = function (htmlElement) {
 		return parseInt(htmlElement.id.substr(2));
+	};
+
+	/**
+	 * @private
+	 */
+	ThreadsWatcher.prototype.getCurrentBoardName = function () {
+		return document.querySelector('meta[property="og:boardname"]').getAttribute('content');
 	};
 
 	// Initialize script
