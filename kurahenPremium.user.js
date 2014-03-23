@@ -398,11 +398,6 @@
 	};
 
 
-
-
-
-
-
 	var ThreadsWatcher = function () {
 		this.loadWatchedThreads();
 		this.insertThreadsListWindow();
@@ -435,7 +430,7 @@
 	};
 
 	ThreadsWatcher.prototype.removeThreadObject = function (postId) {
-		delete this.watchedThreads[this.watchedThreads.indexOf('th_' + postId)];
+		delete this.watchedThreads['th_' + postId];
 	};
 
 	ThreadsWatcher.prototype.threadObjectExists = function (postId) {
@@ -491,6 +486,16 @@
 		link.appendChild(linkTextSpan);
 
 		this.threadsHtmlList.appendChild(entry);
+
+		var self = this;
+		if (unreadPostsNumber < 0) {
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, numberOfNewPosts, status) {
+				// callback(boardName, threadId, numberOfNewPosts, 200);
+				if (status === 200) {
+					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+				}
+			});
+		}
 	};
 
 	ThreadsWatcher.prototype.updateThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
@@ -509,6 +514,7 @@
 
 	ThreadsWatcher.prototype.removeThreadListWindowEntry = function (id, boardName) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
+		console.log('entry ', entry);
 		if (entry === null) {
 			return;
 		}
@@ -546,7 +552,7 @@
 			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0);
 		} else { // Remove existing thread from watchlist
 			var thread = this.getThreadObject(postId);
-			this.removeThreadListWindowEntry(postId.id, postId.boardName);
+			this.removeThreadListWindowEntry(postId, boardName);
 			this.removeThreadObject(postId);
 		}
 
@@ -562,6 +568,8 @@
 		var request = new XMLHttpRequest();
 		request.responseType = 'document';
 		request.open('GET', 'http://karachan.org/' + boardName + '/res/' + threadId + '.html', true);
+
+		var self = this;
 		request.onload = function () {
 			// On error
 			if (request.status !== 200) {
@@ -573,8 +581,7 @@
 			var postsContainers = request.response.getElementsByClassName('postContainer');
 			var numberOfNewPosts = 0;
 			for (var i = 0; i < postsContainers.length; i++) {
-				//noinspection JSPotentiallyInvalidUsageOfThis
-				if (this.parsePostId(postsContainers[i]) === lastPostId) {
+				if (self.parsePostId(postsContainers[i]) === lastPostId) {
 					numberOfNewPosts = postsContainers.length - 1 - i;
 					break;
 				}
