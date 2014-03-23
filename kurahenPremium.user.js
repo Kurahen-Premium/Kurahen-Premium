@@ -428,6 +428,10 @@
 		return this.watchedThreads.length;
 	};
 
+	ThreadsWatcher.prototype.getWatchedThreadsArray = function () {
+		return this.watchedThreads;
+	};
+
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
 		this.threadsListWindow = document.createElement('div');
 		this.threadsListWindow.id = 'watcher_box';
@@ -441,16 +445,56 @@
 		this.threadsHtmlList.id = 'watched_list';
 		this.threadsListWindow.appendChild(this.threadsHtmlList);
 
+		var threads = this.getWatchedThreadsArray();
+		for (var item in threads) {
+			if (threads.hasOwnProperty(item)) {
+				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].id, -1);
+			}
+		}
+
 		document.body.appendChild(this.threadsListWindow);
 	};
 
-	KurahenPremium.prototype.addThreadListWindowEntry = function () {
+	KurahenPremium.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
+		var entry = document.createElement('li');
+		entry.id = 'wl_' + boardName + '_' + id;
+
+		var link = document.createElement('a');
+		link.href = '/' + boardName + '/res/' + id + '.html#p' + lastReadPostId;
+		entry.appendChild(link);
+
+		var unreadPostsSpan = document.createElement('span');
+		unreadPostsSpan.className = 'unreadPostsNumber';
+		unreadPostsSpan.textContent = '[' + (unreadPostsNumber >= 0 ? unreadPostsNumber : 'Ładowanie...') + '] ';
+		link.appendChild(unreadPostsSpan);
+
+		var linkTextSpan = document.createElement('span');
+		linkTextSpan.textContent = '>>/' + boardName + '/' + id;
+		link.appendChild(linkTextSpan);
+
+		this.threadsHtmlList.appendChild(entry);
 	};
 
-	KurahenPremium.prototype.updateThreadListWindowEntry = function () {
+	KurahenPremium.prototype.updateThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber) {
+		var entry = document.getElementById('wl_' + boardName + '_' + id);
+		if (entry === null) {
+			this.addThreadListWindowEntry(id, boardName, lastReadPostId, unreadPostsNumber);
+			return;
+		}
+
+		var link = entry.querySelector('a');
+		link.href = '/' + boardName + '/res/' + id + '.html#p' + lastReadPostId;
+
+		var unreadPostsSpan = link.querySelector('.unreadPostsNumber');
+		unreadPostsSpan.textContent = '[' + (unreadPostsNumber >= 0 ? unreadPostsNumber : 'Ładowanie...') + '] ';
 	};
 
-	KurahenPremium.prototype.removeThreadListWindowEntry = function () {
+	KurahenPremium.prototype.removeThreadListWindowEntry = function (id, boardName) {
+		var entry = document.getElementById('wl_' + boardName + '_' + id);
+		if (entry === null) {
+			return;
+		}
+		this.threadsHtmlList.removeChild(entry);
 	};
 
 	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
