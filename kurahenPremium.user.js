@@ -417,23 +417,23 @@
 	};
 
 	ThreadsWatcher.prototype.getThreadObject = function (postId) {
-		return this.threadsList[postId];
+		return this.watchedThreads[postId];
 	};
 
 	ThreadsWatcher.prototype.threadObjectExists = function (postId) {
-		return typeof this.threadsList[postId] === 'object';
+		return typeof this.watchedThreads[postId] === 'object';
 	};
 
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
-		this.threadsList = document.createElement('div');
-		this.threadsList.id = 'watcher_box';
-		this.threadsList.className = 'movable';
-		this.threadsList.style.height = 'auto';
-		this.threadsList.style.minHeight = '100px';
-		this.threadsList.style.top = '35px';
-		this.threadsList.style.left = '4px';
+		this.threadsListWindow = document.createElement('div');
+		this.threadsListWindow.id = 'watcher_box';
+		this.threadsListWindow.className = 'movable';
+		this.threadsListWindow.style.height = 'auto';
+		this.threadsListWindow.style.minHeight = '100px';
+		this.threadsListWindow.style.top = '35px';
+		this.threadsListWindow.style.left = '4px';
 
-		document.body.appendChild(this.threadsList);
+		document.body.appendChild(this.threadsListWindow);
 	};
 
 	KurahenPremium.prototype.addThreadListWindowEntry = function () {
