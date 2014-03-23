@@ -424,6 +424,10 @@
 		return typeof this.watchedThreads[postId] === 'object';
 	};
 
+	ThreadsWatcher.prototype.threadsSize = function () {
+		return this.watchedThreads.length;
+	};
+
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
 		this.threadsListWindow = document.createElement('div');
 		this.threadsListWindow.id = 'watcher_box';
