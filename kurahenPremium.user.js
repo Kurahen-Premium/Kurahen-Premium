@@ -433,6 +433,10 @@
 		this.threadsListWindow.style.top = '35px';
 		this.threadsListWindow.style.left = '4px';
 
+		this.threadsHtmlList = document.createElement('ul');
+		this.threadsHtmlList.id = 'watched_list';
+		this.threadsListWindow.appendChild(this.threadsHtmlList);
+
 		document.body.appendChild(this.threadsListWindow);
 	};
 
