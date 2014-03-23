@@ -456,6 +456,8 @@
 		this.threadsListWindow.className = 'movable';
 		this.threadsListWindow.style.height = 'auto';
 		this.threadsListWindow.style.minHeight = '100px';
+		this.threadsListWindow.style.width = 'auto';
+		this.threadsListWindow.style.minWidth = '250px';
 		this.threadsListWindow.style.top = '35px';
 		this.threadsListWindow.style.left = '4px';
 		this.threadsListWindow.style.padding = '5px';
