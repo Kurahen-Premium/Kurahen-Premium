@@ -436,6 +436,15 @@
 		document.body.appendChild(this.threadsList);
 	};
 
+	KurahenPremium.prototype.addThreadListWindowEntry = function () {
+	};
+
+	KurahenPremium.prototype.updateThreadListWindowEntry = function () {
+	};
+
+	KurahenPremium.prototype.removeThreadListWindowEntry = function () {
+	};
+
 	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		for (var i = 0; i < postsBars.length; i++) {
