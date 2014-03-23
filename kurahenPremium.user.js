@@ -556,7 +556,8 @@
 				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 			}, false);
 
-			if (this.threadObjectExists(postId)) {
+			var currentBoardName = this.getCurrentBoardName();
+			if (this.threadObjectExists(postId, currentBoardName)) {
 				watchButton.innerText = ' Nie obserwuj';
 			} else {
 				watchButton.innerText = ' Obserwuj';
