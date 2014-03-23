@@ -499,9 +499,14 @@
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
 			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, numberOfNewPosts, status) {
-				// callback(boardName, threadId, numberOfNewPosts, 200);
 				if (status === 200) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+				} else if (status === 404) {
+					self.removeThreadListWindowEntry(threadId, boardName);
+					self.removeThreadObject(threadId, boardName);
+					self.saveWatchedThreads();
+				} else {
+					unreadPostsSpan.textContent = '[?] ';
 				}
 			});
 		}
