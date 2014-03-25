@@ -68,6 +68,8 @@
 		this.replaceEmailFieldWithSelect();
 		this.showAllPostersEmails();
 		this.fixAllExternalLinks();
+		this.fixAllHiders();
+		this.fixAllExpanders();
 
 		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
@@ -199,6 +201,25 @@
 		for (var i = 0; i < postersEmails.length; i++) {
 			postersEmails[i].textContent += ' (' + this.parseMailto(postersEmails[i].getAttribute('href')) + ') ';
 			postersEmails[i].removeAttribute('href');
+		}
+	};
+
+	KurahenPremium.prototype.fixAllHiders = function () {
+		var hiders = document.getElementsByClassName('hider');
+		for (var i = 0; i < hiders.length; i++) {
+			var hiderTextContent = hiders[i].textContent;
+			if (hiderTextContent === '[-]') {
+				hiders[i].textContent = '[—]';
+			} else if (hiderTextContent === '[+]') {
+				hiders[i].textContent = '[ + ]';
+			}
+		}
+	};
+
+	KurahenPremium.prototype.fixAllExpanders = function () {
+		var expanders = document.getElementsByClassName('expander');
+		for (var i = 0; i < expanders.length; i++) {
+			expanders[i].textContent = 'Rozwiń';
 		}
 	};
 
