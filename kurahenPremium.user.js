@@ -503,7 +503,8 @@
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, numberOfNewPosts, status) {
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+				numberOfNewPosts, status) {
 				if (status === 200) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
 				} else if (status === 404) {
@@ -599,7 +600,7 @@
 		request.onload = function () {
 			// On error
 			if (request.status !== 200) {
-				callback(boardName, threadId, -1, request.status);
+				callback(boardName, threadId, lastPostId, -1, request.status);
 				return;
 			}
 
@@ -612,7 +613,16 @@
 					break;
 				}
 			}
-			callback(boardName, threadId, numberOfNewPosts, 200);
+
+			// When last read post was deleted
+			if (numberOfNewPosts === 0) {
+				var lastDetectedPostId = self.parsePostId(postsContainers[postsContainers.length - 1]);
+				if (lastDetectedPostId !== lastPostId) {
+					lastPostId = lastDetectedPostId;
+				}
+			}
+
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, 200);
 		};
 		request.send();
 	};
