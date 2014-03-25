@@ -293,9 +293,11 @@
 		}
 		document.getElementsByTagName('head')[0].appendChild(style);
 
-		var firstPostBar = document.querySelector('.opContainer .postInfo');
-		firstPostBar.innerHTML += ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
+		var firstPostBarHider = document.querySelector('.opContainer .postInfo .hider');
+		var threadPostersStats = document.createElement('span');
+		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
 			' anonów)';
+		firstPostBarHider.parentNode.insertBefore(threadPostersStats, firstPostBarHider);
 	};
 
 	/**
