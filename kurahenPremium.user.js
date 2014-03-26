@@ -182,11 +182,6 @@
 		optionSage.textContent = 'Saguj';
 		select.appendChild(optionSage);
 
-		var optionSpoiler = document.createElement('option');
-		optionSpoiler.value = 'spoiler';
-		optionSpoiler.textContent = 'Ukryj obrazek';
-		select.appendChild(optionSpoiler);
-
 		var optionCustom = document.createElement('option');
 		optionCustom.value = 'custom';
 		optionCustom.textContent = 'Wpisz własny...';
