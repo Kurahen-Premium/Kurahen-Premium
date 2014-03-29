@@ -17,7 +17,7 @@
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 
 	// Zaawansowana konfiguracja
-	var bbCodes = ['b', 'i', 'u', 's', 'small', 'code', 'spoiler'];
+	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
