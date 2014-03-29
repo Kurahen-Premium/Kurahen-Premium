@@ -67,6 +67,8 @@
 		this.insertButtonBar();
 		this.replaceEmailFieldWithSelect();
 		this.showAllPostersEmails();
+
+		this.fixScrollingToTarget();
 		this.fixAllExternalLinks();
 		this.fixAllHiders();
 		this.fixAllExpanders();
@@ -197,6 +199,12 @@
 			postersEmails[i].textContent += ' (' + this.parseMailto(postersEmails[i].getAttribute('href')) + ') ';
 			postersEmails[i].removeAttribute('href');
 		}
+	};
+
+	KurahenPremium.prototype.fixScrollingToTarget = function () {
+		setTimeout(function () {
+			document.querySelector(window.location.hash).scrollIntoView(true);
+		}, 1000);
 	};
 
 	KurahenPremium.prototype.fixAllHiders = function () {
