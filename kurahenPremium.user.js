@@ -526,13 +526,12 @@
 
 		var self = this;
 		if (this.getCurrentBoardName() === boardName && id === this.getCurrentThreadId()) {
-			var lastReadPostId = this.getNewestPostIdFromThread(id);
+			lastReadPostId = this.getNewestPostIdFromThread(id);
 			unreadPostsSpan.textContent = '[0] ';
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
-				numberOfNewPosts, status) {
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId, numberOfNewPosts, status) {
 				if (status === 200) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
 				} else if (status === 404) {
@@ -571,6 +570,16 @@
 
 	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
+
+		var toggleWatchLabel = function () {
+			if (this.innerText === ' Nie obserwuj') {
+				this.innerText = ' Obserwuj';
+			} else {
+				this.innerText = ' Nie obserwuj';
+			}
+			self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
+		};
+
 		for (var i = 0; i < postsBars.length; i++) {
 			var postId = this.parsePostId(postsBars[i]);
 			var watchButton = document.createElement('a');
@@ -578,14 +587,7 @@
 			watchButton.setAttribute('data-post-id', postId);
 
 			var self = this;
-			watchButton.addEventListener('click', function () {
-				if (this.innerText === ' Nie obserwuj') {
-					this.innerText = ' Obserwuj';
-				} else {
-					this.innerText = ' Nie obserwuj';
-				}
-				self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
-			}, false);
+			watchButton.addEventListener('click', toggleWatchLabel, false);
 
 			var currentBoardName = this.getCurrentBoardName();
 			if (this.threadObjectExists(postId, currentBoardName)) {
@@ -606,7 +608,6 @@
 			this.addThreadObject(postId, boardName, newestPostId, topic);
 			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0, topic);
 		} else { // Remove existing thread from watchlist
-			var thread = this.getThreadObject(postId, boardName);
 			this.removeThreadListWindowEntry(postId, boardName);
 			this.removeThreadObject(postId, boardName);
 		}
