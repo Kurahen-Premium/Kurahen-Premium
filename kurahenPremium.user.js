@@ -591,7 +591,7 @@
 
 	ThreadsWatcher.prototype.addWatchButtonsToPosts = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
-
+		var self = this;
 		var toggleWatchLabel = function () {
 			if (this.innerText === ' Nie obserwuj') {
 				this.innerText = ' Obserwuj';
@@ -606,8 +606,6 @@
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
 			watchButton.setAttribute('data-post-id', postId);
-
-			var self = this;
 			watchButton.addEventListener('click', toggleWatchLabel, false);
 
 			var currentBoardName = this.getCurrentBoardName();
