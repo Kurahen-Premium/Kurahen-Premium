@@ -442,7 +442,24 @@
 	};
 
 	ThreadsWatcher.prototype.saveWatchedThreads = function () {
-		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(this.watchedThreads));
+		// Protection from concurrent modification
+		var savedWatchedThreads = localStorage.getItem('KurahenPremium_WatchedThreads');
+		this.mergeObjects(savedWatchedThreads, this.watchedThreads);
+
+		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(savedWatchedThreads));
+	};
+
+	ThreadsWatcher.prototype.mergeObjects = function (originalObject, objectToAppend) {
+		if (originalObject === null) {
+			originalObject = objectToAppend;
+			return;
+		}
+
+		for (var item in objectToAppend) {
+			if (objectToAppend.hasOwnProperty(item)) {
+				originalObject[item] = objectToAppend[item];
+			}
+		}
 	};
 
 	ThreadsWatcher.prototype.getThreadObject = function (postId, boardName) {
