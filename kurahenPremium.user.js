@@ -202,9 +202,11 @@
 	};
 
 	KurahenPremium.prototype.fixScrollingToTarget = function () {
-		setTimeout(function () {
-			document.querySelector(window.location.hash).scrollIntoView(true);
-		}, 1000);
+		if (window.location.hash.length > 1) {
+			setTimeout(function () {
+				document.querySelector(window.location.hash).scrollIntoView(true);
+			}, 1000);
+		}
 	};
 
 	KurahenPremium.prototype.fixAllHiders = function () {
