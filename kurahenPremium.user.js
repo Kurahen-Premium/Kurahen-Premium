@@ -584,7 +584,7 @@
 
 	ThreadsWatcher.prototype.removeThreadListWindowEntry = function (id, boardName) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
-		console.log('entry ', entry);
+
 		if (entry === null) {
 			return;
 		}
