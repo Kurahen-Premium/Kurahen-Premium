@@ -553,8 +553,10 @@
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
 			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId, numberOfNewPosts, status) {
-				if (status === 200) {
+				if (status === 200 && numberOfNewPosts > 0) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+				} else if (status === 200 && numberOfNewPosts === 0) {
+					self.removeThreadListWindowEntry(threadId, boardName);
 				} else if (status === 404) {
 					self.removeThreadListWindowEntry(threadId, boardName);
 					self.removeThreadObject(threadId, boardName);
