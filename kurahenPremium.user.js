@@ -150,8 +150,11 @@
 	};
 
 	KurahenPremium.prototype.disableNightStyle = function () {
-		var option = document.querySelector('#stylechanger option[value$="night.css"]');
-		option.disabled = true;
+		var optionNight = document.querySelector('#stylechanger option[value$="night.css"]');
+		optionNight.disabled = true;
+
+		var optionNight2 = document.querySelector('#stylechanger option[value$="night2.css"]');
+		optionNight2.disabled = true;
 	};
 
 	KurahenPremium.prototype.replaceEmailFieldWithSelect = function () {
