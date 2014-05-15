@@ -4,20 +4,23 @@
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
 // @version     1.0
 
-// @include     http://www.karachan.org/*
-// @include     http://karachan.org/*
+// @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
+// @exclude     https://www.karachan.org/*/src/*
 // @exclude     http://karachan.org/*/src/*
+// @exclude     https://karachan.org/*/src/*
 
-// @include     http://www.karachan.co/*
-// @include     http://karachan.co/*
+// @match       *://*.karachan.co/*
 // @exclude     http://www.karachan.co/*/src/*
+// @exclude     https://www.karachan.co/*/src/*
 // @exclude     http://karachan.co/*/src/*
+// @exclude     https://karachan.co/*/src/*
 
-// @include     http://www.kurahen.org/*
-// @include     http://kurahen.org/*
+// @match       *://*.kurahen.org/*
 // @exclude     http://www.kurahen.org/*/src/*
+// @exclude     https://www.kurahen.org/*/src/*
 // @exclude     http://kurahen.org/*/src/*
+// @exclude     https://kurahen.org/*/src/*
 // ==/UserScript==
 
 (function () {
