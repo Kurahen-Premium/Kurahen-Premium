@@ -23,7 +23,7 @@
 // @exclude     https://kurahen.org/*/src/*
 // ==/UserScript==
 
-(function () {
+var main = function () {
 	'use strict';
 
 	// Konfiguracja
@@ -76,7 +76,7 @@
 			this.changeBoardTitle(customBBoardTitle);
 		}
 		this.updatePageTitle();
-		//this.disableNightStyle();
+		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.insertButtonBar();
 		this.replaceEmailFieldWithSelect();
@@ -739,4 +739,12 @@
 
 	// Initialize script
 	window.KurahenPremium = new KurahenPremium();
-})();
+};
+
+if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
+	// Chrome/Chromium/Opera Next
+	main();
+} else {
+	// Firefox and others
+	window.addEventListener('load', main);
+}
