@@ -657,7 +657,6 @@
 
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
 		var request = new XMLHttpRequest();
-		request.responseType = 'document';
 		request.open('GET', '/' + boardName + '/res/' + threadId + '.html', true);
 
 		var self = this;
@@ -669,7 +668,10 @@
 			}
 
 			// On success
-			var postsContainers = request.response.getElementsByClassName('postContainer');
+			var parser = new DOMParser();
+			var doc = parser.parseFromString(request.responseText, "text/html");
+
+			var postsContainers = doc.getElementsByClassName('postContainer');
 			var numberOfNewPosts = 0;
 			for (var i = 0; i < postsContainers.length; i++) {
 				if (self.parsePostId(postsContainers[i]) === lastPostId) {
