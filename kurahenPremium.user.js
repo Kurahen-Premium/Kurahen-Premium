@@ -73,7 +73,7 @@
 			this.changeBoardTitle(customBBoardTitle);
 		}
 		this.updatePageTitle();
-		this.disableNightStyle();
+		//this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.insertButtonBar();
 		this.replaceEmailFieldWithSelect();
@@ -335,11 +335,11 @@
 		}
 		document.getElementsByTagName('head')[0].appendChild(style);
 
-		var firstPostBarHider = document.querySelector('.opContainer .postInfo .hider');
+		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
 		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
 			' anonów)';
-		firstPostBarHider.parentNode.insertBefore(threadPostersStats, firstPostBarHider);
+		firstPostBar.appendChild(threadPostersStats);
 	};
 
 	/**
@@ -609,10 +609,10 @@
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		var self = this;
 		var toggleWatchLabel = function () {
-			if (this.innerText === ' Nie obserwuj') {
-				this.innerText = ' Obserwuj';
+			if (this.textContent === ' Nie obserwuj') {
+				this.textContent = ' Obserwuj';
 			} else {
-				this.innerText = ' Nie obserwuj';
+				this.textContent = ' Nie obserwuj';
 			}
 			self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 		};
@@ -626,9 +626,9 @@
 
 			var currentBoardName = this.getCurrentBoardName();
 			if (this.threadObjectExists(postId, currentBoardName)) {
-				watchButton.innerText = ' Nie obserwuj';
+				watchButton.textContent = ' Nie obserwuj';
 			} else {
-				watchButton.innerText = ' Obserwuj';
+				watchButton.textContent = ' Obserwuj';
 			}
 
 			postsBars[i].appendChild(watchButton);
