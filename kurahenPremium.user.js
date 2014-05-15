@@ -3,10 +3,21 @@
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
 // @version     1.0
+
 // @include     http://www.karachan.org/*
 // @include     http://karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
 // @exclude     http://karachan.org/*/src/*
+
+// @include     http://www.karachan.co/*
+// @include     http://karachan.co/*
+// @exclude     http://www.karachan.co/*/src/*
+// @exclude     http://karachan.co/*/src/*
+
+// @include     http://www.kurahen.org/*
+// @include     http://kurahen.org/*
+// @exclude     http://www.kurahen.org/*/src/*
+// @exclude     http://kurahen.org/*/src/*
 // ==/UserScript==
 
 (function () {
@@ -647,7 +658,7 @@
 	ThreadsWatcher.prototype.getNumberOfNewPosts = function (boardName, threadId, lastPostId, callback) {
 		var request = new XMLHttpRequest();
 		request.responseType = 'document';
-		request.open('GET', 'http://karachan.org/' + boardName + '/res/' + threadId + '.html', true);
+		request.open('GET', '/' + boardName + '/res/' + threadId + '.html', true);
 
 		var self = this;
 		request.onload = function () {
