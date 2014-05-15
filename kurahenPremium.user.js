@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych opcji dla forum młodzieżowo-katolickiego
-// @version     1.0.2
+// @version     1.0.3
 
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
