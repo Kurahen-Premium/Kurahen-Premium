@@ -287,8 +287,11 @@ var main = function () {
 				var vocarooId = url.substr(url.length - 12, 12);
 
 				var vocarooContainer = document.createElement('div');
-				vocarooContainer.innerHTML = '<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId +
-					'&autoplay=0" width="148" height="44" wmode="transparent" type="application/x-shockwave-flash"></embed>';
+				vocarooContainer.innerHTML = '<object width="148" height="44"><param name="movie"' +
+				'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
+				'<param name="wmode" value="transparent"/>' +
+				'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
+				'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
 
 				if (links[i].nextSibling) {
 					links[i].parentNode.insertBefore(vocarooContainer, links[i].nextSibling);
