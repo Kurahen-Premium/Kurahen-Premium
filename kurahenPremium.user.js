@@ -15,12 +15,6 @@
 // @exclude     https://www.karachan.co/*/src/*
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
-
-// @match       *://*.kurahen.org/*
-// @exclude     http://www.kurahen.org/*/src/*
-// @exclude     https://www.kurahen.org/*/src/*
-// @exclude     http://kurahen.org/*/src/*
-// @exclude     https://kurahen.org/*/src/*
 // ==/UserScript==
 
 var main = function () {
