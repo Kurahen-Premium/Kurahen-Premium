@@ -570,7 +570,7 @@ var main = function () {
 		}
 
 		var self = this;
-		this.threadsListWindow.addEventListener('mouseout', function() {
+		this.threadsListWindow.addEventListener('mouseout', function () {
 			self.setWatchedThreadsWindowTopPosition(self.threadsListWindow.style.top);
 			self.setWatchedThreadsWindowLeftPosition(self.threadsListWindow.style.left);
 		}, false);
@@ -651,10 +651,10 @@ var main = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		var self = this;
 		var toggleWatchLabel = function () {
-			if (this.textContent === ' Nie obserwuj') {
-				this.textContent = ' Obserwuj';
+			if (this.textContent === 'Nie obserwuj') {
+				this.textContent = 'Obserwuj';
 			} else {
-				this.textContent = ' Nie obserwuj';
+				this.textContent = 'Nie obserwuj';
 			}
 			self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 		};
@@ -666,15 +666,23 @@ var main = function () {
 			watchButton.setAttribute('data-post-id', postId);
 			watchButton.addEventListener('click', toggleWatchLabel, false);
 
+			var watchButtonContainer = document.createElement('span');
+			watchButtonContainer.className = 'watch-button-container';
+			watchButtonContainer.appendChild(watchButton);
+
 			var currentBoardName = this.getCurrentBoardName();
 			if (this.threadObjectExists(postId, currentBoardName)) {
-				watchButton.textContent = ' Nie obserwuj';
+				watchButton.textContent = 'Nie obserwuj';
 			} else {
-				watchButton.textContent = ' Obserwuj';
+				watchButton.textContent = 'Obserwuj';
 			}
 
-			postsBars[i].appendChild(watchButton);
+			var postNum = postsBars[i].querySelector('span.postNum');
+			postNum.insertBefore(watchButtonContainer, postNum.querySelector('span'));
 		}
+
+		GM_addStyle('.watch-button-container:before {content: " [";}\n' +
+			'.watch-button-container:after{content: "] ";}');
 	};
 
 	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId, boardName) {
