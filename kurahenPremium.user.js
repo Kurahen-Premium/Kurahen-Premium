@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Kurahen Premium
 // @namespace   karachan.org
-// @description Zestaw dodatkowych opcji dla forum młodzieżowo-katolickiego
-// @version     1.0.4
+// @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
+// @version     1.1.0
 
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
@@ -15,12 +15,6 @@
 // @exclude     https://www.karachan.co/*/src/*
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
-
-// @match       *://*.kurahen.org/*
-// @exclude     http://www.kurahen.org/*/src/*
-// @exclude     https://www.kurahen.org/*/src/*
-// @exclude     http://kurahen.org/*/src/*
-// @exclude     https://kurahen.org/*/src/*
 // ==/UserScript==
 
 var main = function () {
@@ -164,8 +158,11 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.disableNightStyle = function () {
-		var option = document.querySelector('#stylechanger option[value$="night.css"]');
-		option.disabled = true;
+		var optionNight = document.querySelector('#stylechanger option[value$="night.css"]');
+		optionNight.disabled = true;
+
+		var optionNight2 = document.querySelector('#stylechanger option[value$="night2.css"]');
+		optionNight2.disabled = true;
 	};
 
 	KurahenPremium.prototype.replaceEmailFieldWithSelect = function () {
@@ -310,6 +307,9 @@ var main = function () {
 		var opId;
 		for (var i = 0; i < postersIds.length; i++) {
 			var posterId = this.parsePosterId(postersIds[i].textContent);
+			postersIds[i].title = posterId;
+			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
+
 			if (i === 0) {
 				opId = posterId;
 			}
@@ -328,15 +328,14 @@ var main = function () {
 			}
 		}
 
-		var style = document.createElement('style');
-		style.type = 'text/css';
+		var style = '';
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
-				style.textContent += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}';
-				style.textContent += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}';
+				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}\n';
 			}
 		}
-		document.getElementsByTagName('head')[0].appendChild(style);
+		GM_addStyle(style);
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -360,7 +359,7 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.parsePosterId = function (text) {
-		return text.trim().substr(5, 8).replace(/[\.|\/|\+|\-]/g, '_');
+		return text.trim().substr(5, 8);
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
@@ -466,6 +465,32 @@ var main = function () {
 		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(savedWatchedThreads));
 	};
 
+	ThreadsWatcher.prototype.getWatchedThreadsWindowTopPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_Top');
+		if (item === null || item === '') {
+			return '35px';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowTopPosition = function (position) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_Top', position);
+	};
+
+	ThreadsWatcher.prototype.getWatchedThreadsWindowLeftPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_Left');
+		if (item === null || item === '') {
+			return '4px';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowLeftPosition = function (position) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_Left', position);
+	};
+
 	/**
 	 * @private
 	 */
@@ -524,9 +549,13 @@ var main = function () {
 		this.threadsListWindow.style.minHeight = '100px';
 		this.threadsListWindow.style.width = 'auto';
 		this.threadsListWindow.style.minWidth = '250px';
-		this.threadsListWindow.style.top = '35px';
-		this.threadsListWindow.style.left = '4px';
+		this.threadsListWindow.style.top = this.getWatchedThreadsWindowTopPosition();
+		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
+
+		var threadsListWindowTitle = document.createElement('small');
+		threadsListWindowTitle.textContent = 'Obserwowane nitki';
+		this.threadsListWindow.appendChild(threadsListWindowTitle);
 
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';
@@ -540,7 +569,17 @@ var main = function () {
 			}
 		}
 
+		var self = this;
+		this.threadsListWindow.addEventListener('mouseout', function () {
+			self.setWatchedThreadsWindowTopPosition(self.threadsListWindow.style.top);
+			self.setWatchedThreadsWindowLeftPosition(self.threadsListWindow.style.left);
+		}, false);
+
 		document.body.appendChild(this.threadsListWindow);
+
+		var script = document.createElement('script');
+		script.textContent = '$("#watcher_box").drags();';
+		document.body.appendChild(script);
 	};
 
 	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber, topic) {
@@ -570,8 +609,10 @@ var main = function () {
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
 			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId, numberOfNewPosts, status) {
-				if (status === 200) {
+				if (status === 200 && numberOfNewPosts > 0) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+				} else if (status === 200 && numberOfNewPosts === 0) {
+					self.removeThreadListWindowEntry(threadId, boardName);
 				} else if (status === 404) {
 					self.removeThreadListWindowEntry(threadId, boardName);
 					self.removeThreadObject(threadId, boardName);
@@ -599,7 +640,7 @@ var main = function () {
 
 	ThreadsWatcher.prototype.removeThreadListWindowEntry = function (id, boardName) {
 		var entry = document.getElementById('wl_' + boardName + '_' + id);
-		console.log('entry ', entry);
+
 		if (entry === null) {
 			return;
 		}
@@ -610,10 +651,10 @@ var main = function () {
 		var postsBars = document.querySelectorAll('.opContainer .postInfo');
 		var self = this;
 		var toggleWatchLabel = function () {
-			if (this.textContent === ' Nie obserwuj') {
-				this.textContent = ' Obserwuj';
+			if (this.textContent === 'Nie obserwuj') {
+				this.textContent = 'Obserwuj';
 			} else {
-				this.textContent = ' Nie obserwuj';
+				this.textContent = 'Nie obserwuj';
 			}
 			self.addRemoveWatchedThread(parseInt(this.getAttribute('data-post-id')), self.getCurrentBoardName());
 		};
@@ -625,15 +666,23 @@ var main = function () {
 			watchButton.setAttribute('data-post-id', postId);
 			watchButton.addEventListener('click', toggleWatchLabel, false);
 
+			var watchButtonContainer = document.createElement('span');
+			watchButtonContainer.className = 'watch-button-container';
+			watchButtonContainer.appendChild(watchButton);
+
 			var currentBoardName = this.getCurrentBoardName();
 			if (this.threadObjectExists(postId, currentBoardName)) {
-				watchButton.textContent = ' Nie obserwuj';
+				watchButton.textContent = 'Nie obserwuj';
 			} else {
-				watchButton.textContent = ' Obserwuj';
+				watchButton.textContent = 'Obserwuj';
 			}
 
-			postsBars[i].appendChild(watchButton);
+			var postNum = postsBars[i].querySelector('span.postNum');
+			postNum.insertBefore(watchButtonContainer, postNum.querySelector('span'));
 		}
+
+		GM_addStyle('.watch-button-container:before {content: " [";}\n' +
+			'.watch-button-container:after{content: "] ";}');
 	};
 
 	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId, boardName) {
