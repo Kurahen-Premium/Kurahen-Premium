@@ -465,6 +465,32 @@ var main = function () {
 		localStorage.setItem('KurahenPremium_WatchedThreads', JSON.stringify(savedWatchedThreads));
 	};
 
+	ThreadsWatcher.prototype.getWatchedThreadsWindowTopPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_Top');
+		if (item === null || item === '') {
+			return '35px';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowTopPosition = function (position) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_Top', position);
+	};
+
+	ThreadsWatcher.prototype.getWatchedThreadsWindowLeftPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_Left');
+		if (item === null || item === '') {
+			return '4px';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowLeftPosition = function (position) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_Left', position);
+	};
+
 	/**
 	 * @private
 	 */
@@ -523,8 +549,8 @@ var main = function () {
 		this.threadsListWindow.style.minHeight = '100px';
 		this.threadsListWindow.style.width = 'auto';
 		this.threadsListWindow.style.minWidth = '250px';
-		this.threadsListWindow.style.top = '35px';
-		this.threadsListWindow.style.left = '4px';
+		this.threadsListWindow.style.top = this.getWatchedThreadsWindowTopPosition();
+		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
 
 		var threadsListWindowTitle = document.createElement('small');
@@ -542,6 +568,12 @@ var main = function () {
 					-1, threads[item].topic);
 			}
 		}
+
+		var self = this;
+		this.threadsListWindow.addEventListener('mouseout', function() {
+			self.setWatchedThreadsWindowTopPosition(self.threadsListWindow.style.top);
+			self.setWatchedThreadsWindowLeftPosition(self.threadsListWindow.style.left);
+		}, false);
 
 		document.body.appendChild(this.threadsListWindow);
 
