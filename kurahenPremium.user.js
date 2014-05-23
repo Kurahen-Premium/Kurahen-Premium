@@ -544,6 +544,10 @@ var main = function () {
 		}
 
 		document.body.appendChild(this.threadsListWindow);
+
+		var script = document.createElement('script');
+		script.textContent = '$("#watcher_box").drags();';
+		document.body.appendChild(script);
 	};
 
 	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber, topic) {
