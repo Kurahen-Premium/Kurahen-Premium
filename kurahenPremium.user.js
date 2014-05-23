@@ -527,6 +527,10 @@ var main = function () {
 		this.threadsListWindow.style.left = '4px';
 		this.threadsListWindow.style.padding = '5px';
 
+		var threadsListWindowTitle = document.createElement('small');
+		threadsListWindowTitle.textContent = 'Obserwowane nitki';
+		this.threadsListWindow.appendChild(threadsListWindowTitle);
+
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';
 		this.threadsListWindow.appendChild(this.threadsHtmlList);
