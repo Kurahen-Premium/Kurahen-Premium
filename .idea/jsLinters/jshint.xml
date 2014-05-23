@@ -48,6 +48,7 @@
     <option passfail="false" />
     <option phantom="false" />
     <option plusplus="false" />
+    <option predef="GM_addStyle" />
     <option proto="false" />
     <option prototypejs="false" />
     <option quotmark="false" />

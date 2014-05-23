@@ -328,15 +328,14 @@ var main = function () {
 			}
 		}
 
-		var style = document.createElement('style');
-		style.type = 'text/css';
+		var style = '';
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
-				style.textContent += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}';
-				style.textContent += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}';
+				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}\n';
 			}
 		}
-		document.getElementsByTagName('head')[0].appendChild(style);
+		GM_addStyle(style);
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
