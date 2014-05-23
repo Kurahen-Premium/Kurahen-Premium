@@ -307,6 +307,9 @@ var main = function () {
 		var opId;
 		for (var i = 0; i < postersIds.length; i++) {
 			var posterId = this.parsePosterId(postersIds[i].textContent);
+			postersIds[i].title = posterId;
+			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
+
 			if (i === 0) {
 				opId = posterId;
 			}
@@ -357,7 +360,7 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.parsePosterId = function (text) {
-		return text.trim().substr(5, 8).replace(/[\.|\/|\+|\-]/g, '_');
+		return text.trim().substr(5, 8);
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
