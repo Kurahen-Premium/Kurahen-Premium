@@ -24,7 +24,7 @@ var main = function () {
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = true; // Usuniecie tekstu pod elementami do postowania
-    var biggerOnlineCountFont = true // Wieksza czcionka liczby online
+	var biggerOnlineCountFont = true // Wieksza czcionka liczby online
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -64,7 +64,7 @@ var main = function () {
 	];
 
 	var KurahenPremium = function () {
-	    if (document.title === "404 - karachan.org") return;
+		if (document.title === "404 - karachan.org") return;
 		var currentBoardName = this.getCurrentBoardName();
 
 		if (currentBoardName === '') {
@@ -93,11 +93,11 @@ var main = function () {
 		}
 
 		if (deleteTextUnderPostForm) {
-		    this.removeTextUnderPostForm();
+			this.removeTextUnderPostForm();
 		}
 
 		if (biggerOnlineCountFont) {
-		    this.enlargeOnlineCountFont();
+			this.enlargeOnlineCountFont();
 		}
 		this.threadsWatcher = new ThreadsWatcher();
 	};
@@ -451,27 +451,27 @@ var main = function () {
 		buttonBar.appendChild(wordfiltersSelect);
 	};
 
-    /**
+	/**
 	 * @private
 	 */
 	KurahenPremium.prototype.removeTextUnderPostForm = function () {
-	    var chaninfo = document.getElementsByClassName("rules")[0];
-	    chaninfo.parentNode.removeChild(chaninfo);
+		var chaninfo = document.getElementsByClassName("rules")[0];
+		chaninfo.parentNode.removeChild(chaninfo);
 	};
 
-    /**
-    * @private
-    */
+	/**
+	* @private
+	*/
 	KurahenPremium.prototype.enlargeOnlineCountFont = function () {
-	    var counter = document.getElementById("counter");
-	    var online = counter.lastChild.textContent;
-	    counter.removeChild(counter.lastChild);
-	    var newelement = document.createElement("b");
-	    newelement.textContent = online;
-	    counter.appendChild(newelement);
+		var counter = document.getElementById("counter");
+		var online = counter.lastChild.textContent;
+		counter.removeChild(counter.lastChild);
+		var newelement = document.createElement("b");
+		newelement.textContent = online;
+		counter.appendChild(newelement);
 
-	    var container = counter.parentElement;
-	    container.style.fontSize = "20px";
+		var container = counter.parentElement;
+		container.style.fontSize = "20px";
 	};
 
 	var ThreadsWatcher = function () {
@@ -769,7 +769,7 @@ var main = function () {
 					lastPostId = lastDetectedPostId;
 				}
 			}
-           
+
 			callback(boardName, threadId, lastPostId, numberOfNewPosts, 200);
 		};
 		request.send();
