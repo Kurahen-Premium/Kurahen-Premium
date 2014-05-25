@@ -62,6 +62,7 @@ var main = function () {
 	];
 
 	var KurahenPremium = function () {
+	    if (document.title === "404 - karachan.org") return;
 		var currentBoardName = this.getCurrentBoardName();
 
 		if (currentBoardName === '') {
