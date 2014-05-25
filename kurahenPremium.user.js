@@ -23,6 +23,7 @@ var main = function () {
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
+	var deleteTextUnderPostForm = true; // Usuniecie tekstu pod elementami do postowania
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -90,6 +91,9 @@ var main = function () {
 			this.changeFonts();
 		}
 
+		if (deleteTextUnderPostForm) {
+		    this.removeTextUnderPostForm();
+		}
 		this.threadsWatcher = new ThreadsWatcher();
 	};
 
@@ -442,6 +446,13 @@ var main = function () {
 		buttonBar.appendChild(wordfiltersSelect);
 	};
 
+    /**
+	 * @private
+	 */
+	KurahenPremium.prototype.removeTextUnderPostForm = function () {
+	    var chaninfo = document.getElementsByClassName("rules")[0];
+	    chaninfo.parentNode.removeChild(chaninfo);
+	};
 
 	var ThreadsWatcher = function () {
 		this.loadWatchedThreads();
@@ -738,7 +749,7 @@ var main = function () {
 					lastPostId = lastDetectedPostId;
 				}
 			}
-
+           
 			callback(boardName, threadId, lastPostId, numberOfNewPosts, 200);
 		};
 		request.send();
