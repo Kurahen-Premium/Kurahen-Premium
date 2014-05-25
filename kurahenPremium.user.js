@@ -471,7 +471,7 @@ var main = function () {
 	    counter.appendChild(newelement);
 
 	    var container = counter.parentElement;
-	    container.style.fontSize = "25px";
+	    container.style.fontSize = "20px";
 	};
 
 	var ThreadsWatcher = function () {
