@@ -23,8 +23,8 @@ var main = function () {
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
-	var deleteTextUnderPostForm = true; // Usuniecie tekstu pod elementami do postowania
-	var biggerOnlineCountFont = true // Wieksza czcionka liczby online
+	var deleteTextUnderPostForm = false; // Usuniecie tekstu pod elementami do postowania
+	var biggerOnlineCountFont = false // Wieksza czcionka liczby online
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
