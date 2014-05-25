@@ -24,6 +24,7 @@ var main = function () {
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = true; // Usuniecie tekstu pod elementami do postowania
+    var biggerOnlineCountFont = true // Wieksza czcionka liczby online
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -93,6 +94,10 @@ var main = function () {
 
 		if (deleteTextUnderPostForm) {
 		    this.removeTextUnderPostForm();
+		}
+
+		if (biggerOnlineCountFont) {
+		    this.enlargeOnlineCountFont();
 		}
 		this.threadsWatcher = new ThreadsWatcher();
 	};
@@ -452,6 +457,21 @@ var main = function () {
 	KurahenPremium.prototype.removeTextUnderPostForm = function () {
 	    var chaninfo = document.getElementsByClassName("rules")[0];
 	    chaninfo.parentNode.removeChild(chaninfo);
+	};
+
+    /**
+    * @private
+    */
+	KurahenPremium.prototype.enlargeOnlineCountFont = function () {
+	    var counter = document.getElementById("counter");
+	    var online = counter.lastChild.textContent;
+	    counter.removeChild(counter.lastChild);
+	    var newelement = document.createElement("b");
+	    newelement.textContent = online;
+	    counter.appendChild(newelement);
+
+	    var container = counter.parentElement;
+	    container.style.fontSize = "25px";
 	};
 
 	var ThreadsWatcher = function () {
