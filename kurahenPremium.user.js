@@ -786,6 +786,7 @@ var main = function () {
 		}
 
 		var postContent = postMessage.textContent;
+		if (postContent === "") postContent = "Brak treści posta";
 		return postContent.substr(0, Math.min(postContent.length, 25));
 	};
 
