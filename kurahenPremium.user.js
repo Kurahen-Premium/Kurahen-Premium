@@ -454,8 +454,10 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.removeTextUnderPostForm = function () {
-		var chanInfo = document.getElementsByClassName('rules')[0];
-		chanInfo.parentNode.removeChild(chanInfo);
+		var rules = document.querySelector('tr.rules');
+		if (rules !== null) {
+			rules.parentNode.removeChild(rules);
+		}
 	};
 
 	/**
