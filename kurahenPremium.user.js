@@ -23,8 +23,8 @@ var main = function () {
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
-	var deleteTextUnderPostForm = false; // Usuniecie tekstu pod elementami do postowania
-	var biggerOnlineCountFont = false // Wieksza czcionka liczby online
+	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
+	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -64,10 +64,9 @@ var main = function () {
 	];
 
 	var KurahenPremium = function () {
-		if (document.title === "404 - karachan.org") return;
 		var currentBoardName = this.getCurrentBoardName();
 
-		if (currentBoardName === '') {
+		if (currentBoardName === '' || this.isCurrentPage404()) {
 			return; // We are not on any useful page
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -295,10 +294,10 @@ var main = function () {
 
 				var vocarooContainer = document.createElement('div');
 				vocarooContainer.innerHTML = '<object width="148" height="44"><param name="movie"' +
-				'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
-				'<param name="wmode" value="transparent"/>' +
-				'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
-				'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
+					'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
+					'<param name="wmode" value="transparent"/>' +
+					'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
+					'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
 
 				if (links[i].nextSibling) {
 					links[i].parentNode.insertBefore(vocarooContainer, links[i].nextSibling);
@@ -455,23 +454,27 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.removeTextUnderPostForm = function () {
-		var chaninfo = document.getElementsByClassName("rules")[0];
-		chaninfo.parentNode.removeChild(chaninfo);
+		var chanInfo = document.getElementsByClassName('rules')[0];
+		chanInfo.parentNode.removeChild(chanInfo);
 	};
 
 	/**
-	* @private
-	*/
+	 * @private
+	 */
 	KurahenPremium.prototype.enlargeOnlineCountFont = function () {
-		var counter = document.getElementById("counter");
+		var counter = document.getElementById('counter');
 		var online = counter.lastChild.textContent;
 		counter.removeChild(counter.lastChild);
-		var newelement = document.createElement("b");
-		newelement.textContent = online;
-		counter.appendChild(newelement);
+		var newElement = document.createElement('b');
+		newElement.textContent = online;
+		counter.appendChild(newElement);
 
 		var container = counter.parentElement;
-		container.style.fontSize = "20px";
+		container.style.fontSize = '20px';
+	};
+
+	KurahenPremium.prototype.isCurrentPage404 = function () {
+		return document.title === '404 - karachan.org';
 	};
 
 	var ThreadsWatcher = function () {
@@ -818,7 +821,9 @@ var main = function () {
 		}
 
 		var postContent = postMessage.textContent;
-		if (postContent === "") postContent = "Brak treści posta";
+		if (postContent === '') {
+			return '(brak treści posta)';
+		}
 		return postContent.substr(0, Math.min(postContent.length, 25));
 	};
 
