@@ -41,26 +41,26 @@ var main = function () {
 	];
 	var boardsWithId = ['b', 'fz', 'z'];
 	var colors = [
-		'#FF8080',
-		'#FFDD80',
-		'#80FFB7',
-		'#80D0FF',
-		'#C680FF',
-		'#FFAE80',
-		'#D5FF80',
-		'#80FFFD',
-		'#8097FF',
-		'#FF80CA',
-		"#ff7f7f",
-		"#779aef",
-		"#b0de6f",
-		"#cc66c0",
-		"#5cb9a9",
-		"#f3bb79",
-		"#8d71e2",
-		"#6dd168",
-		"#be5f7e",
-		"#7bc8f6"
+		'#ff8080',
+		'#ffdd80',
+		'#80ffb7',
+		'#80d0ff',
+		'#c680ff',
+		'#ffae80',
+		'#d5ff80',
+		'#80fffd',
+		'#8097ff',
+		'#ff80ca',
+		'#ff7f7f',
+		'#779aef',
+		'#b0de6f',
+		'#cc66c0',
+		'#5cb9a9',
+		'#f3bb79',
+		'#8d71e2',
+		'#6dd168',
+		'#be5f7e',
+		'#7bc8f6'
 	];
 
 	var KurahenPremium = function () {
