@@ -310,7 +310,7 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
-		var postersIds = document.getElementsByClassName("posteruid");
+		var postersIds = document.getElementsByClassName('posteruid');
 		var postersStats = {};
 
 		var opId;
@@ -373,7 +373,7 @@ var main = function () {
 
 	KurahenPremium.prototype.insertButtonBar = function () {
 		var postForm = document.getElementById('postform');
-		var textarea = document.querySelector("#postform textarea");
+		var textarea = document.querySelector('#postform textarea');
 		var buttonBar = document.createElement('div');
 		buttonBar.style.textAlign = 'center';
 
@@ -756,7 +756,7 @@ var main = function () {
 
 			// On success
 			var parser = new DOMParser();
-			var doc = parser.parseFromString(request.responseText, "text/html");
+			var doc = parser.parseFromString(request.responseText, 'text/html');
 
 			var postsContainers = doc.getElementsByClassName('postContainer');
 			var numberOfNewPosts = 0;
