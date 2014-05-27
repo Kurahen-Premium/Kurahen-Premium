@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JSHintConfiguration" version="2.4.4" use-config-file="false">
+  <component name="JSHintConfiguration" version="2.5.0" use-config-file="false">
     <option asi="false" />
     <option bitwise="true" />
     <option boss="false" />
@@ -48,7 +48,7 @@
     <option passfail="false" />
     <option phantom="false" />
     <option plusplus="false" />
-    <option predef="GM_addStyle" />
+    <option predef="GM_addStyle:false" />
     <option proto="false" />
     <option prototypejs="false" />
     <option quotmark="false" />
