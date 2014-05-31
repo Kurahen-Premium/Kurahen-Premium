@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.1.0
+// @version     1.2.0
 
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
@@ -17,12 +17,18 @@
 // @exclude     https://karachan.co/*/src/*
 // ==/UserScript==
 
+/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, eqeqeq:true,
+ strict:true, undef:true, bitwise:true, browser:true, devel:true */
+/*global GM_addStyle:false */
+
 var main = function () {
 	'use strict';
 
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
+	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
+	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -39,32 +45,32 @@ var main = function () {
 	];
 	var boardsWithId = ['b', 'fz', 'z'];
 	var colors = [
-		'#FF8080',
-		'#FFDD80',
-		'#80FFB7',
-		'#80D0FF',
-		'#C680FF',
-		'#FFAE80',
-		'#D5FF80',
-		'#80FFFD',
-		'#8097FF',
-		'#FF80CA',
-		"#ff7f7f",
-		"#779aef",
-		"#b0de6f",
-		"#cc66c0",
-		"#5cb9a9",
-		"#f3bb79",
-		"#8d71e2",
-		"#6dd168",
-		"#be5f7e",
-		"#7bc8f6"
+		'#ff8080',
+		'#ffdd80',
+		'#80ffb7',
+		'#80d0ff',
+		'#c680ff',
+		'#ffae80',
+		'#d5ff80',
+		'#80fffd',
+		'#8097ff',
+		'#ff80ca',
+		'#ff7f7f',
+		'#779aef',
+		'#b0de6f',
+		'#cc66c0',
+		'#5cb9a9',
+		'#f3bb79',
+		'#8d71e2',
+		'#6dd168',
+		'#be5f7e',
+		'#7bc8f6'
 	];
 
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
 
-		if (currentBoardName === '') {
+		if (currentBoardName === '' || this.isCurrentPage404()) {
 			return; // We are not on any useful page
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -89,6 +95,13 @@ var main = function () {
 			this.changeFonts();
 		}
 
+		if (deleteTextUnderPostForm) {
+			this.removeTextUnderPostForm();
+		}
+
+		if (biggerOnlineCountFont) {
+			this.enlargeOnlineCountFont();
+		}
 		this.threadsWatcher = new ThreadsWatcher();
 	};
 
@@ -285,10 +298,10 @@ var main = function () {
 
 				var vocarooContainer = document.createElement('div');
 				vocarooContainer.innerHTML = '<object width="148" height="44"><param name="movie"' +
-				'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
-				'<param name="wmode" value="transparent"/>' +
-				'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
-				'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
+					'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
+					'<param name="wmode" value="transparent"/>' +
+					'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
+					'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
 
 				if (links[i].nextSibling) {
 					links[i].parentNode.insertBefore(vocarooContainer, links[i].nextSibling);
@@ -301,7 +314,7 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
-		var postersIds = document.getElementsByClassName("posteruid");
+		var postersIds = document.getElementsByClassName('posteruid');
 		var postersStats = {};
 
 		var opId;
@@ -364,7 +377,7 @@ var main = function () {
 
 	KurahenPremium.prototype.insertButtonBar = function () {
 		var postForm = document.getElementById('postform');
-		var textarea = document.querySelector("#postform textarea");
+		var textarea = document.querySelector('#postform textarea');
 		var buttonBar = document.createElement('div');
 		buttonBar.style.textAlign = 'center';
 
@@ -441,6 +454,34 @@ var main = function () {
 		buttonBar.appendChild(wordfiltersSelect);
 	};
 
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.removeTextUnderPostForm = function () {
+		var rules = document.querySelector('tr.rules');
+		if (rules !== null) {
+			rules.parentNode.removeChild(rules);
+		}
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.enlargeOnlineCountFont = function () {
+		var counter = document.getElementById('counter');
+		var online = counter.lastChild.textContent;
+		counter.removeChild(counter.lastChild);
+		var newElement = document.createElement('b');
+		newElement.textContent = online;
+		counter.appendChild(newElement);
+
+		var container = counter.parentElement;
+		container.style.fontSize = '20px';
+	};
+
+	KurahenPremium.prototype.isCurrentPage404 = function () {
+		return document.title === '404 - karachan.org';
+	};
 
 	var ThreadsWatcher = function () {
 		this.loadWatchedThreads();
@@ -608,19 +649,26 @@ var main = function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId, numberOfNewPosts, status) {
-				if (status === 200 && numberOfNewPosts > 0) {
-					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
-				} else if (status === 200 && numberOfNewPosts === 0) {
-					self.removeThreadListWindowEntry(threadId, boardName);
-				} else if (status === 404) {
-					self.removeThreadListWindowEntry(threadId, boardName);
-					self.removeThreadObject(threadId, boardName);
-					self.saveWatchedThreads();
-				} else {
-					unreadPostsSpan.textContent = '[?] ';
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
+				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
+					if (status === 200 && numberOfNewPosts > 0) {
+						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+					} else if (status === 200 && numberOfNewPosts === 0) {
+						self.removeThreadListWindowEntry(threadId, boardName);
+					} else if (status === 404) {
+						self.removeThreadListWindowEntry(threadId, boardName);
+						self.removeThreadObject(threadId, boardName);
+						self.saveWatchedThreads();
+					} else {
+						unreadPostsSpan.textContent = '[?] ';
+					}
+
+					if (forceUpdate) {
+						self.updateThreadObject(threadId, boardName, lastReadPostId);
+						self.saveWatchedThreads();
+					}
 				}
-			});
+			);
 		}
 	};
 
@@ -711,15 +759,17 @@ var main = function () {
 
 		var self = this;
 		request.onload = function () {
+			var forceUpdate = false;
+
 			// On error
 			if (request.status !== 200) {
-				callback(boardName, threadId, lastPostId, -1, request.status);
+				callback(boardName, threadId, lastPostId, -1, forceUpdate, request.status);
 				return;
 			}
 
 			// On success
 			var parser = new DOMParser();
-			var doc = parser.parseFromString(request.responseText, "text/html");
+			var doc = parser.parseFromString(request.responseText, 'text/html');
 
 			var postsContainers = doc.getElementsByClassName('postContainer');
 			var numberOfNewPosts = 0;
@@ -735,10 +785,11 @@ var main = function () {
 				var lastDetectedPostId = self.parsePostId(postsContainers[postsContainers.length - 1]);
 				if (lastDetectedPostId !== lastPostId) {
 					lastPostId = lastDetectedPostId;
+					forceUpdate = true;
 				}
 			}
 
-			callback(boardName, threadId, lastPostId, numberOfNewPosts, 200);
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, 200);
 		};
 		request.send();
 	};
@@ -786,6 +837,9 @@ var main = function () {
 		}
 
 		var postContent = postMessage.textContent;
+		if (postContent === '') {
+			return '(brak treści posta)';
+		}
 		return postContent.substr(0, Math.min(postContent.length, 25));
 	};
 
