@@ -649,19 +649,26 @@ var main = function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId, numberOfNewPosts, status) {
-				if (status === 200 && numberOfNewPosts > 0) {
-					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
-				} else if (status === 200 && numberOfNewPosts === 0) {
-					self.removeThreadListWindowEntry(threadId, boardName);
-				} else if (status === 404) {
-					self.removeThreadListWindowEntry(threadId, boardName);
-					self.removeThreadObject(threadId, boardName);
-					self.saveWatchedThreads();
-				} else {
-					unreadPostsSpan.textContent = '[?] ';
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
+				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
+					if (status === 200 && numberOfNewPosts > 0) {
+						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+					} else if (status === 200 && numberOfNewPosts === 0) {
+						self.removeThreadListWindowEntry(threadId, boardName);
+					} else if (status === 404) {
+						self.removeThreadListWindowEntry(threadId, boardName);
+						self.removeThreadObject(threadId, boardName);
+						self.saveWatchedThreads();
+					} else {
+						unreadPostsSpan.textContent = '[?] ';
+					}
+
+					if (forceUpdate) {
+						self.updateThreadObject(threadId, boardName, lastReadPostId);
+						self.saveWatchedThreads();
+					}
 				}
-			});
+			);
 		}
 	};
 
@@ -752,9 +759,11 @@ var main = function () {
 
 		var self = this;
 		request.onload = function () {
+			var forceUpdate = false;
+
 			// On error
 			if (request.status !== 200) {
-				callback(boardName, threadId, lastPostId, -1, request.status);
+				callback(boardName, threadId, lastPostId, -1, forceUpdate, request.status);
 				return;
 			}
 
@@ -776,10 +785,11 @@ var main = function () {
 				var lastDetectedPostId = self.parsePostId(postsContainers[postsContainers.length - 1]);
 				if (lastDetectedPostId !== lastPostId) {
 					lastPostId = lastDetectedPostId;
+					forceUpdate = true;
 				}
 			}
 
-			callback(boardName, threadId, lastPostId, numberOfNewPosts, 200);
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, 200);
 		};
 		request.send();
 	};
