@@ -394,12 +394,14 @@ var main = function () {
 		if (prev !== null) {
 			var upButton = document.createElement("a");
 			upButton.className = "fa fa-chevron-up";
+			upButton.title = "poprzedni post tego użytykownika";
 			upButton.setAttribute("href", "../.." + location.pathname + "#p" + prev.toString());
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement("a");
 			downButton.className = "fa fa-chevron-down";
+			downButton.title = "następny post tego użytkownika"
 			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
 			newButtonsContainer.appendChild(downButton);
 		}
