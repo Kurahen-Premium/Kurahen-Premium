@@ -387,7 +387,7 @@ var main = function () {
 	KurahenPremium.prototype.getPostNo = function (userpost) {
 		var id = userpost.parentElement.parentElement.getAttribute("id");
 		return id.substr(2, id.length - 2);
-	}
+	};
 
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement("span");
@@ -401,16 +401,16 @@ var main = function () {
 		if (next !== null) {
 			var downButton = document.createElement("a");
 			downButton.className = "fa fa-chevron-down";
-			downButton.title = "następny post tego użytkownika"
+			downButton.title = "następny post tego użytkownika";
 			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
 			newButtonsContainer.appendChild(downButton);
 		}
 		post.parentElement.appendChild(newButtonsContainer);
-	}
+	};
 
 	KurahenPremium.prototype.setJumpButtons = function (userids) {
 		var postsNo = [];
-		console.log(location.pathname)
+		
 		for (var i = 0; i < userids.length; i++) {
 			postsNo.push(this.getPostNo(userids[i]));
 		}
@@ -420,7 +420,7 @@ var main = function () {
 			this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
 		}
 
-		for (var i = 1; i < userids.length - 1; i++) {
+		for (i = 1; i < userids.length - 1; i++) {
 			this.setJumpButtonForPost(userids[i], postsNo[i - 1], postsNo[i + 1]);
 		}
 	};
