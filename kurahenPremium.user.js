@@ -315,30 +315,30 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
-		var posts = document.getElementsByClassName('posteruid');
+		var postersIds = document.getElementsByClassName('posteruid');
 		var postersStats = {};
 
 		var opId;
-		for (var i = 0; i < posts.length; i++) {
-			var posterId = this.parsePosterId(posts[i].textContent);
-			posts[i].title = posterId;
+		for (var i = 0; i < postersIds.length; i++) {
+			var posterId = this.parsePosterId(postersIds[i].textContent);
+			postersIds[i].title = posterId;
 			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
 
 			if (i === 0) {
 				opId = posterId;
 			}
 
-			posts[i].className += ' poster-id-' + posterId;
+			postersIds[i].className += ' poster-id-' + posterId;
 			if (posterId === opId) {
-				posts[i].textContent = '\u00a0OP nitki';
+				postersIds[i].textContent = '\u00a0OP nitki';
 			} else {
-				posts[i].textContent = '\u00a0' + posterId;
+				postersIds[i].textContent = '\u00a0' + posterId;
 			}
 
 			if (postersStats[posterId] === undefined) {
-				postersStats[posterId] = [posts[i]];
+				postersStats[posterId] = [postersIds[i]];
 			} else {
-				postersStats[posterId].push(posts[i]);
+				postersStats[posterId].push(postersIds[i]);
 			}
 		}
 
@@ -358,7 +358,7 @@ var main = function () {
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
-		threadPostersStats.textContent = ' (' + posts.length + ' postów od ' + Object.keys(postersStats).length +
+		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
 			' anonów)';
 		firstPostBar.appendChild(threadPostersStats);
 	};
@@ -381,8 +381,43 @@ var main = function () {
 		return text.trim().substr(5, 8);
 	};
 
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.getPostNo = function (userpost) {
+		var id = userpost.parentElement.parentElement.getAttribute("id");
+		return id.substr(2, id.length - 2);
+	}
 
-	KurahenPremium.prototype.setJumpButtons = function (userposts) {
+	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
+		var newButtonsContainer = document.createElement("span");
+		if (prev !== null) {
+			var upButton = document.createElement("a");
+			upButton.className = "fa fa-chevron-up";
+			upButton.setAttribute("href", "../.." + location.pathname + "#p" + prev.toString());
+			newButtonsContainer.appendChild(upButton);
+		}
+		if (next !== null) {
+			var downButton = document.createElement("a");
+			downButton.className = "fa fa-chevron-down";
+			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
+			newButtonsContainer.appendChild(downButton);
+		}
+		post.parentElement.appendChild(newButtonsContainer);
+	}
+
+	KurahenPremium.prototype.setJumpButtons = function (userids) {
+		var postsNo = [];
+		console.log(location.pathname)
+		for (var i = 0; i < userids.length; i++) {
+			postsNo.push(this.getPostNo(userids[i]));
+		}
+		
+		if (postsNo.length > 1) {
+			this.setJumpButtonForPost(userids[0], null, postsNo[1]);
+			this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
+		}
+
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
