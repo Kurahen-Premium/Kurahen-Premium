@@ -342,11 +342,9 @@ var main = function () {
 			}
 		}
 
-
 		var style = '';
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
-
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
 				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
 
@@ -391,27 +389,28 @@ var main = function () {
 
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement("span");
+
 		if (prev !== null) {
 			var upButton = document.createElement("a");
 			upButton.className = "fa fa-chevron-up";
-			upButton.title = "poprzedni post tego użytykownika";
+			upButton.title = "Poprzedni post tego użytykownika";
 			upButton.setAttribute("href", "../.." + location.pathname + "#p" + prev.toString());
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement("a");
 			downButton.className = "fa fa-chevron-down";
-			downButton.title = "następny post tego użytkownika";
+			downButton.title = "Następny post tego użytkownika";
 			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
 			newButtonsContainer.appendChild(downButton);
 		}
-		console.log(newButtonsContainer);
+
 		post.parentNode.appendChild(newButtonsContainer);
 	};
 
 	KurahenPremium.prototype.setJumpButtons = function (userids) {
 		var postsNo = [];
-		
+
 		for (var i = 0; i < userids.length; i++) {
 			postsNo.push(this.getPostNo(userids[i]));
 		}
