@@ -3,6 +3,7 @@
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
 // @version     1.2.0
+// @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
