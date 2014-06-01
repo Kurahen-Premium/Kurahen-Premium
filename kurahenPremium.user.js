@@ -385,7 +385,7 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.getPostNo = function (userpost) {
-		var id = userpost.parentElement.parentElement.getAttribute("id");
+		var id = userpost.parentNode.parentNode.getAttribute("id");
 		return id.substr(2, id.length - 2);
 	};
 
@@ -405,7 +405,8 @@ var main = function () {
 			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
 			newButtonsContainer.appendChild(downButton);
 		}
-		post.parentElement.appendChild(newButtonsContainer);
+		console.log(newButtonsContainer);
+		post.parentNode.appendChild(newButtonsContainer);
 	};
 
 	KurahenPremium.prototype.setJumpButtons = function (userids) {
