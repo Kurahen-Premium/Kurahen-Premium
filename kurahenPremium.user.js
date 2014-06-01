@@ -17,8 +17,8 @@
 // @exclude     https://karachan.co/*/src/*
 // ==/UserScript==
 
-/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, eqeqeq:true,
- strict:true, undef:true, bitwise:true, browser:true, devel:true */
+/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
+eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
 /*global GM_addStyle:false */
 
 var main = function () {
