@@ -384,25 +384,25 @@ var main = function () {
 	 * @private
 	 */
 	KurahenPremium.prototype.getPostNo = function (userpost) {
-		var id = userpost.parentNode.parentNode.getAttribute("id");
+		var id = userpost.parentNode.parentNode.getAttribute('id');
 		return id.substr(2, id.length - 2);
 	};
 
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
-		var newButtonsContainer = document.createElement("span");
+		var newButtonsContainer = document.createElement('span');
 
 		if (prev !== null) {
-			var upButton = document.createElement("a");
-			upButton.className = "fa fa-chevron-up";
-			upButton.title = "Poprzedni post tego użytykownika";
-			upButton.setAttribute("href", "../.." + location.pathname + "#p" + prev.toString());
+			var upButton = document.createElement('a');
+			upButton.className = 'fa fa-chevron-up';
+			upButton.title = 'Poprzedni post tego użytykownika';
+			upButton.setAttribute('href', '../..' + location.pathname + '#p' + prev.toString());
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
-			var downButton = document.createElement("a");
-			downButton.className = "fa fa-chevron-down";
-			downButton.title = "Następny post tego użytkownika";
-			downButton.setAttribute("href", "../.." + location.pathname + "#p" + next.toString());
+			var downButton = document.createElement('a');
+			downButton.className = 'fa fa-chevron-down';
+			downButton.title = 'Następny post tego użytkownika';
+			downButton.setAttribute('href', '../..' + location.pathname + '#p' + next.toString());
 			newButtonsContainer.appendChild(downButton);
 		}
 
