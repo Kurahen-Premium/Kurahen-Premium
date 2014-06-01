@@ -346,7 +346,7 @@ var main = function () {
 		var style = '';
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
-				
+
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
 				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
 
@@ -412,12 +412,15 @@ var main = function () {
 		for (var i = 0; i < userids.length; i++) {
 			postsNo.push(this.getPostNo(userids[i]));
 		}
-		
+
 		if (postsNo.length > 1) {
 			this.setJumpButtonForPost(userids[0], null, postsNo[1]);
 			this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
 		}
 
+		for (var i = 1; i < userids.length - 1; i++) {
+			this.setJumpButtonForPost(userids[i], postsNo[i - 1], postsNo[i + 1]);
+		}
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
