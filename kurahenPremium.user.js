@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
@@ -102,6 +102,7 @@ var main = function () {
 		if (biggerOnlineCountFont) {
 			this.enlargeOnlineCountFont();
 		}
+
 		this.threadsWatcher = new ThreadsWatcher();
 	};
 
@@ -314,45 +315,50 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.colorizeAndNamePosters = function () {
-		var postersIds = document.getElementsByClassName('posteruid');
+		var posts = document.getElementsByClassName('posteruid');
 		var postersStats = {};
 
 		var opId;
-		for (var i = 0; i < postersIds.length; i++) {
-			var posterId = this.parsePosterId(postersIds[i].textContent);
-			postersIds[i].title = posterId;
+		for (var i = 0; i < posts.length; i++) {
+			var posterId = this.parsePosterId(posts[i].textContent);
+			posts[i].title = posterId;
 			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
 
 			if (i === 0) {
 				opId = posterId;
 			}
 
-			postersIds[i].className += ' poster-id-' + posterId;
+			posts[i].className += ' poster-id-' + posterId;
 			if (posterId === opId) {
-				postersIds[i].textContent = '\u00a0OP nitki';
+				posts[i].textContent = '\u00a0OP nitki';
 			} else {
-				postersIds[i].textContent = '\u00a0' + posterId;
+				posts[i].textContent = '\u00a0' + posterId;
 			}
 
-			if (isNaN(postersStats[posterId])) {
-				postersStats[posterId] = 1;
+			if (postersStats[posterId] === undefined) {
+				postersStats[posterId] = [posts[i]];
 			} else {
-				postersStats[posterId]++;
+				postersStats[posterId].push(posts[i]);
 			}
 		}
+
 
 		var style = '';
 		for (var id in postersStats) {
-			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
+			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
+				
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}\n';
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
+
+				this.setJumpButtons(postersStats[id]);
 			}
 		}
+
 		GM_addStyle(style);
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
-		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
+		threadPostersStats.textContent = ' (' + posts.length + ' postów od ' + Object.keys(postersStats).length +
 			' anonów)';
 		firstPostBar.appendChild(threadPostersStats);
 	};
@@ -373,6 +379,10 @@ var main = function () {
 	 */
 	KurahenPremium.prototype.parsePosterId = function (text) {
 		return text.trim().substr(5, 8);
+	};
+
+
+	KurahenPremium.prototype.setJumpButtons = function (userposts) {
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
