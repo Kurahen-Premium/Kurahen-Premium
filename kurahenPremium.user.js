@@ -701,7 +701,7 @@ var main = function () {
 		} else if (unreadPostsNumber < 0) {
 			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
-					if (status === 200 && numberOfNewPosts > 0) {
+					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
 					} else if (status === 200 && hideThreadsWithNoNewPosts && numberOfNewPosts === 0) {
 						self.removeThreadListWindowEntry(threadId, boardName);
