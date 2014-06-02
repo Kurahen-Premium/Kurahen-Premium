@@ -395,7 +395,7 @@ var main = function () {
 		if (prev !== null) {
 			var upButton = document.createElement('a');
 			upButton.className = 'fa fa-chevron-up';
-			upButton.title = 'Poprzedni post tego użytykownika';
+			upButton.title = 'Poprzedni post tego użytkownika';
 			upButton.href = '#p' + prev;
 			newButtonsContainer.appendChild(upButton);
 		}
@@ -410,18 +410,18 @@ var main = function () {
 		post.parentNode.appendChild(newButtonsContainer);
 	};
 
-	KurahenPremium.prototype.setJumpButtons = function (userids) {
+	KurahenPremium.prototype.setJumpButtons = function (userIds) {
 		var postsNo = [];
 
-		for (var i = 0; i < userids.length; i++) {
-			postsNo.push(this.getPostNo(userids[i]));
+		for (var i = 0; i < userIds.length; i++) {
+			postsNo.push(this.getPostNo(userIds[i]));
 		}
 
-		this.setJumpButtonForPost(userids[0], null, postsNo[1]);
-		this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
+		this.setJumpButtonForPost(userIds[0], null, postsNo[1]);
+		this.setJumpButtonForPost(userIds[userIds.length - 1], postsNo[postsNo.length - 2], null);
 
-		for (i = 1; i < userids.length - 1; i++) {
-			this.setJumpButtonForPost(userids[i], postsNo[i - 1], postsNo[i + 1]);
+		for (i = 1; i < userIds.length - 1; i++) {
+			this.setJumpButtonForPost(userIds[i], postsNo[i - 1], postsNo[i + 1]);
 		}
 	};
 
