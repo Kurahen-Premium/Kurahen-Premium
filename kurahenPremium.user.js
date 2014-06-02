@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
@@ -104,6 +104,7 @@ var main = function () {
 		if (biggerOnlineCountFont) {
 			this.enlargeOnlineCountFont();
 		}
+
 		this.threadsWatcher = new ThreadsWatcher();
 	};
 
@@ -336,20 +337,23 @@ var main = function () {
 				postersIds[i].textContent = '\u00a0' + posterId;
 			}
 
-			if (isNaN(postersStats[posterId])) {
-				postersStats[posterId] = 1;
+			if (typeof postersStats[posterId] === 'undefined') {
+				postersStats[posterId] = [postersIds[i]];
 			} else {
-				postersStats[posterId]++;
+				postersStats[posterId].push(postersIds[i]);
 			}
 		}
 
 		var style = '';
 		for (var id in postersStats) {
-			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
+			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}\n';
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
+
+				this.setJumpButtons(postersStats[id]);
 			}
 		}
+
 		GM_addStyle(style);
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
@@ -375,6 +379,50 @@ var main = function () {
 	 */
 	KurahenPremium.prototype.parsePosterId = function (text) {
 		return text.trim().substr(5, 8);
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.getPostNo = function (userpost) {
+		var id = userpost.parentNode.parentNode.getAttribute('id');
+		return id.substr(2, id.length - 2);
+	};
+
+	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
+		var newButtonsContainer = document.createElement('span');
+
+		if (prev !== null) {
+			var upButton = document.createElement('a');
+			upButton.className = 'fa fa-chevron-up';
+			upButton.title = 'Poprzedni post tego użytykownika';
+			upButton.href = '#p' + prev;
+			newButtonsContainer.appendChild(upButton);
+		}
+		if (next !== null) {
+			var downButton = document.createElement('a');
+			downButton.className = 'fa fa-chevron-down';
+			downButton.title = 'Następny post tego użytkownika';
+			downButton.href = '#p' + next;
+			newButtonsContainer.appendChild(downButton);
+		}
+
+		post.parentNode.appendChild(newButtonsContainer);
+	};
+
+	KurahenPremium.prototype.setJumpButtons = function (userids) {
+		var postsNo = [];
+
+		for (var i = 0; i < userids.length; i++) {
+			postsNo.push(this.getPostNo(userids[i]));
+		}
+
+		this.setJumpButtonForPost(userids[0], null, postsNo[1]);
+		this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
+
+		for (i = 1; i < userids.length - 1; i++) {
+			this.setJumpButtonForPost(userids[i], postsNo[i - 1], postsNo[i + 1]);
+		}
 	};
 
 	KurahenPremium.prototype.insertButtonBar = function () {
