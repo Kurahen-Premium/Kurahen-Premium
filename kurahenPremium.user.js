@@ -336,7 +336,7 @@ var main = function () {
 				postersIds[i].textContent = '\u00a0' + posterId;
 			}
 
-			if (postersStats[posterId] === undefined) {
+			if (typeof postersStats[posterId] === 'undefined') {
 				postersStats[posterId] = [postersIds[i]];
 			} else {
 				postersStats[posterId].push(postersIds[i]);
