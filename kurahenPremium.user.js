@@ -395,14 +395,14 @@ var main = function () {
 			var upButton = document.createElement('a');
 			upButton.className = 'fa fa-chevron-up';
 			upButton.title = 'Poprzedni post tego użytykownika';
-			upButton.setAttribute('href', '../..' + location.pathname + '#p' + prev.toString());
+			upButton.href = '#p' + prev;
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement('a');
 			downButton.className = 'fa fa-chevron-down';
 			downButton.title = 'Następny post tego użytkownika';
-			downButton.setAttribute('href', '../..' + location.pathname + '#p' + next.toString());
+			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
 		}
 
@@ -416,10 +416,8 @@ var main = function () {
 			postsNo.push(this.getPostNo(userids[i]));
 		}
 
-		if (postsNo.length > 1) {
-			this.setJumpButtonForPost(userids[0], null, postsNo[1]);
-			this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
-		}
+		this.setJumpButtonForPost(userids[0], null, postsNo[1]);
+		this.setJumpButtonForPost(userids[userids.length - 1], postsNo[postsNo.length - 2], null);
 
 		for (i = 1; i < userids.length - 1; i++) {
 			this.setJumpButtonForPost(userids[i], postsNo[i - 1], postsNo[i + 1]);
