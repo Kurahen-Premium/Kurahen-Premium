@@ -19,7 +19,7 @@
 // ==/UserScript==
 
 /*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
-eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
+ eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
 /*global GM_addStyle:false */
 
 var main = function () {
@@ -30,6 +30,7 @@ var main = function () {
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
+	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -654,7 +655,7 @@ var main = function () {
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
 					if (status === 200 && numberOfNewPosts > 0) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
-					} else if (status === 200 && numberOfNewPosts === 0) {
+					} else if (status === 200 && hideThreadsWithNoNewPosts && numberOfNewPosts === 0) {
 						self.removeThreadListWindowEntry(threadId, boardName);
 					} else if (status === 404) {
 						self.removeThreadListWindowEntry(threadId, boardName);
