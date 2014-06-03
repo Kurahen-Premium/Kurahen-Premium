@@ -34,7 +34,7 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = ['…', '%u200B'];
+	var specialCharacters = [['…','Trzykopek'], ['\u200b','Spacja o zerowej szerokości']];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -511,10 +511,8 @@ var main = function () {
 	KurahenPremium.prototype.insertSpeciacialCharButtons = function (textarea, buttonBar) {
 		var onButtonClick = function () {
 			
-
 			var textBeforeSelection = textarea.value.substring(0, textarea.selectionStart);
 			
-
 			textarea.value = textarea.value.substring(0, textarea.selectionStart) + this.value;
 
 			textarea.focus();
@@ -525,7 +523,8 @@ var main = function () {
 		for (var i = 0; i < specialCharacters.length; i++) {
 			var button = document.createElement('input');
 			button.type = 'button';
-			button.value = specialCharacters[i];
+			button.value = specialCharacters[i][0];
+			button.title = specialCharacters[i][1];
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
