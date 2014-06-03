@@ -34,7 +34,9 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = [['\u2026', 'Trzykopek', '\u2026'], ['\u200b', 'Spacja o zerowej szerokości', 'ZWSP']];
+	var specialCharacters = [{ contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026' },
+		{ contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP' }];
+
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -513,8 +515,8 @@ var main = function () {
 		var onButtonClick = function () {
 			var injectedChar;
 			for (var i = 0; i < specialCharacters.length; i++) {
-				if (specialCharacters[i][2] === this.value) {
-					injectedChar = specialCharacters[i][0];
+				if (specialCharacters[i].buttonLabel === this.value) {
+					injectedChar = specialCharacters[i].contentToInsert;
 					break;
 				}
 			}
@@ -522,7 +524,7 @@ var main = function () {
 			var beforeSelect = textarea.value.substring(0, textarea.selectionStart);
 			var afterSelect = textarea.value.substring(textarea.selectionStart, textarea.value.length);
 			textarea.value = beforeSelect + injectedChar + afterSelect;
-			
+
 			textarea.focus();
 			textarea.selectionStart += 1;
 			textarea.selectionEnd = textarea.selectionStart;
@@ -531,9 +533,9 @@ var main = function () {
 		for (var i = 0; i < specialCharacters.length; i++) {
 			var button = document.createElement('input');
 			button.type = 'button';
-			button.value = specialCharacters[i][2];
-			button.title = specialCharacters[i][1];
-			
+			button.value = specialCharacters[i].buttonLabel;
+			button.title = specialCharacters[i].buttonTitle;
+
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
