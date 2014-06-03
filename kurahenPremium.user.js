@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
@@ -34,7 +34,7 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = [['\u2026', 'Trzykopek'], ['\u200b', 'Spacja o zerowej szerokości']];
+	var specialCharacters = [['\u2026', 'Trzykopek', '\u2026'], ['\u200b', 'Spacja o zerowej szerokości', 'ZWSP']];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -433,7 +433,7 @@ var main = function () {
 		buttonBar.style.textAlign = 'center';
 
 		this.insertTextFormattingButtons(textarea, buttonBar);
-		this.insertSpeciacialCharButtons(textarea, buttonBar);
+		this.insertSpecialCharButtons(textarea, buttonBar);
 		this.insertWordfilterList(textarea, buttonBar);
 
 		postForm.insertBefore(buttonBar, postForm.firstChild);
@@ -509,10 +509,20 @@ var main = function () {
 	/**
 	 * @private
 	 */
-	KurahenPremium.prototype.insertSpeciacialCharButtons = function (textarea, buttonBar) {
+	KurahenPremium.prototype.insertSpecialCharButtons = function (textarea, buttonBar) {
 		var onButtonClick = function () {
-			textarea.value = textarea.value.substring(0, textarea.selectionStart) + this.value + textarea.value.substring(textarea.selectionStart, textarea.value.length);
+			var injectedChar;
+			for (var i = 0; i < specialCharacters.length; i++) {
+				if (specialCharacters[i][2] === this.value) {
+					injectedChar = specialCharacters[i][0];
+					break;
+				}
+			}
 
+			var beforeSelect = textarea.value.substring(0, textarea.selectionStart);
+			var afterSelect = textarea.value.substring(textarea.selectionStart, textarea.value.length);
+			textarea.value = beforeSelect + injectedChar + afterSelect;
+			
 			textarea.focus();
 			textarea.selectionStart += 1;
 			textarea.selectionEnd = textarea.selectionStart;
@@ -521,8 +531,9 @@ var main = function () {
 		for (var i = 0; i < specialCharacters.length; i++) {
 			var button = document.createElement('input');
 			button.type = 'button';
-			button.value = specialCharacters[i][0];
+			button.value = specialCharacters[i][2];
 			button.title = specialCharacters[i][1];
+			
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
