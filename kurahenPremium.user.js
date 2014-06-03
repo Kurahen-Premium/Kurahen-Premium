@@ -34,6 +34,7 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
+	var specialCharacters = ['…', '%u200B'];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -432,8 +433,9 @@ var main = function () {
 		buttonBar.style.textAlign = 'center';
 
 		this.insertTextFormattingButtons(textarea, buttonBar);
+		this.insertSpeciacialCharButtons(textarea, buttonBar);
 		this.insertWordfilterList(textarea, buttonBar);
-
+		
 		postForm.insertBefore(buttonBar, postForm.firstChild);
 	};
 
@@ -502,6 +504,31 @@ var main = function () {
 		}
 
 		buttonBar.appendChild(wordfiltersSelect);
+	};
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.insertSpeciacialCharButtons = function (textarea, buttonBar) {
+		var onButtonClick = function () {
+			
+
+			var textBeforeSelection = textarea.value.substring(0, textarea.selectionStart);
+			
+
+			textarea.value = textarea.value.substring(0, textarea.selectionStart) + this.value;
+
+			textarea.focus();
+			textarea.selectionStart += 1;
+			
+		};
+
+		for (var i = 0; i < specialCharacters.length; i++) {
+			var button = document.createElement('input');
+			button.type = 'button';
+			button.value = specialCharacters[i];
+			button.addEventListener('click', onButtonClick, false);
+			buttonBar.appendChild(button);
+		}
 	};
 
 	/**
