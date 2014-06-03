@@ -5,6 +5,8 @@
 // @version     1.2.0
 // @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
+// @grant       GM_addStyle
+
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
 // @exclude     https://www.karachan.org/*/src/*
