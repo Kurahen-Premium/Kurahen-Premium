@@ -34,7 +34,7 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = [['…','Trzykopek'], ['\u200b','Spacja o zerowej szerokości']];
+	var specialCharacters = [['\u2026', 'Trzykopek'], ['\u200b', 'Spacja o zerowej szerokości']];
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -435,7 +435,7 @@ var main = function () {
 		this.insertTextFormattingButtons(textarea, buttonBar);
 		this.insertSpeciacialCharButtons(textarea, buttonBar);
 		this.insertWordfilterList(textarea, buttonBar);
-		
+
 		postForm.insertBefore(buttonBar, postForm.firstChild);
 	};
 
@@ -505,19 +505,17 @@ var main = function () {
 
 		buttonBar.appendChild(wordfiltersSelect);
 	};
+
 	/**
 	 * @private
 	 */
 	KurahenPremium.prototype.insertSpeciacialCharButtons = function (textarea, buttonBar) {
 		var onButtonClick = function () {
-			
-			var textBeforeSelection = textarea.value.substring(0, textarea.selectionStart);
-			
-			textarea.value = textarea.value.substring(0, textarea.selectionStart) + this.value;
+			textarea.value = textarea.value.substring(0, textarea.selectionStart) + this.value + textarea.value.substring(textarea.selectionStart, textarea.value.length);
 
 			textarea.focus();
 			textarea.selectionStart += 1;
-			
+			textarea.selectionEnd = textarea.selectionStart;
 		};
 
 		for (var i = 0; i < specialCharacters.length; i++) {
