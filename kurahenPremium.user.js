@@ -36,6 +36,9 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
+	var specialCharacters = [{ contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026' },
+		{ contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP' }];
+
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -434,6 +437,7 @@ var main = function () {
 		buttonBar.style.textAlign = 'center';
 
 		this.insertTextFormattingButtons(textarea, buttonBar);
+		this.insertSpecialCharButtons(textarea, buttonBar);
 		this.insertWordfilterList(textarea, buttonBar);
 
 		postForm.insertBefore(buttonBar, postForm.firstChild);
@@ -504,6 +508,39 @@ var main = function () {
 		}
 
 		buttonBar.appendChild(wordfiltersSelect);
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.insertSpecialCharButtons = function (textarea, buttonBar) {
+		var onButtonClick = function () {
+			var injectedChar;
+			for (var i = 0; i < specialCharacters.length; i++) {
+				if (specialCharacters[i].buttonLabel === this.value) {
+					injectedChar = specialCharacters[i].contentToInsert;
+					break;
+				}
+			}
+
+			var beforeSelect = textarea.value.substring(0, textarea.selectionStart);
+			var afterSelect = textarea.value.substring(textarea.selectionStart, textarea.value.length);
+			textarea.value = beforeSelect + injectedChar + afterSelect;
+
+			textarea.focus();
+			textarea.selectionStart += 1;
+			textarea.selectionEnd = textarea.selectionStart;
+		};
+
+		for (var i = 0; i < specialCharacters.length; i++) {
+			var button = document.createElement('input');
+			button.type = 'button';
+			button.value = specialCharacters[i].buttonLabel;
+			button.title = specialCharacters[i].buttonTitle;
+
+			button.addEventListener('click', onButtonClick, false);
+			buttonBar.appendChild(button);
+		}
 	};
 
 	/**
