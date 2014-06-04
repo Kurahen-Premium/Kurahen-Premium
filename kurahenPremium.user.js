@@ -36,8 +36,10 @@ var main = function () {
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = [{ contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026' },
-		{ contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP' }];
+	var specialCharacters = [
+		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
+		{contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP'}
+	];
 
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
