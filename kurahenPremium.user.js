@@ -405,6 +405,7 @@ var main = function () {
 
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement('span');
+		newButtonsContainer.style.marginLeft = '3px';
 
 		if (prev !== null) {
 			var upButton = document.createElement('a');
