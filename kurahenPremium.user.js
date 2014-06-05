@@ -401,7 +401,8 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
-	KurahenPremium.prototype.highlightPostsById = function (userId) {
+	
+	KurahenPremium.prototype.setAllPostsOpacity = function (opacity_value) {
 		var allPosts = []; /* container for all posts */
 		
 		/* firstly get all replying posts */
@@ -415,10 +416,14 @@ var main = function () {
 		/* OP's post is named differently so we push it now */
 		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0])
 	
-		/* set opacity to some lower value for all posts */
+		/* set opacity to opacity_value for all posts */
 		for (var i = 0; i < allPosts.length; i++) {
-			allPosts[i].style.opacity = 0.5;
+			allPosts[i].style.opacity = opacity_value;
 		}
+	}
+	
+	KurahenPremium.prototype.highlightPostsById = function (userId) {
+		this.setAllPostsOpacity(0.5);
 		
 		/* now get all given user's posts */
 		var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
