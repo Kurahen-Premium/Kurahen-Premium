@@ -369,7 +369,7 @@ var main = function () {
 		if (roundedIdBackground) {
 			GM_addStyle('.id-rouded { border-radius: 8px; }\n');
 		}
-		GM_addStyle('.arrows { font-size: 22px; }');
+		GM_addStyle('.arrows { font-size: 20px; }');
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
