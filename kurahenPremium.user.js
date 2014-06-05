@@ -359,7 +359,10 @@ var main = function () {
 				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
 
 				this.setJumpButtons(postersStats[id]);
-				this.setHighlightPostsButton(postersStats[id]);
+				
+				if (enableHighlightPostsButton) {
+					this.setHighlightPostsButton(postersStats[id]);
+				}
 			}
 		}
 
@@ -398,10 +401,36 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
-	KurahenPremium.prototype.setHighlightPostsButton(userPosts) {
-
-
-
+	KurahenPremium.prototype.highlightPostsById = function (userId) {
+		var allPosts = []; /* container for all posts */
+		
+		/* firstly get all replying posts */
+		var otherReplies = document.getElementsByClassName('postContainer replyContainer'); 
+		
+		/* push them to the all-posts array */
+		for (var i = 0; i < otherReplies.length; i++) {
+			allPosts.push(otherReplies[i]);
+		}
+		
+		/* OP's post is named differently so we push it now */
+		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0])
+	
+		/* set opacity to some lower value for all posts */
+		for (var i = 0; i < allPosts.length; i++) {
+			allPosts[i].style.opacity = 0.5;
+		}
+		
+		/* now get all given user's posts */
+		var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
+		
+		/* set opacity to 1 for each of the user's post as they were previously set to 0.5 */
+		for (var i = 0; i < postsWithGivenId.length; i++) {
+			postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
+		}
+	}
+	
+	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts) {
+		
 	};	
 	
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
