@@ -372,9 +372,9 @@ var main = function () {
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			style += '.id-rouded { border-radius: 5px; padding: 0px 5px 2px 5px;}\n';
+			style += '.id-rouded { border-radius: 5px; padding: 0px 3px 2px 3px;}\n';
 		}
-		style += '.small-icon { font-size: 20px}\n';
+		style += '.small-icon { font-size: 22px; vertical-align: middle }\n';
 		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
