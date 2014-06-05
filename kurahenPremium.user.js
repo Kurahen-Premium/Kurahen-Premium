@@ -398,7 +398,7 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
-	KurahenPremium.prototype.setHighlightPostsButton(userIds) {
+	KurahenPremium.prototype.setHighlightPostsButton(userPosts) {
 
 
 
@@ -425,18 +425,18 @@ var main = function () {
 		post.parentNode.appendChild(newButtonsContainer);
 	};
 
-	KurahenPremium.prototype.setJumpButtons = function (userIds) {
+	KurahenPremium.prototype.setJumpButtons = function (userPosts) {
 		var postsNo = [];
 
-		for (var i = 0; i < userIds.length; i++) {
-			postsNo.push(this.getPostNo(userIds[i]));
+		for (var i = 0; i < userPosts.length; i++) {
+			postsNo.push(this.getPostNo(userPosts[i]));
 		}
 
-		this.setJumpButtonForPost(userIds[0], null, postsNo[1]);
-		this.setJumpButtonForPost(userIds[userIds.length - 1], postsNo[postsNo.length - 2], null);
+		this.setJumpButtonForPost(userPosts[0], null, postsNo[1]);
+		this.setJumpButtonForPost(userPosts[userPosts.length - 1], postsNo[postsNo.length - 2], null);
 
-		for (i = 1; i < userIds.length - 1; i++) {
-			this.setJumpButtonForPost(userIds[i], postsNo[i - 1], postsNo[i + 1]);
+		for (i = 1; i < userPosts.length - 1; i++) {
+			this.setJumpButtonForPost(userPosts[i], postsNo[i - 1], postsNo[i + 1]);
 		}
 	};
 
