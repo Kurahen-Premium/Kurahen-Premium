@@ -367,7 +367,8 @@ var main = function () {
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			style += '.id-rouded { border-radius: 8px; padding: 0px 5px 0px 5px}\n';
+			style += '.id-rouded { border-radius: 7px; padding: 0px 5px 0px 5px;}\n';
+			style += '.id-rouded:after { font-size: 15px }\n';
 		}
 		style += '.small-icon { font-size: 20px}\n';
 		GM_addStyle(style);
