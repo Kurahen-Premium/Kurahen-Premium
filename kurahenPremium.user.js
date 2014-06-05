@@ -33,9 +33,14 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
-
+	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
+		na podświetlenie wszystkich postów danego użytkownika */
+	
 	// Zaawansowana konfiguracja
+	
+	var unhighlightedPostOpacity = 0.3; /* Przezroczystość postów niepodświetlonych przy 
+		pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty */
+		
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
 		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
@@ -456,7 +461,7 @@ var main = function () {
 			this.setButtonLabelsForId(userId, 'Cofnij');
 		
 			/* set all posts opacity to lower value */
-			this.setAllPostsOpacity(0.5);
+			this.setAllPostsOpacity(unhighlightedPostOpacity);
 			
 			/* now get all given user's posts */
 			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
