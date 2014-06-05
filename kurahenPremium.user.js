@@ -367,10 +367,10 @@ var main = function () {
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			GM_addStyle('.id-rouded { border-radius: 8px; }\n');
+			style += '.id-rouded { border-radius: 8px; padding: 0px 5px 0px 5px}\n';
 		}
-		GM_addStyle('.arrows { font-size: 20px; }');
-
+		style += '.small-icon { font-size: 20px}\n';
+		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
 		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
@@ -410,14 +410,14 @@ var main = function () {
 
 		if (prev !== null) {
 			var upButton = document.createElement('a');
-			upButton.className = 'fa fa-chevron-up arrows';
+			upButton.className = 'fa fa-chevron-up small-icon';
 			upButton.title = 'Poprzedni post tego użytkownika';
 			upButton.href = '#p' + prev;
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement('a');
-			downButton.className = 'fa fa-chevron-down arrows';
+			downButton.className = 'fa fa-chevron-down small-icon';
 			downButton.title = 'Następny post tego użytkownika';
 			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
