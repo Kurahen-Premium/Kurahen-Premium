@@ -114,6 +114,9 @@ var main = function () {
 		}
 
 		this.threadsWatcher = new ThreadsWatcher();
+		
+		/* variable used to change "highlight posts" button state */
+		this.nowHighlightedPostsUserId = false;
 	};
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
@@ -423,14 +426,25 @@ var main = function () {
 	}
 	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
-		this.setAllPostsOpacity(0.5);
-		
-		/* now get all given user's posts */
-		var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
-		
-		/* set opacity to 1 for each of the user's post as they were previously set to 0.5 */
-		for (var i = 0; i < postsWithGivenId.length; i++) {
-			postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
+		/* if we want to highlight the same id this means we want to cancel the highlighting
+			in this case we restore standard opacity for all posts
+		*/
+		if (this.nowHighlightedPostsUserId === userId) {
+			this.setAllPostsOpacity(1.0);
+			this.nowHighlightedPostsUserId = false;
+		}
+		else {
+			this.setAllPostsOpacity(0.5);
+			
+			/* now get all given user's posts */
+			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
+			
+			/* set opacity to 1 for each of the user's post as they were previously set to 0.5 */
+			for (var i = 0; i < postsWithGivenId.length; i++) {
+				postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
+			}
+			
+			this.nowHighlightedPostsUserId = userId;
 		}
 	}
 	
@@ -442,9 +456,9 @@ var main = function () {
 			showPostsButton.href = 'javascript:void(0)';
 			
 			var this_object = this
-			
 			showPostsButton.addEventListener("click", function() { this_object.highlightPostsById(userId); }, false);
 			showPostsButton.innerHTML  = 'Pokaż posty';
+			showPostsButton.className = 'show-posts-'+userId;
 			showPostsContainer.appendChild(showPostsButton);
 			
 			userPosts[i].parentNode.appendChild(showPostsContainer);
