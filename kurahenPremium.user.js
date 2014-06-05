@@ -480,8 +480,6 @@ var main = function () {
 		var highlightPostsCallback = function() { this_object.highlightPostsById(userId); };
 	
 		for (var i = 0; i < userPosts.length; i++) {
-			/* firstly create a separate span container */
-			var showPostsContainer = document.createElement('span');
 			/* create an element */
 			var showPostsButton = document.createElement('a');
 			/* initialize standard labels (listener callback will change it anyway) */
@@ -498,11 +496,8 @@ var main = function () {
 			/* set click listener */
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
 			
-			/* put the button inside <span></span> */
-			showPostsContainer.appendChild(showPostsButton);
-			
 			/* the button is ready; append it to the post */
-			userPosts[i].parentNode.appendChild(showPostsContainer);
+			userPosts[i].parentNode.appendChild(showPostsButton);
 		}
 	};	
 	
