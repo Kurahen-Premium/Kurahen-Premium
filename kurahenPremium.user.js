@@ -425,7 +425,25 @@ var main = function () {
 		}
 	}
 	
+	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel) {
+		/* get all buttons for that id */
+		var buttons = document.getElementsByClassName('show-posts-'+userId);
+		
+		/* label each button */
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].innerHTML = buttonLabel;
+		}
+	}
+	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
+		/* if we are already highlighting somebody */
+		if (this.nowHighlightedPostsUserId !== false) {
+			/* restore standard labels */
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, 'Pokaż posty');
+		}
+		
+		/* at this moment every post is labelled 'Pokaż posty' */
+		
 		/* if we want to highlight the same id this means we want to cancel the highlighting
 			in this case we restore standard opacity for all posts
 		*/
@@ -434,12 +452,16 @@ var main = function () {
 			this.nowHighlightedPostsUserId = false;
 		}
 		else {
+			/* change button captions to 'Cofnij' */
+			this.setButtonLabelsForId(userId, 'Cofnij');
+		
+			/* set all posts opacity to lower value */
 			this.setAllPostsOpacity(0.5);
 			
 			/* now get all given user's posts */
 			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
 			
-			/* set opacity to 1 for each of the user's post as they were previously set to 0.5 */
+			/* set opacity to 1 for each of the user's post as they were previously set to some lower value */
 			for (var i = 0; i < postsWithGivenId.length; i++) {
 				postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
 			}
