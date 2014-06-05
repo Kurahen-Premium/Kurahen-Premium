@@ -33,6 +33,7 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
+	var roundedIdBackground = true;
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -338,6 +339,9 @@ var main = function () {
 			}
 
 			postersIds[i].className += ' poster-id-' + posterId;
+			if (roundedIdBackground) {
+				postersIds[i].className += ' id-rouded';
+			}
 			if (posterId === opId) {
 				postersIds[i].textContent = '\u00a0OP nitki';
 			} else {
@@ -362,6 +366,9 @@ var main = function () {
 		}
 
 		GM_addStyle(style);
+		if (roundedIdBackground) {
+			GM_addStyle('.id-rouded { border-radius: 8px; }\n');
+		}
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
