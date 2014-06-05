@@ -369,6 +369,7 @@ var main = function () {
 		if (roundedIdBackground) {
 			GM_addStyle('.id-rouded { border-radius: 8px; }\n');
 		}
+		GM_addStyle('.arrows { font-size: 22px; }');
 
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -409,14 +410,14 @@ var main = function () {
 
 		if (prev !== null) {
 			var upButton = document.createElement('a');
-			upButton.className = 'fa fa-chevron-up';
+			upButton.className = 'fa fa-chevron-up arrows';
 			upButton.title = 'Poprzedni post tego użytkownika';
 			upButton.href = '#p' + prev;
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement('a');
-			downButton.className = 'fa fa-chevron-down';
+			downButton.className = 'fa fa-chevron-down arrows';
 			downButton.title = 'Następny post tego użytkownika';
 			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
