@@ -361,7 +361,7 @@ var main = function () {
 				this.setJumpButtons(postersStats[id]);
 				
 				if (enableHighlightPostsButton) {
-					this.setHighlightPostsButton(postersStats[id]);
+					this.setHighlightPostsButton(postersStats[id], id);
 				}
 			}
 		}
@@ -434,8 +434,21 @@ var main = function () {
 		}
 	}
 	
-	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts) {
-		
+	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
+		for (var i = 0; i < userPosts.length; i++) {
+			var showPostsContainer = document.createElement('span');
+			var showPostsButton = document.createElement('a');
+			showPostsButton.title = 'Podświetl posty tego użytnika';
+			showPostsButton.href = 'javascript:void(0)';
+			
+			var this_object = this
+			
+			showPostsButton.addEventListener("click", function() { this_object.highlightPostsById(userId); }, false);
+			showPostsButton.innerHTML  = 'Pokaż posty';
+			showPostsContainer.appendChild(showPostsButton);
+			
+			userPosts[i].parentNode.appendChild(showPostsContainer);
+		}
 	};	
 	
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
