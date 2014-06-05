@@ -422,13 +422,13 @@ var main = function () {
 		}
 		
 		/* OP's post is named differently so we push it now */
-		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0])
+		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0]);
 	
 		/* set opacity to opacity_value for all posts */
-		for (var i = 0; i < allPosts.length; i++) {
-			allPosts[i].style.opacity = opacity_value;
+		for (var j = 0; j < allPosts.length; j++) {
+			allPosts[j].style.opacity = opacity_value;
 		}
-	}
+	};
 	
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
 		/* get all buttons for that id */
@@ -439,7 +439,7 @@ var main = function () {
 			buttons[i].innerHTML = buttonLabel;
 			buttons[i].title = newTitle;
 		}
-	}
+	};
 	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
 		/* if we are already highlighting somebody */
@@ -474,9 +474,11 @@ var main = function () {
 			
 			this.nowHighlightedPostsUserId = userId;
 		}
-	}
+	};
 	
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
+		var highlightPostsCallback = function() { this_object.highlightPostsById(userId); };
+	
 		for (var i = 0; i < userPosts.length; i++) {
 			/* firstly create a separate span container */
 			var showPostsContainer = document.createElement('span');
@@ -492,9 +494,9 @@ var main = function () {
 			showPostsButton.className = 'show-posts-'+userId;
 			
 			/* cache "this" object to the closure acting as callback */
-			var this_object = this
+			var this_object = this;
 			/* set click listener */
-			showPostsButton.addEventListener("click", function() { this_object.highlightPostsById(userId); }, false);
+			showPostsButton.addEventListener('click', highlightPostsCallback, false);
 			
 			/* put the button inside <span></span> */
 			showPostsContainer.appendChild(showPostsButton);
