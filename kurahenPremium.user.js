@@ -430,13 +430,14 @@ var main = function () {
 		}
 	}
 	
-	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel) {
+	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
 		/* get all buttons for that id */
 		var buttons = document.getElementsByClassName('show-posts-'+userId);
 		
 		/* label each button */
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].innerHTML = buttonLabel;
+			buttons[i].title = newTitle;
 		}
 	}
 	
@@ -444,7 +445,7 @@ var main = function () {
 		/* if we are already highlighting somebody */
 		if (this.nowHighlightedPostsUserId !== false) {
 			/* restore standard labels */
-			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, 'Pokaż posty');
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, 'Pokaż posty', 'Podświetl posty tego użytnika');
 		}
 		
 		/* at this moment every post is labelled 'Pokaż posty' */
@@ -458,7 +459,7 @@ var main = function () {
 		}
 		else {
 			/* change button captions to 'Cofnij' */
-			this.setButtonLabelsForId(userId, 'Cofnij');
+			this.setButtonLabelsForId(userId, 'Cofnij', 'Wróć do widoku wszystkich postów');
 		
 			/* set all posts opacity to lower value */
 			this.setAllPostsOpacity(unhighlightedPostOpacity);
@@ -477,17 +478,28 @@ var main = function () {
 	
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
 		for (var i = 0; i < userPosts.length; i++) {
+			/* firstly create a separate span container */
 			var showPostsContainer = document.createElement('span');
+			/* create an element */
 			var showPostsButton = document.createElement('a');
-			showPostsButton.title = 'Podświetl posty tego użytnika';
-			showPostsButton.href = 'javascript:void(0)';
-			
-			var this_object = this
-			showPostsButton.addEventListener("click", function() { this_object.highlightPostsById(userId); }, false);
+			/* initialize standard labels (listener callback will change it anyway) */
 			showPostsButton.innerHTML  = 'Pokaż posty';
+			showPostsButton.title = 'Podświetl posty tego użytnika';
+			/* make it a link */
+			showPostsButton.href = 'javascript:void(0)';
+			/* set a class name so the setButtonLabelsForId function 
+				can aquire all buttons of posts of given id to change their captions */
 			showPostsButton.className = 'show-posts-'+userId;
+			
+			/* cache "this" object to the closure acting as callback */
+			var this_object = this
+			/* set click listener */
+			showPostsButton.addEventListener("click", function() { this_object.highlightPostsById(userId); }, false);
+			
+			/* put the button inside <span></span> */
 			showPostsContainer.appendChild(showPostsButton);
 			
+			/* the button is ready; append it to the post */
 			userPosts[i].parentNode.appendChild(showPostsContainer);
 		}
 	};	
