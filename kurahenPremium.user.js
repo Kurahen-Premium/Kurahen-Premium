@@ -359,16 +359,20 @@ var main = function () {
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
-
+				var txt;
+				if (postersStats[id].length < 5) {
+					txt = ' posty';
+				} else {
+					txt = ' postów';
+				}
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
 				this.setJumpButtons(postersStats[id]);
 			}
 		}
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			style += '.id-rouded { border-radius: 7px; padding: 0px 5px 0px 5px;}\n';
-			style += '.id-rouded:after { font-size: 15px }\n';
+			style += '.id-rouded { border-radius: 5px; padding: 0px 5px 2px 5px;}\n';
 		}
 		style += '.small-icon { font-size: 20px}\n';
 		GM_addStyle(style);
