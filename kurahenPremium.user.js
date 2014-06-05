@@ -33,6 +33,7 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
+	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
 
 	// Zaawansowana konfiguracja
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
@@ -358,6 +359,7 @@ var main = function () {
 				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
 
 				this.setJumpButtons(postersStats[id]);
+				this.setHighlightPostsButton(postersStats[id]);
 			}
 		}
 
@@ -396,6 +398,12 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
+	KurahenPremium.prototype.setHighlightPostsButton(userIds) {
+
+
+
+	};	
+	
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement('span');
 
