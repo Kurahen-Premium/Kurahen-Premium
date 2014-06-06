@@ -458,13 +458,13 @@ var main = function () {
 		var buttons = document.getElementsByClassName('show-posts-'+userId);
 		
 		for (var i = 0; i < buttons.length; i++) {
-			buttons[i].innerHTML = buttonLabel;
+			buttons[i].textContent = buttonLabel;
 			buttons[i].title = newTitle;
 		}
 	};
 	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
-		if (this.nowHighlightedPostsUserId != false) {
+		if (this.nowHighlightedPostsUserId) {
 			
 			var showPostsStr = '   Pokaż posty';
 			
