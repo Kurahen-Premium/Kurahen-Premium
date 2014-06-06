@@ -33,8 +33,11 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
+	var showPostCountNearId = false; /* włącz/wyłącz licznik postów obok id (z wyłączonym id jest mniejszy) */
 	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
 		na podświetlenie wszystkich postów danego użytkownika */
+	var showPostCountNearHighlightPostsButton = true; /* włącz/wyłącz licznik postów obok Pokaż posty */
+	
 	var roundedIdBackground = true;
 
 	// Zaawansowana konfiguracja
@@ -374,7 +377,9 @@ var main = function () {
 				} else {
 					txt = ' postów';
 				}
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
+				
+				if (showPostCountNearId)
+					style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
 				
 				if (enableHighlightPostsButton) {
 					this.setHighlightPostsButton(postersStats[id], id);
@@ -386,7 +391,7 @@ var main = function () {
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 2px 1px 2px;}\n';
+			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
 		}
 		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
 		GM_addStyle(style);
@@ -459,7 +464,14 @@ var main = function () {
 		/* if we are already highlighting somebody */
 		if (this.nowHighlightedPostsUserId !== false) {
 			/* restore standard labels */
-			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, '  Pokaż posty', 'Podświetl posty tego użytnika');
+			
+			var showPostsStr = '   Pokaż posty';
+			
+			if (showPostCountNearHighlightPostsButton) {
+				showPostsStr += ' (' + document.getElementsByClassName('posteruid poster-id-' + userId).length + ')';
+			}
+			
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytnika');
 		}
 		
 		/* at this moment every post is labelled 'Pokaż posty' */
@@ -497,7 +509,13 @@ var main = function () {
 			/* create an element */
 			var showPostsButton = document.createElement('a');
 			/* initialize standard labels (listener callback will change it anyway) */
-			showPostsButton.innerHTML  = '  Pokaż posty';
+			var showPostsStr = '   Pokaż posty';
+			
+			if (showPostCountNearHighlightPostsButton) {
+				showPostsStr += ' (' + userPosts.length + ')';
+			}
+			
+			showPostsButton.innerHTML  = showPostsStr;
 			showPostsButton.title = 'Podświetl posty tego użytnika';
 			showPostsButton.style.fontSize = '11px';
 			/* make it a link */
