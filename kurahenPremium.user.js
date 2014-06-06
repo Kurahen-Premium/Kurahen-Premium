@@ -29,7 +29,7 @@ var main = function () {
 
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
-	var enableBetterFonts = false; // Podmienia domyślne czcionki na Roboto
+	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
@@ -432,30 +432,24 @@ var main = function () {
 
 	
 	KurahenPremium.prototype.setAllPostsOpacity = function (opacity_value) {
-		var allPosts = []; /* container for all posts */
+		var allPosts = [];
 		
-		/* firstly get all replying posts */
 		var otherReplies = document.getElementsByClassName('postContainer replyContainer'); 
 		
-		/* push them to the all-posts array */
 		for (var i = 0; i < otherReplies.length; i++) {
 			allPosts.push(otherReplies[i]);
 		}
 		
-		/* OP's post is named differently so we push it now */
 		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0]);
 	
-		/* set opacity to opacity_value for all posts */
 		for (var j = 0; j < allPosts.length; j++) {
 			allPosts[j].style.opacity = opacity_value;
 		}
 	};
 	
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
-		/* get all buttons for that id */
 		var buttons = document.getElementsByClassName('show-posts-'+userId);
 		
-		/* label each button */
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].innerHTML = buttonLabel;
 			buttons[i].title = newTitle;
@@ -463,9 +457,7 @@ var main = function () {
 	};
 	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
-		/* if we are already highlighting somebody */
 		if (this.nowHighlightedPostsUserId !== false) {
-			/* restore standard labels */
 			
 			var showPostsStr = '   Pokaż posty';
 			
@@ -476,26 +468,16 @@ var main = function () {
 			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytnika');
 		}
 		
-		/* at this moment every post is labelled 'Pokaż posty' */
-		
-		/* if we want to highlight the same id this means we want to cancel the highlighting
-			in this case we restore standard opacity for all posts
-		*/
 		if (this.nowHighlightedPostsUserId === userId) {
 			this.setAllPostsOpacity(1.0);
 			this.nowHighlightedPostsUserId = false;
 		}
 		else {
-			/* change button captions to 'Cofnij' */
-			this.setButtonLabelsForId(userId, '  Cofnij', 'Wróć do widoku wszystkich postów');
-		
-			/* set all posts opacity to lower value */
+			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
 			this.setAllPostsOpacity(unhighlightedPostOpacity);
 			
-			/* now get all given user's posts */
 			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
 			
-			/* set opacity to 1 for each of the user's post as they were previously set to some lower value */
 			for (var i = 0; i < postsWithGivenId.length; i++) {
 				postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
 			}
@@ -506,40 +488,31 @@ var main = function () {
 	
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
 		var highlightPostsCallback = function() { this_object.highlightPostsById(userId); };
-	
 		for (var i = 0; i < userPosts.length; i++) {
-			/* create an element */
 			var showPostsButton = document.createElement('a');
-			/* initialize standard labels (listener callback will change it anyway) */
 			var showPostsStr = '   Pokaż posty';
 			
 			if (showPostCountNearHighlightPostsButton) {
 				showPostsStr += ' (' + userPosts.length + ')';
 			}
 			
-			showPostsButton.innerHTML  = showPostsStr;
+			showPostsButton.textContent  = showPostsStr;
 			showPostsButton.title = 'Podświetl posty tego użytnika';
 			showPostsButton.style.fontSize = '11px';
-			/* make it a link */
 			showPostsButton.href = 'javascript:void(0)';
-			/* set a class name so the setButtonLabelsForId function 
-				can aquire all buttons of posts of given id to change their captions */
 			showPostsButton.className = 'show-posts-'+userId;
 			
-			/* cache "this" object to the closure acting as callback */
 			var this_object = this;
-			/* set click listener */
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
 			
-			/* the button is ready; append it to the post */
 			userPosts[i].parentNode.appendChild(showPostsButton);
 		}
-	};	
+	};
 	
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement('span');
 		newButtonsContainer.style.marginLeft = '3px';
-
+		
 		if (prev !== null) {
 			var upButton = document.createElement('a');
 			upButton.className = 'fa fa-chevron-up small-icon';
@@ -554,13 +527,13 @@ var main = function () {
 			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
 		}
-
+		
 		post.parentNode.appendChild(newButtonsContainer);
 	};
 
 	KurahenPremium.prototype.setJumpButtons = function (userPosts) {
 		var postsNo = [];
-
+		
 		for (var i = 0; i < userPosts.length; i++) {
 			postsNo.push(this.getPostNo(userPosts[i]));
 		}
