@@ -37,6 +37,7 @@ var main = function () {
 	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
 		na podświetlenie wszystkich postów danego użytkownika */
 	var showPostCountNearHighlightPostsButton = true; /* włącz/wyłącz licznik postów obok Pokaż posty */
+	var enableJumpButtons = true;  /* włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta */
 	
 	var roundedIdBackground = true;
 
@@ -385,7 +386,8 @@ var main = function () {
 					this.setHighlightPostsButton(postersStats[id], id);
 				}
 				
-				this.setJumpButtons(postersStats[id]);
+				if (enableJumpButtons)
+					this.setJumpButtons(postersStats[id]);
 			}
 		}
 
