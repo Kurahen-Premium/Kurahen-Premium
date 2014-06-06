@@ -29,7 +29,7 @@ var main = function () {
 
 	// Konfiguracja
 	var customBBoardTitle = '/b/ - Random';
-	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
+	var enableBetterFonts = false; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
@@ -375,19 +375,20 @@ var main = function () {
 					txt = ' postów';
 				}
 				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
-				this.setJumpButtons(postersStats[id]);
 				
 				if (enableHighlightPostsButton) {
 					this.setHighlightPostsButton(postersStats[id], id);
 				}
+				
+				this.setJumpButtons(postersStats[id]);
 			}
 		}
 
 		GM_addStyle(style);
 		if (roundedIdBackground) {
-			style += '.id-rouded { border-radius: 5px; padding: 0px 3px 2px 3px;}\n';
+			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 2px 1px 2px;}\n';
 		}
-		style += '.small-icon { font-size: 22px; vertical-align: middle }\n';
+		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
 		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -458,7 +459,7 @@ var main = function () {
 		/* if we are already highlighting somebody */
 		if (this.nowHighlightedPostsUserId !== false) {
 			/* restore standard labels */
-			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, 'Pokaż posty', 'Podświetl posty tego użytnika');
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, '  Pokaż posty', 'Podświetl posty tego użytnika');
 		}
 		
 		/* at this moment every post is labelled 'Pokaż posty' */
@@ -472,7 +473,7 @@ var main = function () {
 		}
 		else {
 			/* change button captions to 'Cofnij' */
-			this.setButtonLabelsForId(userId, 'Cofnij', 'Wróć do widoku wszystkich postów');
+			this.setButtonLabelsForId(userId, '  Cofnij', 'Wróć do widoku wszystkich postów');
 		
 			/* set all posts opacity to lower value */
 			this.setAllPostsOpacity(unhighlightedPostOpacity);
@@ -496,8 +497,9 @@ var main = function () {
 			/* create an element */
 			var showPostsButton = document.createElement('a');
 			/* initialize standard labels (listener callback will change it anyway) */
-			showPostsButton.innerHTML  = 'Pokaż posty';
+			showPostsButton.innerHTML  = '  Pokaż posty';
 			showPostsButton.title = 'Podświetl posty tego użytnika';
+			showPostsButton.style.fontSize = '11px';
 			/* make it a link */
 			showPostsButton.href = 'javascript:void(0)';
 			/* set a class name so the setButtonLabelsForId function 
