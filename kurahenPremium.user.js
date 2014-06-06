@@ -35,7 +35,8 @@ var main = function () {
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
 	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
 		na podświetlenie wszystkich postów danego użytkownika */
-	
+	var roundedIdBackground = true;
+
 	// Zaawansowana konfiguracja
 	
 	var unhighlightedPostOpacity = 0.3; /* Przezroczystość postów niepodświetlonych przy 
@@ -347,6 +348,9 @@ var main = function () {
 			}
 
 			postersIds[i].className += ' poster-id-' + posterId;
+			if (roundedIdBackground) {
+				postersIds[i].className += ' id-rouded';
+			}
 			if (posterId === opId) {
 				postersIds[i].textContent = '\u00a0OP nitki';
 			} else {
@@ -364,8 +368,13 @@ var main = function () {
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + ' postów)\u00a0"}\n';
-
+				var txt;
+				if (postersStats[id].length < 5) {
+					txt = ' posty';
+				} else {
+					txt = ' postów';
+				}
+				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
 				this.setJumpButtons(postersStats[id]);
 				
 				if (enableHighlightPostsButton) {
@@ -375,7 +384,11 @@ var main = function () {
 		}
 
 		GM_addStyle(style);
-
+		if (roundedIdBackground) {
+			style += '.id-rouded { border-radius: 5px; padding: 0px 3px 2px 3px;}\n';
+		}
+		style += '.small-icon { font-size: 22px; vertical-align: middle }\n';
+		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
 		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
@@ -503,17 +516,18 @@ var main = function () {
 	
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement('span');
+		newButtonsContainer.style.marginLeft = '3px';
 
 		if (prev !== null) {
 			var upButton = document.createElement('a');
-			upButton.className = 'fa fa-chevron-up';
+			upButton.className = 'fa fa-chevron-up small-icon';
 			upButton.title = 'Poprzedni post tego użytkownika';
 			upButton.href = '#p' + prev;
 			newButtonsContainer.appendChild(upButton);
 		}
 		if (next !== null) {
 			var downButton = document.createElement('a');
-			downButton.className = 'fa fa-chevron-down';
+			downButton.className = 'fa fa-chevron-down small-icon';
 			downButton.title = 'Następny post tego użytkownika';
 			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
