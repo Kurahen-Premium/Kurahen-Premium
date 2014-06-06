@@ -33,13 +33,10 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var showPostCountNearId = false; /* włącz/wyłącz licznik postów obok id (z wyłączonym id jest mniejszy) */
 	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
 		na podświetlenie wszystkich postów danego użytkownika */
-	var showPostCountNearHighlightPostsButton = true; /* włącz/wyłącz licznik postów obok Pokaż posty */
 	var enableJumpButtons = true;  /* włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta */
 	
-	var roundedIdBackground = true;
 
 	// Zaawansowana konfiguracja
 	
@@ -87,6 +84,16 @@ var main = function () {
 		'#7bc8f6'
 	];
 
+	
+	/* internal configuration flags */
+	var roundedIdBackground = true;
+	var showPostCountNearHighlightPostsButton = true;
+	var showPostCountNearId = false;
+	
+	if(!enableHighlightPostsButton) {
+		showPostCountNearId = true;
+	}
+	
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
 
@@ -128,7 +135,7 @@ var main = function () {
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
 	};
-
+	
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
 		document.title = newTitle;
 		document.getElementsByClassName('boardTitle')[0].textContent = newTitle;
@@ -457,7 +464,7 @@ var main = function () {
 	};
 	
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
-		if (this.nowHighlightedPostsUserId !== false) {
+		if (this.nowHighlightedPostsUserId != false) {
 			
 			var showPostsStr = '   Pokaż posty';
 			
@@ -465,7 +472,7 @@ var main = function () {
 				showPostsStr += ' (' + document.getElementsByClassName('posteruid poster-id-' + userId).length + ')';
 			}
 			
-			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytnika');
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytkownika');
 		}
 		
 		if (this.nowHighlightedPostsUserId === userId) {
