@@ -36,7 +36,6 @@ var main = function () {
 	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
 		na podświetlenie wszystkich postów danego użytkownika */
 	var enableJumpButtons = true;  /* włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta */
-	
 
 	// Zaawansowana konfiguracja
 	
@@ -84,14 +83,13 @@ var main = function () {
 		'#7bc8f6'
 	];
 
-	
 	/* internal configuration flags */
 	var roundedIdBackground = true;
 	var showPostCountNearHighlightPostsButton = true;
 	var showPostCountNearId = false;
-	
+
 	showPostCountNearId = !enableHighlightPostsButton;
-	
+
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
 
@@ -435,44 +433,42 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
-	
 	KurahenPremium.prototype.setAllPostsOpacity = function (opacity_value) {
 		var allPosts = [];
-		
+
 		var otherReplies = document.getElementsByClassName('postContainer replyContainer'); 
-		
+
 		for (var i = 0; i < otherReplies.length; i++) {
 			allPosts.push(otherReplies[i]);
 		}
-		
+
 		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0]);
-	
+
 		for (var j = 0; j < allPosts.length; j++) {
 			allPosts[j].style.opacity = opacity_value;
 		}
 	};
-	
+
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
 		var buttons = document.getElementsByClassName('show-posts-'+userId);
-		
+
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].textContent = buttonLabel;
 			buttons[i].title = newTitle;
 		}
 	};
-	
+
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
 		if (this.nowHighlightedPostsUserId) {
-			
 			var showPostsStr = '   Pokaż posty';
-			
+
 			if (showPostCountNearHighlightPostsButton) {
 				showPostsStr += ' (' + document.getElementsByClassName('posteruid poster-id-' + userId).length + ')';
 			}
-			
+
 			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytkownika');
 		}
-		
+
 		if (this.nowHighlightedPostsUserId === userId) {
 			this.setAllPostsOpacity(1.0);
 			this.nowHighlightedPostsUserId = false;
@@ -480,44 +476,44 @@ var main = function () {
 		else {
 			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
 			this.setAllPostsOpacity(unhighlightedPostOpacity);
-			
+
 			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
-			
+
 			for (var i = 0; i < postsWithGivenId.length; i++) {
 				postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
 			}
-			
+
 			this.nowHighlightedPostsUserId = userId;
 		}
 	};
-	
+
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
 		var highlightPostsCallback = function() { this_object.highlightPostsById(userId); };
 		for (var i = 0; i < userPosts.length; i++) {
 			var showPostsButton = document.createElement('a');
 			var showPostsStr = '   Pokaż posty';
-			
+
 			if (showPostCountNearHighlightPostsButton) {
 				showPostsStr += ' (' + userPosts.length + ')';
 			}
-			
+
 			showPostsButton.textContent  = showPostsStr;
 			showPostsButton.title = 'Podświetl posty tego użytnika';
 			showPostsButton.style.fontSize = '11px';
 			showPostsButton.href = 'javascript:void(0)';
 			showPostsButton.className = 'show-posts-'+userId;
-			
+
 			var this_object = this;
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
-			
+
 			userPosts[i].parentNode.appendChild(showPostsButton);
 		}
 	};
-	
+
 	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
 		var newButtonsContainer = document.createElement('span');
 		newButtonsContainer.style.marginLeft = '3px';
-		
+
 		if (prev !== null) {
 			var upButton = document.createElement('a');
 			upButton.className = 'fa fa-chevron-up small-icon';
@@ -532,13 +528,13 @@ var main = function () {
 			downButton.href = '#p' + next;
 			newButtonsContainer.appendChild(downButton);
 		}
-		
+
 		post.parentNode.appendChild(newButtonsContainer);
 	};
 
 	KurahenPremium.prototype.setJumpButtons = function (userPosts) {
 		var postsNo = [];
-		
+
 		for (var i = 0; i < userPosts.length; i++) {
 			postsNo.push(this.getPostNo(userPosts[i]));
 		}
