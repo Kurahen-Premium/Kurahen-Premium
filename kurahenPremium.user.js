@@ -90,9 +90,7 @@ var main = function () {
 	var showPostCountNearHighlightPostsButton = true;
 	var showPostCountNearId = false;
 	
-	if(!enableHighlightPostsButton) {
-		showPostCountNearId = true;
-	}
+	showPostCountNearId = !enableHighlightPostsButton;
 	
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
