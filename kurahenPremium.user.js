@@ -399,8 +399,15 @@ var main = function () {
 			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
 		}
 		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
+		style += '.post-animated { transition: opacity 0.4s}\n';
 		style += '.hiden-post { opacity: ' + unhighlightedPostOpacity + '}\n';
+		style += '.highlighting-button { font-size: 11px; cursor:pointer}\n';
+		style += '.highlighting-button:hover { color: orange;}\n';
 		GM_addStyle(style);
+		var allUsrPosts = document.getElementsByClassName('postContainer');
+		for (i = 0; i < allUsrPosts.length; i++) {
+			allUsrPosts[i].classList.add('post-animated');
+		}
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
 		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
@@ -435,11 +442,11 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
-		var buttons = document.getElementsByClassName('show-posts-' + userId);
+		var otherChild = document.getElementsByClassName('poster-id-' + userId);
 
-		for (var i = 0; i < buttons.length; i++) {
-			buttons[i].textContent = buttonLabel;
-			buttons[i].title = newTitle;
+		for (var i = 0; i < otherChild.length; i++) {
+			otherChild[i].parentNode.childNodes[3].textContent = buttonLabel;
+			otherChild[i].parentNode.childNodes[3].title = newTitle;
 		}
 	};
 
@@ -501,7 +508,7 @@ var main = function () {
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
 		var highlightPostsCallback = function () { this_object.highlightPostsById(userId); };
 		for (var i = 0; i < userPosts.length; i++) {
-			var showPostsButton = document.createElement('a');
+			var showPostsButton = document.createElement('span');
 			var showPostsStr = '   Pokaż posty';
 
 			if (showPostCountNearHighlightPostsButton) {
@@ -510,10 +517,7 @@ var main = function () {
 
 			showPostsButton.textContent = showPostsStr;
 			showPostsButton.title = 'Podświetl posty tego użytkownika';
-			showPostsButton.style.fontSize = '11px';
-			showPostsButton.href = 'javascript:void(0)';
-			showPostsButton.className = 'show-posts-' + userId;
-
+			showPostsButton.className = 'highlighting-button';
 			var this_object = this;
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
 
