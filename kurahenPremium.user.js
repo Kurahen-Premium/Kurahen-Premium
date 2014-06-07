@@ -398,7 +398,7 @@ var main = function () {
 			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
 		}
 		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
-		style += '.hided-post { opacity: ' + unhighlightedPostOpacity + '}\n';
+		style += '.hiden-post { opacity: ' + unhighlightedPostOpacity + '}\n';
 		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -470,21 +470,47 @@ var main = function () {
 		}
 
 		if (this.nowHighlightedPostsUserId === userId) {
-			this.setAllPostsOpacity(1.0);
+			//this.setAllPostsOpacity(1.0);
+			this.showAllPosts();
 			this.nowHighlightedPostsUserId = false;
 		}
 		else {
 			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
-			this.setAllPostsOpacity(unhighlightedPostOpacity);
+			//this.setAllPostsOpacity(unhighlightedPostOpacity);
+			this.hideAllPostsExcept(userId);
 
-			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
-			for (var i = 0; i < postsWithGivenId.length; i++) {
-				var postNo = this.getPostNo(postsWithGivenId[i]);
-				document.getElementById('pc' + postNo).style.opacity = 1.0;
-			}
+			//var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
+			//for (var i = 0; i < postsWithGivenId.length; i++) {
+			//	var postNo = this.getPostNo(postsWithGivenId[i]);
+
+			//}
 
 			this.nowHighlightedPostsUserId = userId;
 		}
+	};
+
+
+	KurahenPremium.prototype.hideAllPostsExcept = function (userId) {
+		// lower opacity for all posts exept this with given id
+		var allposts = document.getElementsByClassName('postContainer');
+
+		for (var i = 0; i < allposts.length; i++) {
+			if(this.getIdFromPostContainter(allposts[i]) === userId) continue;
+			allposts[i].classList.add('hiden-post');
+		}
+	};
+
+	KurahenPremium.prototype.showAllPosts = function () {
+		// set normal opacity for all posts
+		var allposts = document.getElementsByClassName('postContainer');
+		for (var i = 0; i < allposts.length; i++) {
+			allposts[i].classList.remove('hiden-post');
+		}
+	};
+
+	KurahenPremium.prototype.getIdFromPostContainter = function (postContainer) {
+		// depends on modified page src
+		return postContainer.getElementsByClassName('posteruid')[0].title;
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
