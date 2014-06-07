@@ -445,8 +445,8 @@ var main = function () {
 		var otherChild = document.getElementsByClassName('poster-id-' + userId);
 
 		for (var i = 0; i < otherChild.length; i++) {
-			otherChild[i].parentNode.childNodes[3].textContent = buttonLabel;
-			otherChild[i].parentNode.childNodes[3].title = newTitle;
+			otherChild[i].nextSibling.textContent = buttonLabel;
+			otherChild[i].nextSibling.title = newTitle;
 		}
 	};
 
