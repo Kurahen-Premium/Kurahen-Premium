@@ -469,7 +469,6 @@ var main = function () {
 	KurahenPremium.prototype.hideAllPostsExcept = function (userId) {
 		// lower opacity for all posts exept this with given id
 		var allposts = document.getElementsByClassName('postContainer');
-
 		for (var i = 0; i < allposts.length; i++) {
 			if(this.getIdFromPostContainter(allposts[i]) === userId) continue;
 			allposts[i].classList.add('hiden-post');
@@ -486,8 +485,13 @@ var main = function () {
 
 	KurahenPremium.prototype.getIdFromPostContainter = function (postContainer) {
 		// depends on modified page src
-		var txt = postContainer.getElementsByClassName('posteruid')[0].textContent;
-		return txt.substring(1,txt.length);
+		var idElement = postContainer.getElementsByClassName('posteruid')[0];
+		for (var i = 0; idElement.classList.length; i++) {
+			if (idElement.classList.item(i).indexOf('poster-id-') > -1) {
+				return idElement.classList.item(i).substr('poster-id-'.length, 8);
+			}
+		}
+		return null;
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
