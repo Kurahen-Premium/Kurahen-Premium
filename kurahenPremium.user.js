@@ -183,6 +183,9 @@ var main = function () {
 		}
 
 		var postContent = postMessage.textContent;
+		if (postContent === '') {
+			return '(brak treści posta)';
+		}
 		return postContent.substr(0, Math.min(postContent.length, 70));
 	};
 
