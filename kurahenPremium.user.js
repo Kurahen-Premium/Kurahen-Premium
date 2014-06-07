@@ -347,8 +347,8 @@ var main = function () {
 		var opId;
 		for (var i = 0; i < postersIds.length; i++) {
 			var posterId = this.parsePosterId(postersIds[i].textContent);
-			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
 			postersIds[i].title = posterId;
+			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
 
 			if (i === 0) {
 				opId = posterId;
@@ -457,12 +457,12 @@ var main = function () {
 			this.showAllPosts();
 			this.nowHighlightedPostsUserId = false;
 		}
-		else  {
+		else {
 			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
 			this.hideAllPostsExcept(userId);
 
 			this.nowHighlightedPostsUserId = userId;
-			}
+		}
 	};
 
 
@@ -486,7 +486,8 @@ var main = function () {
 
 	KurahenPremium.prototype.getIdFromPostContainter = function (postContainer) {
 		// depends on modified page src
-		return postContainer.getElementsByClassName('posteruid')[0].title;
+		var txt = postContainer.getElementsByClassName('posteruid')[0].textContent;
+		return txt.substring(1,txt.length);
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
