@@ -375,15 +375,16 @@ var main = function () {
 		for (var id in postersStats) {
 			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				var txt;
+				var numeral;
 				if (postersStats[id].length < 5) {
-					txt = ' posty';
+					numeral = ' posty';
 				} else {
-					txt = ' postów';
+					numeral = ' postów';
 				}
 
 				if (showPostCountNearId) {
-					style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt + ')\u00a0"}\n';
+					style += '.poster-id-' + id + ':after{content:" (';
+					style += postersStats[id].length + numeral + ')\u00a0"}\n';
 				}
 				if (enableHighlightPostsButton) {
 					this.setHighlightPostsButton(postersStats[id], id);
