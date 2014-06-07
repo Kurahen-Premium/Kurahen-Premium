@@ -394,11 +394,11 @@ var main = function () {
 			}
 		}
 
-		GM_addStyle(style);
 		if (roundedIdBackground) {
 			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
 		}
 		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
+		style += '.hided-post { opacity: ' + unhighlightedPostOpacity + '}\n';
 		GM_addStyle(style);
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -478,9 +478,9 @@ var main = function () {
 			this.setAllPostsOpacity(unhighlightedPostOpacity);
 
 			var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
-
 			for (var i = 0; i < postsWithGivenId.length; i++) {
-				postsWithGivenId[i].parentNode.parentNode.parentNode.parentNode.style.opacity = 1.0;
+				var postNo = this.getPostNo(postsWithGivenId[i]);
+				document.getElementById('pc' + postNo).style.opacity = 1.0;
 			}
 
 			this.nowHighlightedPostsUserId = userId;
