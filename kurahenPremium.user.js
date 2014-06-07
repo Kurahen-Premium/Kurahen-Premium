@@ -442,7 +442,8 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
-		var buttons = document.querySelector("[highlight-button-id='" +userId + "']");
+		var buttons = document.querySelectorAll("[highlight-button-id='" + userId + "']");
+		console.log(buttons);
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].textContent = buttonLabel;
 			buttons[i].title = newTitle;
