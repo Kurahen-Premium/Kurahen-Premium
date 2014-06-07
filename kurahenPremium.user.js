@@ -442,11 +442,10 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
-		var otherChild = document.getElementsByClassName('poster-id-' + userId);
-
-		for (var i = 0; i < otherChild.length; i++) {
-			otherChild[i].nextSibling.textContent = buttonLabel;
-			otherChild[i].nextSibling.title = newTitle;
+		var buttons = document.querySelector("[highlight-button-id='" +userId + "']");
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].textContent = buttonLabel;
+			buttons[i].title = newTitle;
 		}
 	};
 
@@ -506,6 +505,7 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
+		var this_object = this;
 		var highlightPostsCallback = function () { this_object.highlightPostsById(userId); };
 		for (var i = 0; i < userPosts.length; i++) {
 			var showPostsButton = document.createElement('span');
@@ -518,7 +518,7 @@ var main = function () {
 			showPostsButton.textContent = showPostsStr;
 			showPostsButton.title = 'Podświetl posty tego użytkownika';
 			showPostsButton.className = 'highlighting-button';
-			var this_object = this;
+			showPostsButton.setAttribute('highlight-button-id', userId);
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
 
 			userPosts[i].parentNode.appendChild(showPostsButton);
