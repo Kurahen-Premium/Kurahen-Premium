@@ -347,8 +347,8 @@ var main = function () {
 		var opId;
 		for (var i = 0; i < postersIds.length; i++) {
 			var posterId = this.parsePosterId(postersIds[i].textContent);
-			postersIds[i].title = posterId;
 			posterId = posterId.replace(/[\.|\/|\+|\-]/g, '_');
+			postersIds[i].title = posterId;
 
 			if (i === 0) {
 				opId = posterId;
@@ -433,22 +433,6 @@ var main = function () {
 		return id.substr(2, id.length - 2);
 	};
 
-	KurahenPremium.prototype.setAllPostsOpacity = function (opacity_value) {
-		var allPosts = [];
-
-		var otherReplies = document.getElementsByClassName('postContainer replyContainer'); 
-
-		for (var i = 0; i < otherReplies.length; i++) {
-			allPosts.push(otherReplies[i]);
-		}
-
-		allPosts.push(document.getElementsByClassName('postContainer opContainer')[0]);
-
-		for (var j = 0; j < allPosts.length; j++) {
-			allPosts[j].style.opacity = opacity_value;
-		}
-	};
-
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
 		var buttons = document.getElementsByClassName('show-posts-'+userId);
 
@@ -463,30 +447,22 @@ var main = function () {
 			var showPostsStr = '   Pokaż posty';
 
 			if (showPostCountNearHighlightPostsButton) {
-				showPostsStr += ' (' + document.getElementsByClassName('posteruid poster-id-' + userId).length + ')';
+				showPostsStr += ' (' + document.getElementsByClassName('poster-id-' + userId).length + ')';
 			}
 
 			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytkownika');
 		}
 
 		if (this.nowHighlightedPostsUserId === userId) {
-			//this.setAllPostsOpacity(1.0);
 			this.showAllPosts();
 			this.nowHighlightedPostsUserId = false;
 		}
-		else {
+		else  {
 			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
-			//this.setAllPostsOpacity(unhighlightedPostOpacity);
 			this.hideAllPostsExcept(userId);
 
-			//var postsWithGivenId = document.getElementsByClassName('posteruid poster-id-' + userId);
-			//for (var i = 0; i < postsWithGivenId.length; i++) {
-			//	var postNo = this.getPostNo(postsWithGivenId[i]);
-
-			//}
-
 			this.nowHighlightedPostsUserId = userId;
-		}
+			}
 	};
 
 
