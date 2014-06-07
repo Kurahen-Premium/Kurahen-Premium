@@ -18,6 +18,12 @@
 // @exclude     https://www.karachan.co/*/src/*
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
+
+// @match       *://64.120.230.218/*
+// @exclude     http://64.120.230.218/*/src/*
+// @exclude     https://64.120.230.218/*/src/*
+// @exclude     http://64.120.230.218/*/src/*
+// @exclude     https://64.120.230.218/*/src/*
 // ==/UserScript==
 
 /*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
