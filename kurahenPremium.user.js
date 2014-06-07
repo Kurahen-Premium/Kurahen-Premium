@@ -404,9 +404,9 @@ var main = function () {
 		style += '.highlighting-button { font-size: 11px; cursor:pointer}\n';
 		style += '.highlighting-button:hover { color: orange;}\n';
 		GM_addStyle(style);
-		var allUsrPosts = document.getElementsByClassName('postContainer');
-		for (i = 0; i < allUsrPosts.length; i++) {
-			allUsrPosts[i].classList.add('post-animated');
+		var allUserPosts = document.getElementsByClassName('postContainer');
+		for (i = 0; i < allUserPosts.length; i++) {
+			allUserPosts[i].classList.add('post-animated');
 		}
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
@@ -443,7 +443,6 @@ var main = function () {
 
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
 		var buttons = document.querySelectorAll("[highlight-button-id='" + userId + "']");
-		console.log(buttons);
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].textContent = buttonLabel;
 			buttons[i].title = newTitle;
@@ -472,7 +471,6 @@ var main = function () {
 			this.nowHighlightedPostsUserId = userId;
 		}
 	};
-
 
 	KurahenPremium.prototype.hideAllPostsExcept = function (userId) {
 		// lower opacity for all posts exept this with given id
@@ -506,8 +504,8 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
-		var this_object = this;
-		var highlightPostsCallback = function () { this_object.highlightPostsById(userId); };
+		var self = this;
+		var highlightPostsCallback = function () { self.highlightPostsById(userId); };
 		for (var i = 0; i < userPosts.length; i++) {
 			var showPostsButton = document.createElement('span');
 			var showPostsStr = '   Pokaż posty';
