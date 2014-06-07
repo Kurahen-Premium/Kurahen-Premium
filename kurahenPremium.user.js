@@ -174,7 +174,7 @@ var main = function () {
 
 		var links = postMessage.getElementsByClassName('postlink');
 		for (var i = 0; i < links.length; i++) {
-			postMessage.removeChild(links[i]);
+			links[i].parentNode.removeChild(links[i]);
 		}
 
 		var quoteLinks = postMessage.getElementsByClassName('quotelink');
@@ -926,7 +926,7 @@ var main = function () {
 
 		var links = postMessage.getElementsByClassName('postlink');
 		for (var i = 0; i < links.length; i++) {
-			postMessage.removeChild(links[i]);
+			links[i].parentNode.removeChild(links[i]);
 		}
 
 		var quoteLinks = postMessage.getElementsByClassName('quotelink');
