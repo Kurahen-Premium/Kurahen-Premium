@@ -38,10 +38,10 @@ var main = function () {
 	var enableJumpButtons = true;  /* włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta */
 
 	// Zaawansowana konfiguracja
-	
+
 	var unhighlightedPostOpacity = 0.3; /* Przezroczystość postów niepodświetlonych przy 
 		pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty */
-		
+
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
 		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
@@ -127,11 +127,11 @@ var main = function () {
 		}
 
 		this.threadsWatcher = new ThreadsWatcher();
-		
+
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
 	};
-	
+
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
 		document.title = newTitle;
 		document.getElementsByClassName('boardTitle')[0].textContent = newTitle;
@@ -381,16 +381,17 @@ var main = function () {
 				} else {
 					txt = ' postów';
 				}
-				
-				if (showPostCountNearId)
-					style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt +')\u00a0"}\n';
-				
+
+				if (showPostCountNearId) {
+					style += '.poster-id-' + id + ':after{content:" (' + postersStats[id].length + txt + ')\u00a0"}\n';
+				}
 				if (enableHighlightPostsButton) {
 					this.setHighlightPostsButton(postersStats[id], id);
 				}
-				
-				if (enableJumpButtons)
+
+				if (enableJumpButtons) {
 					this.setJumpButtons(postersStats[id]);
+				}
 			}
 		}
 
@@ -434,7 +435,7 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
-		var buttons = document.getElementsByClassName('show-posts-'+userId);
+		var buttons = document.getElementsByClassName('show-posts-' + userId);
 
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].textContent = buttonLabel;
@@ -470,7 +471,10 @@ var main = function () {
 		// lower opacity for all posts exept this with given id
 		var allposts = document.getElementsByClassName('postContainer');
 		for (var i = 0; i < allposts.length; i++) {
-			if(this.getIdFromPostContainter(allposts[i]) === userId) continue;
+			if (this.getIdFromPostContainter(allposts[i]) === userId) {
+				allposts[i].classList.remove('hiden-post');
+				continue;
+			}
 			allposts[i].classList.add('hiden-post');
 		}
 	};
@@ -495,7 +499,7 @@ var main = function () {
 	};
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
-		var highlightPostsCallback = function() { this_object.highlightPostsById(userId); };
+		var highlightPostsCallback = function () { this_object.highlightPostsById(userId); };
 		for (var i = 0; i < userPosts.length; i++) {
 			var showPostsButton = document.createElement('a');
 			var showPostsStr = '   Pokaż posty';
@@ -504,11 +508,11 @@ var main = function () {
 				showPostsStr += ' (' + userPosts.length + ')';
 			}
 
-			showPostsButton.textContent  = showPostsStr;
-			showPostsButton.title = 'Podświetl posty tego użytnika';
+			showPostsButton.textContent = showPostsStr;
+			showPostsButton.title = 'Podświetl posty tego użytkownika';
 			showPostsButton.style.fontSize = '11px';
 			showPostsButton.href = 'javascript:void(0)';
-			showPostsButton.className = 'show-posts-'+userId;
+			showPostsButton.className = 'show-posts-' + userId;
 
 			var this_object = this;
 			showPostsButton.addEventListener('click', highlightPostsCallback, false);
