@@ -363,7 +363,7 @@ var main = function () {
 
 			postersIds[i].className += ' poster-id-' + posterId;
 			if (roundedIdBackground) {
-				postersIds[i].className += ' id-rouded';
+				postersIds[i].className += ' id-rounded';
 			}
 			if (posterId === opId) {
 				postersIds[i].textContent = '\u00a0OP nitki';
@@ -405,7 +405,7 @@ var main = function () {
 		}
 
 		if (roundedIdBackground) {
-			style += '.id-rouded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
+			style += '.id-rounded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
 		}
 		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
 		style += '.post-animated { transition: opacity 0.4s}\n';
