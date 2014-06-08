@@ -39,14 +39,11 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var enableHighlightPostsButton = true; /* Dodaje przycisk obok id posta który pozwala 
-		na podświetlenie wszystkich postów danego użytkownika */
-	var enableJumpButtons = true;  /* włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta */
+	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
+	var enableJumpButtons = true; // Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
 
 	// Zaawansowana konfiguracja
-
-	var unhighlightedPostOpacity = 0.3; /* Przezroczystość postów niepodświetlonych przy 
-		pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty */
+	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
 
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
@@ -132,10 +129,10 @@ var main = function () {
 			this.enlargeOnlineCountFont();
 		}
 
-		this.threadsWatcher = new ThreadsWatcher();
-
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
+
+		this.threadsWatcher = new ThreadsWatcher();
 	};
 
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
@@ -396,6 +393,7 @@ var main = function () {
 					style += '.poster-id-' + id + ':after{content:" (';
 					style += postersStats[id].length + numeral + ')\u00a0"}\n';
 				}
+
 				if (enableHighlightPostsButton) {
 					this.setHighlightPostsButton(postersStats[id], id);
 				}
@@ -415,6 +413,7 @@ var main = function () {
 		style += '.highlighting-button { font-size: 11px; cursor:pointer}\n';
 		style += '.highlighting-button:hover { color: orange;}\n';
 		GM_addStyle(style);
+
 		var allUserPosts = document.getElementsByClassName('postContainer');
 		for (i = 0; i < allUserPosts.length; i++) {
 			allUserPosts[i].classList.add('post-animated');
@@ -447,8 +446,8 @@ var main = function () {
 	/**
 	 * @private
 	 */
-	KurahenPremium.prototype.getPostNo = function (userpost) {
-		var id = userpost.parentNode.parentNode.getAttribute('id');
+	KurahenPremium.prototype.getPostNo = function (userPost) {
+		var id = userPost.parentNode.parentNode.getAttribute('id');
 		return id.substr(2, id.length - 2);
 	};
 
@@ -462,7 +461,7 @@ var main = function () {
 
 	KurahenPremium.prototype.highlightPostsById = function (userId) {
 		if (this.nowHighlightedPostsUserId) {
-			var showPostsStr = '   Pokaż posty';
+			var showPostsStr = ' Pokaż posty';
 
 			if (showPostCountNearHighlightPostsButton) {
 				showPostsStr += ' (' + document.getElementsByClassName('poster-id-' + userId).length + ')';
@@ -474,36 +473,34 @@ var main = function () {
 		if (this.nowHighlightedPostsUserId === userId) {
 			this.showAllPosts();
 			this.nowHighlightedPostsUserId = false;
-		}
-		else {
-			this.setButtonLabelsForId(userId, '  Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
+		} else {
+			this.setButtonLabelsForId(userId, ' Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
 			this.hideAllPostsExcept(userId);
-
 			this.nowHighlightedPostsUserId = userId;
 		}
 	};
 
 	KurahenPremium.prototype.hideAllPostsExcept = function (userId) {
-		// lower opacity for all posts exept this with given id
-		var allposts = document.getElementsByClassName('postContainer');
-		for (var i = 0; i < allposts.length; i++) {
-			if (this.getIdFromPostContainter(allposts[i]) === userId) {
-				allposts[i].classList.remove('hiden-post');
+		// lower opacity for all posts except these with given id
+		var allPosts = document.getElementsByClassName('postContainer');
+		for (var i = 0; i < allPosts.length; i++) {
+			if (this.getIdFromPostContainer(allPosts[i]) === userId) {
+				allPosts[i].classList.remove('hiden-post');
 				continue;
 			}
-			allposts[i].classList.add('hiden-post');
+			allPosts[i].classList.add('hiden-post');
 		}
 	};
 
 	KurahenPremium.prototype.showAllPosts = function () {
 		// set normal opacity for all posts
-		var allposts = document.getElementsByClassName('postContainer');
-		for (var i = 0; i < allposts.length; i++) {
-			allposts[i].classList.remove('hiden-post');
+		var allPosts = document.getElementsByClassName('postContainer');
+		for (var i = 0; i < allPosts.length; i++) {
+			allPosts[i].classList.remove('hiden-post');
 		}
 	};
 
-	KurahenPremium.prototype.getIdFromPostContainter = function (postContainer) {
+	KurahenPremium.prototype.getIdFromPostContainer = function (postContainer) {
 		// depends on modified page src
 		var idElement = postContainer.getElementsByClassName('posteruid')[0];
 		for (var i = 0; idElement.classList.length; i++) {
@@ -516,10 +513,12 @@ var main = function () {
 
 	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
 		var self = this;
-		var highlightPostsCallback = function () { self.highlightPostsById(userId); };
+		var highlightPostsCallback = function () {
+			self.highlightPostsById(userId);
+		};
 		for (var i = 0; i < userPosts.length; i++) {
 			var showPostsButton = document.createElement('span');
-			var showPostsStr = '   Pokaż posty';
+			var showPostsStr = ' Pokaż posty';
 
 			if (showPostCountNearHighlightPostsButton) {
 				showPostsStr += ' (' + userPosts.length + ')';
