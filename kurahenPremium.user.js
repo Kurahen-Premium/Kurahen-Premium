@@ -2,7 +2,10 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.2.1
+// @version     1.3.0
+// @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
+
+// @grant       GM_addStyle
 
 // @match       *://*.karachan.org/*
 // @exclude     http://www.karachan.org/*/src/*
@@ -15,10 +18,16 @@
 // @exclude     https://www.karachan.co/*/src/*
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
+
+// @match       *://64.120.230.218/*
+// @exclude     http://64.120.230.218/*/src/*
+// @exclude     https://64.120.230.218/*/src/*
+// @exclude     http://64.120.230.218/*/src/*
+// @exclude     https://64.120.230.218/*/src/*
 // ==/UserScript==
 
-/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, eqeqeq:true,
- strict:true, undef:true, bitwise:true, browser:true, devel:true */
+/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
+ eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
 /*global GM_addStyle:false */
 
 var main = function () {
@@ -29,9 +38,19 @@ var main = function () {
 	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
+	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
+	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
+	var enableJumpButtons = true; // Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
 
 	// Zaawansowana konfiguracja
+	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
+
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
+	var specialCharacters = [
+		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
+		{contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP'}
+	];
+
 	var wordfilters = [
 		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
 		['#gimbo', 'xD'],
@@ -66,6 +85,13 @@ var main = function () {
 		'#be5f7e',
 		'#7bc8f6'
 	];
+
+	/* internal configuration flags */
+	var roundedIdBackground = true;
+	var showPostCountNearHighlightPostsButton = true;
+	var showPostCountNearId = false;
+
+	showPostCountNearId = !enableHighlightPostsButton;
 
 	var KurahenPremium = function () {
 		var currentBoardName = this.getCurrentBoardName();
@@ -102,6 +128,10 @@ var main = function () {
 		if (biggerOnlineCountFont) {
 			this.enlargeOnlineCountFont();
 		}
+
+		/* variable used to change "highlight posts" button state */
+		this.nowHighlightedPostsUserId = false;
+
 		this.threadsWatcher = new ThreadsWatcher();
 	};
 
@@ -167,6 +197,9 @@ var main = function () {
 		}
 
 		var postContent = postMessage.textContent;
+		if (postContent === '') {
+			return '(brak treści posta)';
+		}
 		return postContent.substr(0, Math.min(postContent.length, 70));
 	};
 
@@ -277,23 +310,24 @@ var main = function () {
 		for (var i = 0; i < links.length; i++) {
 			var url = links[i].getAttribute('href');
 
-			if (url.indexOf('youtu') > -1) {
-				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
-				if (urlParameters === null || urlParameters.length !== 2) {
-					continue;
-				}
-
-				var youtubeContainer = document.createElement('div');
-				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
-					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
-
-				if (links[i].nextSibling) {
-					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
-				} else {
-					links[i].parentNode.appendChild(youtubeContainer);
-				}
-				links[i].style.display = 'none';
-			} else if (url.indexOf('http://vocaroo.com') > -1) {
+//			if (url.indexOf('youtu') > -1) {
+//				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
+//				if (urlParameters === null || urlParameters.length !== 2) {
+//					continue;
+//				}
+//
+//				var youtubeContainer = document.createElement('div');
+//				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
+//					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
+//
+//				if (links[i].nextSibling) {
+//					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
+//				} else {
+//					links[i].parentNode.appendChild(youtubeContainer);
+//				}
+//				links[i].style.display = 'none';
+//			} else
+			if (url.indexOf('http://vocaroo.com') > -1) {
 				var vocarooId = url.substr(url.length - 12, 12);
 
 				var vocarooContainer = document.createElement('div');
@@ -328,28 +362,62 @@ var main = function () {
 			}
 
 			postersIds[i].className += ' poster-id-' + posterId;
+			if (roundedIdBackground) {
+				postersIds[i].className += ' id-rounded';
+			}
 			if (posterId === opId) {
 				postersIds[i].textContent = '\u00a0OP nitki';
 			} else {
 				postersIds[i].textContent = '\u00a0' + posterId;
 			}
 
-			if (isNaN(postersStats[posterId])) {
-				postersStats[posterId] = 1;
+			if (typeof postersStats[posterId] === 'undefined') {
+				postersStats[posterId] = [postersIds[i]];
 			} else {
-				postersStats[posterId]++;
+				postersStats[posterId].push(postersIds[i]);
 			}
 		}
 
 		var style = '';
 		for (var id in postersStats) {
-			if (postersStats.hasOwnProperty(id) && postersStats[id] > 1) {
+			if (postersStats.hasOwnProperty(id) && postersStats[id].length > 1) {
 				style += '.poster-id-' + id + '{color:#000;background-color: ' + this.getNextColor() + ';}\n';
-				style += '.poster-id-' + id + ':after{content:" (' + postersStats[id] + ' postów)\u00a0"}\n';
+				var numeral;
+				if (postersStats[id].length < 5) {
+					numeral = ' posty';
+				} else {
+					numeral = ' postów';
+				}
+
+				if (showPostCountNearId) {
+					style += '.poster-id-' + id + ':after{content:" (';
+					style += postersStats[id].length + numeral + ')\u00a0"}\n';
+				}
+
+				if (enableHighlightPostsButton) {
+					this.setHighlightPostsButton(postersStats[id], id);
+				}
+
+				if (enableJumpButtons) {
+					this.setJumpButtons(postersStats[id]);
+				}
 			}
 		}
+
+		if (roundedIdBackground) {
+			style += '.id-rounded { font-size: 11px; border-radius: 6px; padding: 0px 6px 0px 2px;}\n';
+		}
+		style += '.small-icon { font-size: 16px; vertical-align: middle }\n';
+		style += '.post-animated { transition: opacity 0.4s}\n';
+		style += '.hiden-post { opacity: ' + unhighlightedPostOpacity + '}\n';
+		style += '.highlighting-button { font-size: 11px; cursor:pointer}\n';
+		style += '.highlighting-button:hover { color: orange;}\n';
 		GM_addStyle(style);
 
+		var allUserPosts = document.getElementsByClassName('postContainer');
+		for (i = 0; i < allUserPosts.length; i++) {
+			allUserPosts[i].classList.add('post-animated');
+		}
 		var firstPostBar = document.querySelector('.opContainer .postInfo');
 		var threadPostersStats = document.createElement('span');
 		threadPostersStats.textContent = ' (' + postersIds.length + ' postów od ' + Object.keys(postersStats).length +
@@ -375,6 +443,134 @@ var main = function () {
 		return text.trim().substr(5, 8);
 	};
 
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.getPostNo = function (userPost) {
+		var id = userPost.parentNode.parentNode.getAttribute('id');
+		return id.substr(2, id.length - 2);
+	};
+
+	KurahenPremium.prototype.setButtonLabelsForId = function (userId, buttonLabel, newTitle) {
+		var buttons = document.querySelectorAll('[highlight-button-id="' + userId + '"]');
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].textContent = buttonLabel;
+			buttons[i].title = newTitle;
+		}
+	};
+
+	KurahenPremium.prototype.highlightPostsById = function (userId) {
+		if (this.nowHighlightedPostsUserId) {
+			var showPostsStr = ' Pokaż posty';
+
+			if (showPostCountNearHighlightPostsButton) {
+				showPostsStr += ' (' + document.getElementsByClassName('poster-id-' + userId).length + ')';
+			}
+
+			this.setButtonLabelsForId(this.nowHighlightedPostsUserId, showPostsStr, 'Podświetl posty tego użytkownika');
+		}
+
+		if (this.nowHighlightedPostsUserId === userId) {
+			this.showAllPosts();
+			this.nowHighlightedPostsUserId = false;
+		} else {
+			this.setButtonLabelsForId(userId, ' Pokaż wszystkie', 'Wróć do widoku wszystkich postów');
+			this.hideAllPostsExcept(userId);
+			this.nowHighlightedPostsUserId = userId;
+		}
+	};
+
+	KurahenPremium.prototype.hideAllPostsExcept = function (userId) {
+		// lower opacity for all posts except these with given id
+		var allPosts = document.getElementsByClassName('postContainer');
+		for (var i = 0; i < allPosts.length; i++) {
+			if (this.getIdFromPostContainer(allPosts[i]) === userId) {
+				allPosts[i].classList.remove('hiden-post');
+				continue;
+			}
+			allPosts[i].classList.add('hiden-post');
+		}
+	};
+
+	KurahenPremium.prototype.showAllPosts = function () {
+		// set normal opacity for all posts
+		var allPosts = document.getElementsByClassName('postContainer');
+		for (var i = 0; i < allPosts.length; i++) {
+			allPosts[i].classList.remove('hiden-post');
+		}
+	};
+
+	KurahenPremium.prototype.getIdFromPostContainer = function (postContainer) {
+		// depends on modified page src
+		var idElement = postContainer.getElementsByClassName('posteruid')[0];
+		for (var i = 0; idElement.classList.length; i++) {
+			if (idElement.classList.item(i).indexOf('poster-id-') > -1) {
+				return idElement.classList.item(i).substr('poster-id-'.length, 8);
+			}
+		}
+		return null;
+	};
+
+	KurahenPremium.prototype.setHighlightPostsButton = function (userPosts, userId) {
+		var self = this;
+		var highlightPostsCallback = function () {
+			self.highlightPostsById(userId);
+		};
+		for (var i = 0; i < userPosts.length; i++) {
+			var showPostsButton = document.createElement('span');
+			var showPostsStr = ' Pokaż posty';
+
+			if (showPostCountNearHighlightPostsButton) {
+				showPostsStr += ' (' + userPosts.length + ')';
+			}
+
+			showPostsButton.textContent = showPostsStr;
+			showPostsButton.title = 'Podświetl posty tego użytkownika';
+			showPostsButton.className = 'highlighting-button';
+			showPostsButton.setAttribute('highlight-button-id', userId);
+			showPostsButton.addEventListener('click', highlightPostsCallback, false);
+
+			userPosts[i].parentNode.appendChild(showPostsButton);
+		}
+	};
+
+	KurahenPremium.prototype.setJumpButtonForPost = function (post, prev, next) {
+		var newButtonsContainer = document.createElement('span');
+		newButtonsContainer.style.marginLeft = '3px';
+
+		if (prev !== null) {
+			var upButton = document.createElement('a');
+			upButton.className = 'fa fa-chevron-up small-icon';
+			upButton.title = 'Poprzedni post tego użytkownika';
+			upButton.href = '#p' + prev;
+			newButtonsContainer.appendChild(upButton);
+		}
+		if (next !== null) {
+			var downButton = document.createElement('a');
+			downButton.className = 'fa fa-chevron-down small-icon';
+			downButton.title = 'Następny post tego użytkownika';
+			downButton.href = '#p' + next;
+			newButtonsContainer.appendChild(downButton);
+		}
+
+		post.parentNode.appendChild(newButtonsContainer);
+	};
+
+	KurahenPremium.prototype.setJumpButtons = function (userPosts) {
+		var postsNo = [];
+
+		for (var i = 0; i < userPosts.length; i++) {
+			postsNo.push(this.getPostNo(userPosts[i]));
+		}
+
+		this.setJumpButtonForPost(userPosts[0], null, postsNo[1]);
+		this.setJumpButtonForPost(userPosts[userPosts.length - 1], postsNo[postsNo.length - 2], null);
+
+		for (i = 1; i < userPosts.length - 1; i++) {
+			this.setJumpButtonForPost(userPosts[i], postsNo[i - 1], postsNo[i + 1]);
+		}
+	};
+
 	KurahenPremium.prototype.insertButtonBar = function () {
 		var postForm = document.getElementById('postform');
 		var textarea = document.querySelector('#postform textarea');
@@ -382,6 +578,7 @@ var main = function () {
 		buttonBar.style.textAlign = 'center';
 
 		this.insertTextFormattingButtons(textarea, buttonBar);
+		this.insertSpecialCharButtons(textarea, buttonBar);
 		this.insertWordfilterList(textarea, buttonBar);
 
 		postForm.insertBefore(buttonBar, postForm.firstChild);
@@ -452,6 +649,39 @@ var main = function () {
 		}
 
 		buttonBar.appendChild(wordfiltersSelect);
+	};
+
+	/**
+	 * @private
+	 */
+	KurahenPremium.prototype.insertSpecialCharButtons = function (textarea, buttonBar) {
+		var onButtonClick = function () {
+			var injectedChar;
+			for (var i = 0; i < specialCharacters.length; i++) {
+				if (specialCharacters[i].buttonLabel === this.value) {
+					injectedChar = specialCharacters[i].contentToInsert;
+					break;
+				}
+			}
+
+			var beforeSelect = textarea.value.substring(0, textarea.selectionStart);
+			var afterSelect = textarea.value.substring(textarea.selectionStart, textarea.value.length);
+			textarea.value = beforeSelect + injectedChar + afterSelect;
+
+			textarea.focus();
+			textarea.selectionStart += 1;
+			textarea.selectionEnd = textarea.selectionStart;
+		};
+
+		for (var i = 0; i < specialCharacters.length; i++) {
+			var button = document.createElement('input');
+			button.type = 'button';
+			button.value = specialCharacters[i].buttonLabel;
+			button.title = specialCharacters[i].buttonTitle;
+
+			button.addEventListener('click', onButtonClick, false);
+			buttonBar.appendChild(button);
+		}
 	};
 
 	/**
@@ -651,9 +881,9 @@ var main = function () {
 		} else if (unreadPostsNumber < 0) {
 			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
-					if (status === 200 && numberOfNewPosts > 0) {
+					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
-					} else if (status === 200 && numberOfNewPosts === 0) {
+					} else if (status === 200 && hideThreadsWithNoNewPosts && numberOfNewPosts === 0) {
 						self.removeThreadListWindowEntry(threadId, boardName);
 					} else if (status === 404) {
 						self.removeThreadListWindowEntry(threadId, boardName);

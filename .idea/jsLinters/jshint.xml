@@ -51,7 +51,7 @@
     <option predef="GM_addStyle:false" />
     <option proto="false" />
     <option prototypejs="false" />
-    <option quotmark="false" />
+    <option quotmark="single" />
     <option rhino="false" />
     <option scripturl="false" />
     <option shadow="false" />
