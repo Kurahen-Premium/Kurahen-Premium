@@ -28,3 +28,5 @@ co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienk
 * wszystkie zewnętrzne linki są otwierane domyślnie w nowej karcie
 * styl Night jest zablokowany przed przypadkowym wyborem
 * domyślna czcionka jest zmieniona na czytelniejszą na ekranach LCD (ale można ją wyłączyć)
+
+Pozostałe funkcje i najnowsze zmiany znajdziesz na [stronie z listą wydanych wersji](https://github.com/kucanon/Kurahen-Premium/releases).
