@@ -26,8 +26,8 @@
 // @exclude     https://64.120.230.218/*/src/*
 // ==/UserScript==
 
-/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
- eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
+/*jshint nonew:true, curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single,
+ eqeqeq:true, strict:true, undef:true, bitwise:true, newcap:false, browser:true, devel:true, maxlen:120, nonbsp:true */
 /*global GM_addStyle:false */
 
 var main = function () {
@@ -39,11 +39,13 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
+	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich
+	                                       // postów danego użytkownika
 	var enableJumpButtons = true; // Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
 
 	// Zaawansowana konfiguracja
-	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
+	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego
+	                                    // użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
 
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
@@ -853,7 +855,8 @@ var main = function () {
 		document.body.appendChild(script);
 	};
 
-	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber, topic) {
+	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber,
+		topic) {
 		var entry = document.createElement('li');
 		entry.id = 'wl_' + boardName + '_' + id;
 
