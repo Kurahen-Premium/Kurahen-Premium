@@ -19,11 +19,11 @@
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
 
-// @match       *://64.120.230.218/*
-// @exclude     http://64.120.230.218/*/src/*
-// @exclude     https://64.120.230.218/*/src/*
-// @exclude     http://64.120.230.218/*/src/*
-// @exclude     https://64.120.230.218/*/src/*
+// @match       *://96.8.113.203/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
 // ==/UserScript==
 
 /*jshint nonew:true, curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single,
