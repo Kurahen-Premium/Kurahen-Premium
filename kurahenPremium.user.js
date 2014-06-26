@@ -609,6 +609,7 @@ var main = function () {
 			var button = document.createElement('input');
 			button.type = 'button';
 			button.value = bbCodes[i];
+			button.style.padding = '0 7px';
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
@@ -680,7 +681,7 @@ var main = function () {
 			button.type = 'button';
 			button.value = specialCharacters[i].buttonLabel;
 			button.title = specialCharacters[i].buttonTitle;
-
+			button.style.padding = '0 7px';
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
