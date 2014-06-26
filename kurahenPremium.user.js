@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.3.0
+// @version     1.3.1
 // @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -19,15 +19,15 @@
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
 
-// @match       *://64.120.230.218/*
-// @exclude     http://64.120.230.218/*/src/*
-// @exclude     https://64.120.230.218/*/src/*
-// @exclude     http://64.120.230.218/*/src/*
-// @exclude     https://64.120.230.218/*/src/*
+// @match       *://96.8.113.203/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
 // ==/UserScript==
 
-/*jshint nonew:true, jquery:true, nonstandard:true, curly:true, noarg:true, forin:true, noempty:true, quotmark:single,
- eqeqeq:true, strict:true, undef:true, bitwise:true, browser:true, devel:true */
+/*jshint nonew:true, curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single,
+ eqeqeq:true, strict:true, undef:true, bitwise:true, newcap:false, browser:true, devel:true, maxlen:120, nonbsp:true */
 /*global GM_addStyle:false */
 
 var main = function () {
@@ -39,15 +39,17 @@ var main = function () {
 	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
 	var biggerOnlineCountFont = false; // Większa czcionka liczby online
 	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
+	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich
+	                                       // postów danego użytkownika
 	var enableJumpButtons = true; // Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
 
 	// Zaawansowana konfiguracja
-	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
+	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego
+	                                    // użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
 
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
-		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
+		{contentToInsert: '\u2026', buttonTitle: 'Wielokropek', buttonLabel: '\u2026'},
 		{contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP'}
 	];
 
@@ -607,6 +609,7 @@ var main = function () {
 			var button = document.createElement('input');
 			button.type = 'button';
 			button.value = bbCodes[i];
+			button.style.padding = '0 7px';
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
@@ -678,7 +681,7 @@ var main = function () {
 			button.type = 'button';
 			button.value = specialCharacters[i].buttonLabel;
 			button.title = specialCharacters[i].buttonTitle;
-
+			button.style.padding = '0 7px';
 			button.addEventListener('click', onButtonClick, false);
 			buttonBar.appendChild(button);
 		}
@@ -853,7 +856,8 @@ var main = function () {
 		document.body.appendChild(script);
 	};
 
-	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber, topic) {
+	ThreadsWatcher.prototype.addThreadListWindowEntry = function (id, boardName, lastReadPostId, unreadPostsNumber,
+		topic) {
 		var entry = document.createElement('li');
 		entry.id = 'wl_' + boardName + '_' + id;
 
