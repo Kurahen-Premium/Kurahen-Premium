@@ -49,7 +49,7 @@ var main = function () {
 
 	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
 	var specialCharacters = [
-		{contentToInsert: '\u2026', buttonTitle: 'Trzykopek', buttonLabel: '\u2026'},
+		{contentToInsert: '\u2026', buttonTitle: 'Wielokropek', buttonLabel: '\u2026'},
 		{contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP'}
 	];
 
