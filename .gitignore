@@ -4,3 +4,6 @@
 
 # Windows
 Thumbs.db
+
+# Dev
+/node_modules/
