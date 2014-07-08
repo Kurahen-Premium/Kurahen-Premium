@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		ts: {
 			build: {
 				src: ['src/**/*.ts'],
-				out: 'out.js',
+				out: 'kurahenPremium.user.js',
 				options: {
 					// 'es3' (default) | 'es5'
 					target: 'es5',
@@ -19,14 +19,34 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			build: {
-				src: ['src/header.txt', 'out.js'],
-				dest: 'out.js'
+				src: ['src/userscriptMetadata.txt', 'kurahenPremium.user.js'],
+				dest: 'kurahenPremium.user.js'
+			}
+		},
+		'string-replace': {
+			version: {
+				files: {
+					'kurahenPremium.user.js': 'kurahenPremium.user.js'
+				},
+				options: {
+					replacements: [
+						{
+							pattern: /{{ VERSION }}/g,
+							replacement: '<%= pkg.version %>'
+						}
+					]
+				}
 			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-ts');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-string-replace');
 
-	grunt.registerTask('default', ['ts:build', 'concat:build']);
+	grunt.registerTask('default', [
+		'ts:build',
+		'concat:build',
+		'string-replace:version'
+	]);
 };
