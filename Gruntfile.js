@@ -37,16 +37,28 @@ module.exports = function (grunt) {
 					]
 				}
 			}
+		},
+		'jsbeautifier': {
+			files: ['kurahenPremium.user.js'],
+			options: {
+				js: {
+					indentWithTabs: true,
+					jslintHappy: true,
+					wrapLineLength: 120
+				}
+			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-ts');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-string-replace');
+	grunt.loadNpmTasks('grunt-jsbeautifier');
 
 	grunt.registerTask('default', [
 		'ts:build',
 		'concat:build',
-		'string-replace:version'
+		'string-replace:version',
+		'jsbeautifier'
 	]);
 };
