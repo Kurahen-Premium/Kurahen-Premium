@@ -217,7 +217,7 @@ class ThreadsWatcher {
 	}
 
 	addWatchButtonsToPosts() {
-		var postsBars = document.querySelectorAll('.opContainer .postInfo');
+		var postsBars = <HTMLElement[]><any>document.querySelectorAll('.opContainer .postInfo');
 		var self = this;
 		var toggleWatchLabel = function () {
 			if (this.textContent === 'Nie obserwuj') {
@@ -232,7 +232,7 @@ class ThreadsWatcher {
 			var postId = this.parsePostId(postsBars[i]);
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
-			watchButton.setAttribute('data-post-id', postId);
+			watchButton.setAttribute('data-post-id', postId.toString());
 			watchButton.addEventListener('click', toggleWatchLabel, false);
 
 			var watchButtonContainer = document.createElement('span');
@@ -270,7 +270,7 @@ class ThreadsWatcher {
 	}
 
 	getNewestPostIdFromThread(threadId) {
-		var posts = document.querySelectorAll('.thread[id$="' + threadId + '"] .postContainer');
+		var posts = <HTMLElement[]><any>document.querySelectorAll('.thread[id$="' + threadId + '"] .postContainer');
 		return parseInt(posts[posts.length - 1].id.substr(2));
 	}
 

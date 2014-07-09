@@ -159,7 +159,7 @@ class KurahenPremium {
 	}
 
 	showAllPostersEmails() {
-		var postersEmails = document.getElementsByClassName('useremail');
+		var postersEmails = <HTMLElement[]><any>document.getElementsByClassName('useremail');
 
 		for (var i = 0; i < postersEmails.length; i++) {
 			postersEmails[i].textContent += ' (' + this.parseMailto(postersEmails[i].getAttribute('href')) + ') ';
@@ -176,7 +176,7 @@ class KurahenPremium {
 	}
 
 	fixAllHiders() {
-		var hiders = document.getElementsByClassName('hider');
+		var hiders = <HTMLElement[]><any>document.getElementsByClassName('hider');
 		for (var i = 0; i < hiders.length; i++) {
 			var hiderTextContent = hiders[i].textContent;
 			if (hiderTextContent === '[-]') {
@@ -188,14 +188,14 @@ class KurahenPremium {
 	}
 
 	fixAllExpanders() {
-		var expanders = document.getElementsByClassName('expander');
+		var expanders = <HTMLElement[]><any>document.getElementsByClassName('expander');
 		for (var i = 0; i < expanders.length; i++) {
 			expanders[i].textContent = 'Rozwiń';
 		}
 	}
 
 	fixAllExternalLinks() {
-		var links = document.getElementsByClassName('postlink');
+		var links = <HTMLElement[]><any>document.getElementsByClassName('postlink');
 		for (var i = 0; i < links.length; i++) {
 			links[i].setAttribute('href', links[i].getAttribute('href').replace('https://href.li/?', ''));
 			links[i].setAttribute('target', '_blank');
@@ -257,7 +257,7 @@ class KurahenPremium {
 	}
 
 	colorizeAndNamePosters() {
-		var postersIds = document.getElementsByClassName('posteruid');
+		var postersIds = <HTMLElement[]><any>document.getElementsByClassName('posteruid');
 		var postersStats = {};
 
 		var opId;
@@ -323,7 +323,7 @@ class KurahenPremium {
 		style += '.highlighting-button:hover { color: orange;}\n';
 		GM_addStyle(style);
 
-		var allUserPosts = document.getElementsByClassName('postContainer');
+		var allUserPosts = <HTMLElement[]><any>document.getElementsByClassName('postContainer');
 		for (i = 0; i < allUserPosts.length; i++) {
 			allUserPosts[i].classList.add('post-animated');
 		}
@@ -361,7 +361,7 @@ class KurahenPremium {
 	}
 
 	setButtonLabelsForId(userId, buttonLabel, newTitle) {
-		var buttons = document.querySelectorAll('[highlight-button-id="' + userId + '"]');
+		var buttons = <HTMLElement[]><any>document.querySelectorAll('[highlight-button-id="' + userId + '"]');
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].textContent = buttonLabel;
 			buttons[i].title = newTitle;
@@ -391,7 +391,7 @@ class KurahenPremium {
 
 	hideAllPostsExcept(userId) {
 		// lower opacity for all posts except these with given id
-		var allPosts = document.getElementsByClassName('postContainer');
+		var allPosts = <HTMLElement[]><any>document.getElementsByClassName('postContainer');
 		for (var i = 0; i < allPosts.length; i++) {
 			if (this.getIdFromPostContainer(allPosts[i]) === userId) {
 				allPosts[i].classList.remove('hiden-post');
@@ -403,7 +403,7 @@ class KurahenPremium {
 
 	showAllPosts() {
 		// set normal opacity for all posts
-		var allPosts = document.getElementsByClassName('postContainer');
+		var allPosts = <HTMLElement[]><any>document.getElementsByClassName('postContainer');
 		for (var i = 0; i < allPosts.length; i++) {
 			allPosts[i].classList.remove('hiden-post');
 		}
