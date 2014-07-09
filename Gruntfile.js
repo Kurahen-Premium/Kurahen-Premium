@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			build: {
-				src: ['src/userscriptMetadata.txt', 'kurahenPremium.user.js'],
+				src: ['src/userscriptMetadata.txt', 'src/jshintSettings.txt', 'kurahenPremium.user.js'],
 				dest: 'kurahenPremium.user.js'
 			}
 		},
