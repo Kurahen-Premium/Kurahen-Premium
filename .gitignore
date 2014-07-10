@@ -7,3 +7,4 @@ Thumbs.db
 
 # Dev
 /node_modules/
+/.tscache/

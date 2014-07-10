@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name        Kurahen Premium
+// @namespace   karachan.org
+// @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
+// @version     {{ VERSION }}
+// @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
+
+// @grant       GM_addStyle
+
+// @match       *://*.karachan.org/*
+// @exclude     http://www.karachan.org/*/src/*
+// @exclude     https://www.karachan.org/*/src/*
+// @exclude     http://karachan.org/*/src/*
+// @exclude     https://karachan.org/*/src/*
+
+// @match       *://*.karachan.co/*
+// @exclude     http://www.karachan.co/*/src/*
+// @exclude     https://www.karachan.co/*/src/*
+// @exclude     http://karachan.co/*/src/*
+// @exclude     https://karachan.co/*/src/*
+
+// @match       *://96.8.113.203/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
+// @exclude     http://96.8.113.203/*/src/*
+// @exclude     https://96.8.113.203/*/src/*
+// ==/UserScript==
