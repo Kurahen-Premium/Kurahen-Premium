@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		'jsbeautifier': {
+		jsbeautifier: {
 			files: ['kurahenPremium.user.js'],
 			options: {
 				js: {
