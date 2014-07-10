@@ -13,7 +13,9 @@ module.exports = function (grunt) {
 					// true (default) | false
 					sourceMap: false,
 					// true (default) | false
-					removeComments: false
+					removeComments: false,
+					htmlModuleTemplate: '<%= filename %>',
+					htmlVarTemplate: '<%= ext %>'
 				}
 			}
 		},
