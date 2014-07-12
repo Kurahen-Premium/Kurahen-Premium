@@ -30,3 +30,7 @@ co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienk
 * domyślna czcionka jest zmieniona na czytelniejszą na ekranach LCD (ale można ją wyłączyć)
 
 Pozostałe funkcje i najnowsze zmiany znajdziesz na [stronie z listą wydanych wersji](https://github.com/kucanon/Kurahen-Premium/releases).
+
+## Jestem kucem i chcę pomóc
+Zapoznaj się z [instrukcją dla kucy](https://github.com/kucanon/Kurahen-Premium/wiki/Instrukcje-dla-kucy).
+Coś niejasne? [Zadaj pytanie](https://github.com/kucanon/Kurahen-Premium/issues/new).
