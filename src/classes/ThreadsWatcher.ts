@@ -92,7 +92,8 @@ class ThreadsWatcher {
 	}
 
 	threadObjectExists(postId, boardName) {
-		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object';
+		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object' &&
+			this.watchedThreads['th_' + boardName + '_' + postId] !== null;
 	}
 
 	threadsSize() {
