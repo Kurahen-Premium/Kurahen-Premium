@@ -7,5 +7,5 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
 	main();
 } else {
 	// Firefox and others
-	window.addEventListener('load', main);
+	window.addEventListener('DOMContentLoaded', main);
 }
