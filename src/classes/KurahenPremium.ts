@@ -623,6 +623,6 @@ class KurahenPremium {
 	}
 
 	isCurrentPage404() {
-		return document.title === '404 - karachan.org';
+		return document.title === '404 Not Found';
 	}
 }
