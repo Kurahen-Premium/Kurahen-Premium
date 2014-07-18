@@ -3,6 +3,14 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		tslint: {
+			options: {
+				configuration: grunt.file.readJSON('src/.tslintrc.json')
+			},
+			build: {
+				src: ['src/*.ts', 'src/classes/*.ts']
+			}
+		},
 		ts: {
 			build: {
 				src: ['src/**/*.ts'],
@@ -52,12 +60,14 @@ module.exports = function (grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks('grunt-tslint');
 	grunt.loadNpmTasks('grunt-ts');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-string-replace');
 	grunt.loadNpmTasks('grunt-jsbeautifier');
 
 	grunt.registerTask('default', [
+		'tslint',
 		'ts:build',
 		'concat:build',
 		'string-replace:version',

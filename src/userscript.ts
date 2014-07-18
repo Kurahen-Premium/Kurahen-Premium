@@ -1,5 +1,9 @@
+interface Window {
+	kurahenPremium: any;
+}
+
 var main = function () {
-	new KurahenPremium();
+	window.kurahenPremium = new KurahenPremium();
 };
 
 if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {

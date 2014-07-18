@@ -11,7 +11,8 @@
     "grunt-contrib-concat": "^0.4.0",
     "grunt-jsbeautifier": "^0.2.7",
     "grunt-string-replace": "^0.2.7",
-    "grunt-ts": "^1.11.3"
+    "grunt-ts": "^1.11.3",
+    "grunt-tslint": "^0.4.2"
   },
   "scripts": {
     "test": "grunt --verbose"
