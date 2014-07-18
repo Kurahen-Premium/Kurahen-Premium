@@ -73,4 +73,11 @@ module.exports = function (grunt) {
 		'string-replace:version',
 		'jsbeautifier'
 	]);
+
+	grunt.registerTask('debug-build', [
+		'ts:build',
+		'concat:build',
+		'string-replace:version',
+		'jsbeautifier'
+	]);
 };
