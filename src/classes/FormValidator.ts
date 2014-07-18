@@ -26,6 +26,12 @@ class FormValidator {
 				return;
 			}
 
+			if (this.getFileSize() > 6000000) {
+				ev.preventDefault();
+				alert('Plik zbyt duży');
+				return;
+			}
+
 			if (!this.kurahenPremium.isCurrentWebpageThread()) {
 				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
 					if (confirm('Wysłać bez pliku?')) {
@@ -45,6 +51,11 @@ class FormValidator {
 
 	getPostTextLength(): number {
 		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value.length;
+	}
+
+	getFileSize(): number {
+		if (!this.isFileInputFilled()) return 0;
+		return (<HTMLInputElement> document.getElementById('postFile')).files[0].size;
 	}
 
 	isCaptchaFilled(): boolean {
