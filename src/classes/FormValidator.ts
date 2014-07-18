@@ -14,7 +14,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.getPostTextLength() > 6000) {
+			if (this.getPostTextLength() > maxPostLength) {
 				ev.preventDefault();
 				alert('Zbyt długi post');
 				return;
@@ -26,7 +26,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.getFileSize() > 6000000) {
+			if (this.getFileSize() > maxFileSize) {
 				ev.preventDefault();
 				alert('Plik zbyt duży');
 				return;
