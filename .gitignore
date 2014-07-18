@@ -8,6 +8,7 @@ Thumbs.db
 # Dev
 /node_modules/
 /.tscache/
+tscommand-*.tmp.txt
 
 #Visual Studio
 /vs/

@@ -132,7 +132,7 @@ class KurahenPremium {
 		select.style.margin = '0';
 		select.style.width = '236px';
 		select.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			if (this.options[this.selectedIndex].value === 'custom') {
 				var textField = document.createElement('input');
 				textField.type = 'text';
@@ -222,24 +222,6 @@ class KurahenPremium {
 	inlineVideoAndAudioLinks(links) {
 		for (var i = 0; i < links.length; i++) {
 			var url = links[i].getAttribute('href');
-
-			//			if (url.indexOf('youtu') > -1) {
-			//				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
-			//				if (urlParameters === null || urlParameters.length !== 2) {
-			//					continue;
-			//				}
-			//
-			//				var youtubeContainer = document.createElement('div');
-			//				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
-			//					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
-			//
-			//				if (links[i].nextSibling) {
-			//					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
-			//				} else {
-			//					links[i].parentNode.appendChild(youtubeContainer);
-			//				}
-			//				links[i].style.display = 'none';
-			//			} else
 			if (url.indexOf('http://vocaroo.com') > -1) {
 				var vocarooId = url.substr(url.length - 12, 12);
 
@@ -540,7 +522,7 @@ class KurahenPremium {
 		wordfiltersSelect.appendChild(defaultOption);
 
 		wordfiltersSelect.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			var textToInsert = this.options[this.selectedIndex].value;
 			var textBeforeEndOfSelection = textarea.value.substring(0, textarea.selectionEnd);
 			var textAfterEndOfSelection = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
@@ -551,7 +533,7 @@ class KurahenPremium {
 			textarea.selectionStart = textBeforeEndOfSelection.length + textToInsert.length;
 			textarea.selectionEnd = textarea.selectionStart;
 
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			this.selectedIndex = 0;
 		}, false);
 
