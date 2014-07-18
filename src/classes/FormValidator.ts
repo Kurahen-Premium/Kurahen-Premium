@@ -8,8 +8,7 @@ class FormValidator {
 
 	setSubmitAction() {
 		document.getElementById('submit').addEventListener("click", (ev) => {
-
-			if (this.isPostTextFilled()) {
+			if (!this.isPostTextFilled()) {
 				ev.preventDefault();
 				alert('Ale post to napisz');
 				return;
@@ -21,14 +20,14 @@ class FormValidator {
 				return;
 			}
 
-			if (this.isCaptchaFilled()) {
+			if (!this.isCaptchaFilled()) {
 				ev.preventDefault();
 				alert('Ale kapcze to wypełnij');
 				return;
 			}
 
 			if (!this.kurahenPremium.isCurrentWebpageThread()) {
-				if (this.isFileInputFilled() && !this.isNoFileChecked()) {
+				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
 					if (confirm('Wysłać bez pliku?')) {
 						this.setNoFile();
 					}
@@ -41,7 +40,7 @@ class FormValidator {
 	}
 
 	isPostTextFilled(): boolean {
-		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value === '';
+		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value !== '';
 	}
 
 	getPostTextLength(): number {
@@ -49,11 +48,11 @@ class FormValidator {
 	}
 
 	isCaptchaFilled(): boolean {
-		return (<HTMLInputElement> document.getElementById('captchaField')).value === '';
+		return (<HTMLInputElement> document.getElementById('captchaField')).value !== '';
 	}
 
 	isFileInputFilled(): boolean {
-		return (<HTMLInputElement> document.getElementById('postFile')).value === '';
+		return (<HTMLInputElement> document.getElementById('postFile')).value !== '';
 	}
 
 	isNoFileChecked(): boolean {
