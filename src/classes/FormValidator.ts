@@ -15,6 +15,12 @@ class FormValidator {
 				return;
 			}
 
+			if (this.getPostTextLength() > 6000) {
+				ev.preventDefault();
+				alert('Zbyt długi post');
+				return;
+			}
+
 			if (this.isCaptchaFilled()) {
 				ev.preventDefault();
 				alert('Ale kapcze to wypełnij');
@@ -38,6 +44,10 @@ class FormValidator {
 		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value === '';
 	}
 
+	getPostTextLength(): number {
+		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value.length;
+	}
+
 	isCaptchaFilled(): boolean {
 		return (<HTMLInputElement> document.getElementById('captchaField')).value === '';
 	}
@@ -46,7 +56,7 @@ class FormValidator {
 		return (<HTMLInputElement> document.getElementById('postFile')).value === '';
 	}
 
-	isNoFileChecked():boolean {
+	isNoFileChecked(): boolean {
 		return (<HTMLInputElement>document.getElementById("nofile")).checked;
 	}
 
