@@ -7,7 +7,7 @@ class FormValidator {
 	}
 
 	setSubmitAction() {
-		document.getElementById('submit').addEventListener("click", (ev) => {
+		document.getElementById('submit').addEventListener('click', (ev) => {
 			if (!this.isPostTextFilled()) {
 				ev.preventDefault();
 				alert('Ale post to napisz');
@@ -32,6 +32,13 @@ class FormValidator {
 				return;
 			}
 
+			if (!this.isAllowedFile()) {
+				if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
+					ev.preventDefault();
+					return;
+				}
+			}
+
 			if (!this.kurahenPremium.isCurrentWebpageThread()) {
 				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
 					if (confirm('Wysłać bez pliku?')) {
@@ -46,11 +53,11 @@ class FormValidator {
 	}
 
 	isPostTextFilled(): boolean {
-		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value !== '';
+		return (<HTMLTextAreaElement> document.getElementsByName('com')[0]).value !== '';
 	}
 
 	getPostTextLength(): number {
-		return (<HTMLTextAreaElement> document.getElementsByName("com")[0]).value.length;
+		return (<HTMLTextAreaElement> document.getElementsByName('com')[0]).value.length;
 	}
 
 	getFileSize(): number {
@@ -67,10 +74,19 @@ class FormValidator {
 	}
 
 	isNoFileChecked(): boolean {
-		return (<HTMLInputElement>document.getElementById("nofile")).checked;
+		return (<HTMLInputElement>document.getElementById('nofile')).checked;
+	}
+
+	isAllowedFile(): boolean {
+		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
+		var ext = fileName.split('.').pop();
+		for (var i = 0; i < allowedFileExtensions.length; i++) {
+			if (ext === allowedFileExtensions[i]) return true;
+		}
+		return false;
 	}
 
 	setNoFile() {
-		(<HTMLInputElement>document.getElementById("nofile")).checked = true;
+		(<HTMLInputElement>document.getElementById('nofile')).checked = true;
 	}
 }
