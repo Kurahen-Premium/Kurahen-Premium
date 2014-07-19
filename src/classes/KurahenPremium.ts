@@ -2,7 +2,7 @@ class KurahenPremium {
 
 	nowHighlightedPostsUserId;
 	threadsWatcher;
-	FormValidator = new FormValidator(this);
+	formValidator = new FormValidator(this.isCurrentWebpageThread);
 
 	constructor() {
 		var currentBoardName = this.getCurrentBoardName();

@@ -1,12 +1,12 @@
 class FormValidator {
-	private kurahenPremium: KurahenPremium;
+	private isCurrentWebpageThread: () => void;
 
-	constructor(KurachenPremium: KurahenPremium) {
-		this.kurahenPremium = KurachenPremium;
+	constructor(isCurrentWebpageThreadFunc: () => void) {
+		this.isCurrentWebpageThread = isCurrentWebpageThreadFunc;
 		this.setSubmitAction();
 	}
 
-	setSubmitAction() {
+	setSubmitAction(): void {
 		document.getElementById('submit').addEventListener('click', (ev) => {
 			if (!this.isPostTextFilled()) {
 				ev.preventDefault();
@@ -32,19 +32,19 @@ class FormValidator {
 				return;
 			}
 
-			if (!this.isAllowedFile()) {
-				if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
-					ev.preventDefault();
-					return;
-				}
-			}
-
-			if (!this.kurahenPremium.isCurrentWebpageThread()) {
+			if (!this.isCurrentWebpageThread()) {
 				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
 					if (confirm('Wysłać bez pliku?')) {
 						this.setNoFile();
 					} else {
 						ev.preventDefault();
+						return;
+					}
+				} else {
+					if (!this.isAllowedFile()) {
+						if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
+							ev.preventDefault();
+						}
 					}
 				}
 			}
@@ -52,7 +52,7 @@ class FormValidator {
 	}
 
 	isPostTextFilled(): boolean {
-		return (<HTMLTextAreaElement> document.getElementsByName('com')[0]).value !== '';
+		return this.getPostTextLength() > 0;
 	}
 
 	getPostTextLength(): number {
@@ -77,6 +77,7 @@ class FormValidator {
 	}
 
 	isAllowedFile(): boolean {
+		if (!this.isFileInputFilled) { return false; }
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
 		var ext = fileName.split('.').pop();
 		for (var i = 0; i < allowedFileExtensions.length; i++) {
@@ -85,7 +86,7 @@ class FormValidator {
 		return false;
 	}
 
-	setNoFile() {
+	setNoFile(): void {
 		(<HTMLInputElement>document.getElementById('nofile')).checked = true;
 	}
 }
