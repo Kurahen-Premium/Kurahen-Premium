@@ -53,7 +53,7 @@ class FormValidator {
 		});
 	}
 
-	private reactToNotAllowedFile(ev: MouseEvent) {
+	reactToNotAllowedFile(ev: MouseEvent) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}
