@@ -8,15 +8,15 @@ class FormValidator {
 
 	setSubmitAction(): void {
 		document.getElementById('submit').addEventListener('click', (ev) => {
-			if (!this.isPostTextFilled()) {
-				ev.preventDefault();
-				alert('Ale post to napisz');
-				return;
-			}
-
 			if (this.getPostTextLength() > maxPostLength) {
 				ev.preventDefault();
 				alert('Zbyt długi post');
+				return;
+			}
+
+			if (!this.isFileInputFilled() && !this.isPostTextFilled()) {
+				ev.preventDefault();
+				alert('Napisz post lub dodaj śmieszny obrazek');
 				return;
 			}
 
@@ -33,9 +33,9 @@ class FormValidator {
 			}
 
 			if (this.isCurrentWebpageThread()) {
-					if (this.isFileInputFilled() && !this.isAllowedFile()) {
-						this.reactToNotAllowedFile(ev);
-					}
+				if (this.isFileInputFilled() && !this.isAllowedFile()) {
+					this.reactToNotAllowedFile(ev);
+				}
 				return;
 			}
 
