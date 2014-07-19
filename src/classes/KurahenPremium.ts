@@ -2,6 +2,7 @@ class KurahenPremium {
 
 	nowHighlightedPostsUserId;
 	threadsWatcher;
+	formValidator = new FormValidator(this.isCurrentWebpageThread);
 
 	constructor() {
 		var currentBoardName = this.getCurrentBoardName();
@@ -79,8 +80,11 @@ class KurahenPremium {
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
 	}
 
-	getCurrentBoardName() {
-		return window.location.pathname.split('/')[1];
+	getCurrentBoardName(): string {
+		var shouldBeBoard = window.location.pathname.split('/')[1];
+		if (shouldBeBoard === 'menu.html') { return ''; }
+		if (shouldBeBoard === 'news.html') { return ''; }
+		return shouldBeBoard;
 	}
 
 	isCurrentWebpageThread() {
@@ -602,6 +606,6 @@ class KurahenPremium {
 	}
 
 	isCurrentPage404() {
-		return document.title === '404 - karachan.org';
+		return document.title === '404 Not Found';
 	}
 }

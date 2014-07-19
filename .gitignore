@@ -9,3 +9,6 @@ Thumbs.db
 /node_modules/
 /.tscache/
 tscommand-*.tmp.txt
+
+#Visual Studio
+/vs/

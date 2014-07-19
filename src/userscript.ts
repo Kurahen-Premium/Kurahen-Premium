@@ -1,3 +1,5 @@
+/// <reference path='./typeDefinitions/greasemonkey.d.ts'/>
+
 interface Window {
 	kurahenPremium: any;
 }

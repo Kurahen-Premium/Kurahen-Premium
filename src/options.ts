@@ -53,6 +53,10 @@ var colors = [
 	'#7bc8f6'
 ];
 
+var maxPostLength = 6000;
+var maxFileSize = 6000000;
+var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
+
 /* internal configuration flags */
 var roundedIdBackground = true;
 var showPostCountNearHighlightPostsButton = true;
