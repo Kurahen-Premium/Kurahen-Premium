@@ -80,10 +80,10 @@ class KurahenPremium {
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
 	}
 
-	getCurrentBoardName():string {
+	getCurrentBoardName(): string {
 		var shouldBeBoard = window.location.pathname.split('/')[1];
-		if (shouldBeBoard === 'menu.html') return '';
-		if (shouldBeBoard === 'news.html') return '';
+		if (shouldBeBoard === 'menu.html') { return ''; }
+		if (shouldBeBoard === 'news.html') { return ''; }
 		return shouldBeBoard;
 	}
 

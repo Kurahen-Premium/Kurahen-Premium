@@ -43,8 +43,7 @@ class FormValidator {
 				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
 					if (confirm('Wysłać bez pliku?')) {
 						this.setNoFile();
-					}
-					else {
+					} else {
 						ev.preventDefault();
 					}
 				}
@@ -61,7 +60,7 @@ class FormValidator {
 	}
 
 	getFileSize(): number {
-		if (!this.isFileInputFilled()) return 0;
+		if (!this.isFileInputFilled()) { return 0; }
 		return (<HTMLInputElement> document.getElementById('postFile')).files[0].size;
 	}
 
@@ -81,7 +80,7 @@ class FormValidator {
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
 		var ext = fileName.split('.').pop();
 		for (var i = 0; i < allowedFileExtensions.length; i++) {
-			if (ext === allowedFileExtensions[i]) return true;
+			if (ext === allowedFileExtensions[i]) { return true; }
 		}
 		return false;
 	}
