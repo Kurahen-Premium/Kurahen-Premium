@@ -32,23 +32,32 @@ class FormValidator {
 				return;
 			}
 
-			if (!this.isCurrentWebpageThread()) {
-				if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
-					if (confirm('Wysłać bez pliku?')) {
-						this.setNoFile();
-					} else {
-						ev.preventDefault();
-						return;
+			if (this.isCurrentWebpageThread()) {
+					if (this.isFileInputFilled() && !this.isAllowedFile()) {
+						this.reactToNotAllowedFile(ev);
 					}
+				return;
+			}
+
+			if (!this.isFileInputFilled() && !this.isNoFileChecked()) {
+				if (confirm('Wysłać bez pliku?')) {
+					this.setNoFile();
 				} else {
-					if (!this.isAllowedFile()) {
-						if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
-							ev.preventDefault();
-						}
-					}
+					ev.preventDefault();
+					return;
+				}
+			} else {
+				if (!this.isAllowedFile()) {
+					this.reactToNotAllowedFile(ev);
 				}
 			}
 		});
+	}
+
+	private reactToNotAllowedFile(ev: MouseEvent) {
+		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
+			ev.preventDefault();
+		}
 	}
 
 	isPostTextFilled(): boolean {
