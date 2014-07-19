@@ -44,7 +44,6 @@ class FormValidator {
 					this.setNoFile();
 				} else {
 					ev.preventDefault();
-					return;
 				}
 			} else {
 				if (!this.isAllowedFile()) {
