@@ -14,14 +14,19 @@ module ThreadsJsonRetriver {
 
 		jsonReq.open('GET', jsonUrl);
 		jsonReq.onloadend = () => {
-			var obj = JSON.parse(jsonReq.responseText);
-			onDone(obj.posts);
-		}
+			var obj: Post[] = JSON.parse(jsonReq.responseText).posts;
+			obj.shift();
+			obj.sort(function (a, b) {
+				return a.no - b.no;
+			});
+			onDone(obj);
+		};
 		jsonReq.send();
 	}
 
 	function getJsonURL(threadURL: string): string {
-		var urlWithoutExt = threadURL.split('.')[0];
-		return urlWithoutExt + '.json';
+		var urlInParts = threadURL.split('.');
+		urlInParts.pop();
+		return urlInParts.join('.') + '.json';
 	}
 }
