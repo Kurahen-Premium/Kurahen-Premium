@@ -1,3 +1,12 @@
+interface Post {
+	com: string;
+	name: string;
+	no: string;
+	now: string;
+	resto: string;
+	time: string;
+}
+
 class ThreadsWatcher {
 
 	watchedThreads;
@@ -171,7 +180,8 @@ class ThreadsWatcher {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
+			// this.getNumberOfNewPosts(boardName, id, lastReadPostId,
+			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId,
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
 					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -189,8 +199,7 @@ class ThreadsWatcher {
 						self.updateThreadObject(threadId, boardName, lastReadPostId);
 						self.saveWatchedThreads();
 					}
-				}
-			);
+				});
 		}
 	}
 
@@ -312,6 +321,43 @@ class ThreadsWatcher {
 			}
 
 			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, 200);
+		};
+		request.send();
+	}
+
+	getNumberOfNewPostsJSON(boardName: string, threadId: number, lastPostId: number, callback: (boardName: string,
+		threadId: number, lastPostId: number, numberOfNewPosts: number, forceUpdate: boolean,
+		reqStatus: number) => void) {
+
+		var request = new XMLHttpRequest();
+
+		request.open('GET', '/' + boardName + '/res/' + threadId + '.json');
+		request.onload = () => {
+			var forceUpdate = false;
+
+			// On error
+			if (request.status !== 200) {
+				callback(boardName, threadId, lastPostId, -1, forceUpdate, request.status);
+				return;
+			}
+
+			// On success
+			var posts: Post[] = JSON.parse(request.responseText).posts;
+			posts.shift();
+
+			posts.sort(function (a, b) {
+				return parseInt(a.no) - parseInt(b.no);
+			});
+
+			var numberOfNewPosts = 0;
+			for (var i = 0; i < posts.length; i++) {
+				if (parseInt(posts[i].no) === lastPostId) {
+					numberOfNewPosts = posts.length - 1 - i;
+					break;
+				}
+			}
+
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, request.status);
 		};
 		request.send();
 	}
