@@ -8,12 +8,6 @@ class FormValidator {
 
 	setSubmitAction(): void {
 		document.getElementById('submit').addEventListener('click', (ev) => {
-			if (this.getPostTextLength() > maxPostLength) {
-				ev.preventDefault();
-				alert('Zbyt długi post');
-				return;
-			}
-
 			if (!this.isFileInputFilled() && !this.isPostTextFilled()) {
 				ev.preventDefault();
 				alert('Napisz post lub dodaj śmieszny obrazek');
