@@ -10,7 +10,7 @@ interface Post {
 class ThreadsWatcher {
 
 	watchedThreads;
-	threadsListWindow;
+	threadsListWindow: HTMLDivElement;
 	threadsHtmlList;
 
 	constructor() {
@@ -125,9 +125,28 @@ class ThreadsWatcher {
 		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
 
+
 		var threadsListWindowTitle = document.createElement('small');
 		threadsListWindowTitle.textContent = 'Obserwowane nitki';
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
+
+		var threadsListWindowSticker = document.createElement('img');
+		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
+		threadsListWindowSticker.style.position = 'absolute';
+		threadsListWindowSticker.style.opacity = '0.5';
+		threadsListWindowSticker.style.right = '0px';
+		threadsListWindowSticker.style.cursor = 'default';
+		threadsListWindowSticker.onclick = (ev) => {
+			var stick = <HTMLImageElement> ev.toElement;
+			if (stick.style.opacity === '1') {
+				stick.style.opacity = '0.3';
+				this.threadsListWindow.style.position = 'static';
+			} else {
+				stick.style.opacity = '1';
+				this.threadsListWindow.style.position = 'fixed';
+			}
+		};
+		this.threadsListWindow.appendChild(threadsListWindowSticker);
 
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';
