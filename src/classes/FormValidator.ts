@@ -82,7 +82,7 @@ class FormValidator {
 	isAllowedFile(): boolean {
 		if (!this.isFileInputFilled) { return false; }
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
-		var ext = fileName.split('.').pop();
+		var ext = fileName.split('.').pop().toLowerCase();
 		for (var i = 0; i < allowedFileExtensions.length; i++) {
 			if (ext === allowedFileExtensions[i]) { return true; }
 		}

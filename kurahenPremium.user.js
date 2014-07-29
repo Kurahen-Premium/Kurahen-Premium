@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.3.1
+// @version     1.4.0-pre
 // @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -31,8 +31,109 @@
 
 /*global GM_addStyle:false */
 
+var FormValidator = (function () {
+	function FormValidator(isCurrentWebpageThreadFunc) {
+		this.isCurrentWebpageThread = isCurrentWebpageThreadFunc;
+		this.setSubmitAction();
+	}
+	FormValidator.prototype.setSubmitAction = function () {
+		var _this = this;
+		document.getElementById('submit').addEventListener('click', function (ev) {
+			if (!_this.isFileInputFilled() && !_this.isPostTextFilled()) {
+				ev.preventDefault();
+				alert('Napisz post lub dodaj śmieszny obrazek');
+				return;
+			}
+
+			if (!_this.isCaptchaFilled()) {
+				ev.preventDefault();
+				alert('Ale kapcze to wypełnij');
+				return;
+			}
+
+			if (_this.getFileSize() > maxFileSize) {
+				ev.preventDefault();
+				alert('Plik zbyt duży');
+				return;
+			}
+
+			if (_this.isCurrentWebpageThread()) {
+				if (_this.isFileInputFilled() && !_this.isAllowedFile()) {
+					_this.reactToNotAllowedFile(ev);
+				}
+				return;
+			}
+
+			if (!_this.isFileInputFilled() && !_this.isNoFileChecked()) {
+				if (confirm('Wysłać bez pliku?')) {
+					_this.setNoFile();
+				} else {
+					ev.preventDefault();
+					return;
+				}
+			} else {
+				if (!_this.isAllowedFile()) {
+					_this.reactToNotAllowedFile(ev);
+				}
+			}
+		});
+	};
+
+	FormValidator.prototype.reactToNotAllowedFile = function (ev) {
+		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
+			ev.preventDefault();
+		}
+	};
+
+	FormValidator.prototype.isPostTextFilled = function () {
+		return this.getPostTextLength() > 0;
+	};
+
+	FormValidator.prototype.getPostTextLength = function () {
+		return document.getElementsByName('com')[0].value.length;
+	};
+
+	FormValidator.prototype.getFileSize = function () {
+		if (!this.isFileInputFilled()) {
+			return 0;
+		}
+		return document.getElementById('postFile').files[0].size;
+	};
+
+	FormValidator.prototype.isCaptchaFilled = function () {
+		return document.getElementById('captchaField').value !== '';
+	};
+
+	FormValidator.prototype.isFileInputFilled = function () {
+		return document.getElementById('postFile').value !== '';
+	};
+
+	FormValidator.prototype.isNoFileChecked = function () {
+		return document.getElementById('nofile').checked;
+	};
+
+	FormValidator.prototype.isAllowedFile = function () {
+		if (!this.isFileInputFilled) {
+			return false;
+		}
+		var fileName = document.getElementById('postFile').files[0].name;
+		var ext = fileName.split('.').pop().toLowerCase();
+		for (var i = 0; i < allowedFileExtensions.length; i++) {
+			if (ext === allowedFileExtensions[i]) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	FormValidator.prototype.setNoFile = function () {
+		document.getElementById('nofile').checked = true;
+	};
+	return FormValidator;
+})();
 var KurahenPremium = (function () {
 	function KurahenPremium() {
+		this.formValidator = new FormValidator(this.isCurrentWebpageThread);
 		var currentBoardName = this.getCurrentBoardName();
 
 		if (currentBoardName === '' || this.isCurrentPage404()) {
@@ -108,7 +209,14 @@ var KurahenPremium = (function () {
 	};
 
 	KurahenPremium.prototype.getCurrentBoardName = function () {
-		return window.location.pathname.split('/')[1];
+		var shouldBeBoard = window.location.pathname.split('/')[1];
+		if (shouldBeBoard === 'menu.html') {
+			return '';
+		}
+		if (shouldBeBoard === 'news.html') {
+			return '';
+		}
+		return shouldBeBoard;
 	};
 
 	KurahenPremium.prototype.isCurrentWebpageThread = function () {
@@ -156,7 +264,7 @@ var KurahenPremium = (function () {
 		select.style.margin = '0';
 		select.style.width = '236px';
 		select.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			if (this.options[this.selectedIndex].value === 'custom') {
 				var textField = document.createElement('input');
 				textField.type = 'text';
@@ -246,24 +354,6 @@ var KurahenPremium = (function () {
 	KurahenPremium.prototype.inlineVideoAndAudioLinks = function (links) {
 		for (var i = 0; i < links.length; i++) {
 			var url = links[i].getAttribute('href');
-
-			//			if (url.indexOf('youtu') > -1) {
-			//				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
-			//				if (urlParameters === null || urlParameters.length !== 2) {
-			//					continue;
-			//				}
-			//
-			//				var youtubeContainer = document.createElement('div');
-			//				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
-			//					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
-			//
-			//				if (links[i].nextSibling) {
-			//					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
-			//				} else {
-			//					links[i].parentNode.appendChild(youtubeContainer);
-			//				}
-			//				links[i].style.display = 'none';
-			//			} else
 			if (url.indexOf('http://vocaroo.com') > -1) {
 				var vocarooId = url.substr(url.length - 12, 12);
 
@@ -564,7 +654,7 @@ var KurahenPremium = (function () {
 		wordfiltersSelect.appendChild(defaultOption);
 
 		wordfiltersSelect.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			var textToInsert = this.options[this.selectedIndex].value;
 			var textBeforeEndOfSelection = textarea.value.substring(0, textarea.selectionEnd);
 			var textAfterEndOfSelection = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
@@ -575,7 +665,7 @@ var KurahenPremium = (function () {
 			textarea.selectionStart = textBeforeEndOfSelection.length + textToInsert.length;
 			textarea.selectionEnd = textarea.selectionStart;
 
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			this.selectedIndex = 0;
 		}, false);
 
@@ -648,7 +738,7 @@ var KurahenPremium = (function () {
 	};
 
 	KurahenPremium.prototype.isCurrentPage404 = function () {
-		return document.title === '404 - karachan.org';
+		return document.title === '404 Not Found';
 	};
 	return KurahenPremium;
 })();
@@ -739,7 +829,8 @@ var ThreadsWatcher = (function () {
 	};
 
 	ThreadsWatcher.prototype.threadObjectExists = function (postId, boardName) {
-		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object';
+		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object' && this.watchedThreads['th_' +
+			boardName + '_' + postId] !== null;
 	};
 
 	ThreadsWatcher.prototype.threadsSize = function () {
@@ -818,7 +909,8 @@ var ThreadsWatcher = (function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			// this.getNumberOfNewPosts(boardName, id, lastReadPostId,
+			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -961,6 +1053,48 @@ var ThreadsWatcher = (function () {
 		request.send();
 	};
 
+	ThreadsWatcher.prototype.getNumberOfNewPostsJSON = function (boardName, threadId, lastPostId, callback) {
+		var request = new XMLHttpRequest();
+
+		request.open('GET', '/' + boardName + '/res/' + threadId + '.json');
+		request.onload = function () {
+			var forceUpdate = false;
+
+			// On error
+			if (request.status !== 200) {
+				callback(boardName, threadId, lastPostId, -1, forceUpdate, request.status);
+				return;
+			}
+
+			// On success
+			var posts = JSON.parse(request.responseText).posts;
+			posts.shift();
+
+			posts.sort(function (a, b) {
+				return parseInt(a.no) - parseInt(b.no);
+			});
+
+			var numberOfNewPosts = 0;
+			for (var i = 0; i < posts.length; i++) {
+				if (parseInt(posts[i].no) === lastPostId) {
+					numberOfNewPosts = posts.length - 1 - i;
+					break;
+				}
+			}
+
+			// When last read post was deleted
+			if (numberOfNewPosts === 0) {
+				var lastDetectedPostId = parseInt(posts[posts.length - 1].no);
+				if (lastDetectedPostId !== lastPostId) {
+					lastPostId = lastDetectedPostId;
+					forceUpdate = true;
+				}
+			}
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, request.status);
+		};
+		request.send();
+	};
+
 	/**
 	 * @private
 	 */
@@ -1072,14 +1206,19 @@ var colors = [
 	'#7bc8f6'
 ];
 
+var maxFileSize = 6072494;
+var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
+
 /* internal configuration flags */
 var roundedIdBackground = true;
 var showPostCountNearHighlightPostsButton = true;
 var showPostCountNearId = false;
 
 showPostCountNearId = !enableHighlightPostsButton;
+/// <reference path='./typeDefinitions/greasemonkey.d.ts'/>
+
 var main = function () {
-	new KurahenPremium();
+	window.kurahenPremium = new KurahenPremium();
 };
 
 if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
@@ -1087,5 +1226,5 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
 	main();
 } else {
 	// Firefox and others
-	window.addEventListener('load', main);
+	window.addEventListener('DOMContentLoaded', main);
 }
