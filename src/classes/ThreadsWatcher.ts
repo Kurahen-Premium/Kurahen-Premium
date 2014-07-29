@@ -357,6 +357,14 @@ class ThreadsWatcher {
 				}
 			}
 
+			// When last read post was deleted
+			if (numberOfNewPosts === 0) {
+				var lastDetectedPostId = parseInt(posts[posts.length-1].no);
+				if (lastDetectedPostId !== lastPostId) {
+					lastPostId = lastDetectedPostId;
+					forceUpdate = true;
+				}
+			}
 			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, request.status);
 		};
 		request.send();
