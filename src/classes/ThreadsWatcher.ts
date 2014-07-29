@@ -345,6 +345,11 @@ class ThreadsWatcher {
 			var posts: Post[] = JSON.parse(request.responseText).posts;
 			posts.shift();
 
+			// If only op post
+			if (posts.length === 0) {
+				callback(boardName, threadId, lastPostId, 0, forceUpdate, request.status);
+			}
+
 			posts.sort(function (a, b) {
 				return parseInt(a.no) - parseInt(b.no);
 			});
