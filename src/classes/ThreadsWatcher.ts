@@ -133,17 +133,21 @@ class ThreadsWatcher {
 		var threadsListWindowSticker = document.createElement('img');
 		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
 		threadsListWindowSticker.style.position = 'absolute';
-		threadsListWindowSticker.style.opacity = '0.5';
+		threadsListWindowSticker.style.opacity = '0.25';
 		threadsListWindowSticker.style.right = '0px';
 		threadsListWindowSticker.style.cursor = 'default';
 		threadsListWindowSticker.onclick = (ev) => {
 			var stick = <HTMLImageElement> ev.toElement;
 			if (stick.style.opacity === '1') {
-				stick.style.opacity = '0.3';
-				this.threadsListWindow.style.position = 'static';
+				stick.style.opacity = '0.25';
+				this.threadsListWindow.style.position = 'absolute';
+				var newtop = parseInt(this.threadsListWindow.style.top) + document.body.scrollTop;
+				this.threadsListWindow.style.top = newtop + 'px';
 			} else {
 				stick.style.opacity = '1';
 				this.threadsListWindow.style.position = 'fixed';
+				newtop = parseInt(this.threadsListWindow.style.top) - document.body.scrollTop;
+				this.threadsListWindow.style.top = newtop + 'px';
 			}
 		};
 		this.threadsListWindow.appendChild(threadsListWindowSticker);
