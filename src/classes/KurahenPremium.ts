@@ -5,7 +5,7 @@ class KurahenPremium {
 	formValidator = new FormValidator();
 
 	constructor() {
-		var currentBoardName = this.getCurrentBoardName();
+		var currentBoardName = UrlChecker.getCurrentBoardName();
 
 		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
 			return; // We are not on any useful page
@@ -78,13 +78,6 @@ class KurahenPremium {
 		var existingLink = document.getElementsByTagName('link')[0];
 		existingLink.parentNode.insertBefore(newLink, existingLink);
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
-	}
-
-	getCurrentBoardName(): string {
-		var shouldBeBoard = window.location.pathname.split('/')[1];
-		if (shouldBeBoard === 'menu.html') { return ''; }
-		if (shouldBeBoard === 'news.html') { return ''; }
-		return shouldBeBoard;
 	}
 
 	getTopicFromFirstPostContent() {
