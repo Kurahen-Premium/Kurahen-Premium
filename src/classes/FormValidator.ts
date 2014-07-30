@@ -1,8 +1,6 @@
 class FormValidator {
-	private isCurrentWebpageThread: () => void;
 
-	constructor(isCurrentWebpageThreadFunc: () => void) {
-		this.isCurrentWebpageThread = isCurrentWebpageThreadFunc;
+	constructor() {
 		this.setSubmitAction();
 	}
 
@@ -26,7 +24,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.isCurrentWebpageThread()) {
+			if (UrlChecker.isCurrentWebpageThread()) {
 				if (this.isFileInputFilled() && !this.isAllowedFile()) {
 					this.reactToNotAllowedFile(ev);
 				}
