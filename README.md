@@ -1,4 +1,4 @@
-Kurahen Premium [![Build Status](https://travis-ci.org/kucanon/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/kucanon/Kurahen-Premium "Status testów dla gałęzi dev")
+﻿Kurahen Premium [![Build Status](https://travis-ci.org/UncleBillyUSA/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/UncleBillyUSA/Kurahen-Premium "Status testów dla gałęzi dev")
 ===============
 
 Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego.
