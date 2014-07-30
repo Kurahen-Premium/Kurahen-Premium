@@ -36,7 +36,6 @@ class FormValidator {
 					this.setNoFile();
 				} else {
 					ev.preventDefault();
-					return;
 				}
 			} else {
 				if (!this.isAllowedFile()) {
@@ -46,7 +45,7 @@ class FormValidator {
 		});
 	}
 
-	private reactToNotAllowedFile(ev: MouseEvent) {
+	reactToNotAllowedFile(ev: MouseEvent) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}
