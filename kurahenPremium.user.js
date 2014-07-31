@@ -51,7 +51,7 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (_this.getFileSize() > maxFileSize) {
+			if (_this.getFileSize() > _this.getMaxFileSize()) {
 				ev.preventDefault();
 				alert('Plik zbyt duży');
 				return;
@@ -98,6 +98,11 @@ var FormValidator = (function () {
 			return 0;
 		}
 		return document.getElementById('postFile').files[0].size;
+	};
+
+	FormValidator.prototype.getMaxFileSize = function () {
+		var valStr = document.getElementsByName('MAX_FILE_SIZE')[0].value;
+		return parseInt(valStr);
 	};
 
 	FormValidator.prototype.isCaptchaFilled = function () {
@@ -1211,7 +1216,6 @@ var colors = [
 	'#7bc8f6'
 ];
 
-var maxFileSize = 6291456;
 var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
 
 /* internal configuration flags */

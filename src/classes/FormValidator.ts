@@ -20,7 +20,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.getFileSize() > maxFileSize) {
+			if (this.getFileSize() > this.getMaxFileSize()) {
 				ev.preventDefault();
 				alert('Plik zbyt duży');
 				return;
@@ -65,6 +65,11 @@ class FormValidator {
 	getFileSize(): number {
 		if (!this.isFileInputFilled()) { return 0; }
 		return (<HTMLInputElement> document.getElementById('postFile')).files[0].size;
+	}
+
+	getMaxFileSize(): number {
+		var valStr = (<HTMLInputElement> document.getElementsByName('MAX_FILE_SIZE')[0]).value;
+		return parseInt(valStr);
 	}
 
 	isCaptchaFilled(): boolean {
