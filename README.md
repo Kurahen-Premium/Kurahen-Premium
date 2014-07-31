@@ -1,4 +1,4 @@
-Kurahen Premium [![Build Status](https://travis-ci.org/kucanon/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/kucanon/Kurahen-Premium "Status testów dla gałęzi dev")
+Kurahen Premium [![Build Status](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium "Status testów dla gałęzi dev")
 ===============
 
 Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego.
@@ -12,8 +12,8 @@ Zaopatrz się w rozszerzenie do obsługi userscriptów dla swojej przeglądarki:
 * Firefox: [Greasemonkey](https://addons.mozilla.org/pl/firefox/addon/greasemonkey/)
 * Opera: [Violentmonkey](https://addons.opera.com/pl/extensions/details/violent-monkey/?display=pl)
 
-Pobierz [wersję stabilną](https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js) (lub
-[wersję rozwojową](https://github.com/kucanon/Kurahen-Premium/raw/dev/kurahenPremium.user.js) jeśli jesteś kucem i wiesz
+Pobierz [wersję stabilną](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js) (lub
+[wersję rozwojową](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/dev/kurahenPremium.user.js) jeśli jesteś kucem i wiesz
 co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienku które wyskoczy.
 
 ## Najważniejsze funkcje
@@ -29,4 +29,4 @@ co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienk
 * styl Night jest zablokowany przed przypadkowym wyborem
 * domyślna czcionka jest zmieniona na czytelniejszą na ekranach LCD (ale można ją wyłączyć)
 
-Pozostałe funkcje i najnowsze zmiany znajdziesz na [stronie z listą wydanych wersji](https://github.com/kucanon/Kurahen-Premium/releases).
+Pozostałe funkcje i najnowsze zmiany znajdziesz na [stronie z listą wydanych wersji](https://github.com/Kurahen-Premium/Kurahen-Premium/releases).
