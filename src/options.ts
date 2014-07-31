@@ -53,7 +53,7 @@ var colors = [
 	'#7bc8f6'
 ];
 
-var maxFileSize = 6072494;
+var maxFileSize = 6291456;
 var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
 
 /* internal configuration flags */
