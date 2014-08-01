@@ -27,7 +27,9 @@ var wordfilters = [
 	['#Lasoupeauxchoux', 'kapuśniaczek'],
 	['#homoś', 'pedał'],
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
-	['#1%', 'groźny LEWAK wykryty']
+	['#1%', 'groźny LEWAK wykryty'],
+	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
+	['hizume', 'Mała Księżniczka']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
