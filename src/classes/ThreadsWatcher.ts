@@ -145,7 +145,7 @@ class ThreadsWatcher {
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
 
 		var threadsListWindowSticker = document.createElement('img');
-		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
+		threadsListWindowSticker.src = '/img/sticky.gif';
 		threadsListWindowSticker.style.position = 'absolute';
 		if (this.threadsListWindow.style.position === 'absolute') {
 			threadsListWindowSticker.style.opacity = '0.25';
