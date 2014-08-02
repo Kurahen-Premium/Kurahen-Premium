@@ -27,7 +27,9 @@ var wordfilters = [
 	['#Lasoupeauxchoux', 'kapuśniaczek'],
 	['#homoś', 'pedał'],
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
-	['#1%', 'groźny LEWAK wykryty']
+	['#1%', 'groźny LEWAK wykryty'],
+	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
+	['hizume', 'Mała Księżniczka']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
@@ -53,7 +55,6 @@ var colors = [
 	'#7bc8f6'
 ];
 
-var maxFileSize = 6072494;
 var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
 
 /* internal configuration flags */

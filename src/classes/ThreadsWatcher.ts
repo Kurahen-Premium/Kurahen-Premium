@@ -224,7 +224,7 @@ class ThreadsWatcher {
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
 			// this.getNumberOfNewPosts(boardName, id, lastReadPostId,
-			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId,
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
 					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -387,6 +387,11 @@ class ThreadsWatcher {
 			// On success
 			var posts: Post[] = JSON.parse(request.responseText).posts;
 			posts.shift();
+
+			// If only op post
+			if (posts.length === 0) {
+				callback(boardName, threadId, lastPostId, 0, forceUpdate, request.status);
+			}
 
 			posts.sort(function (a, b) {
 				return parseInt(a.no) - parseInt(b.no);

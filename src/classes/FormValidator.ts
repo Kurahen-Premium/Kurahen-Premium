@@ -18,7 +18,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.getFileSize() > maxFileSize) {
+			if (this.getFileSize() > this.getMaxFileSize()) {
 				ev.preventDefault();
 				alert('Plik zbyt duży');
 				return;
@@ -64,6 +64,11 @@ class FormValidator {
 		return (<HTMLInputElement> document.getElementById('postFile')).files[0].size;
 	}
 
+	getMaxFileSize(): number {
+		var valStr = (<HTMLInputElement> document.getElementsByName('MAX_FILE_SIZE')[0]).value;
+		return parseInt(valStr);
+	}
+
 	isCaptchaFilled(): boolean {
 		return (<HTMLInputElement> document.getElementById('captchaField')).value !== '';
 	}
@@ -79,7 +84,7 @@ class FormValidator {
 	isAllowedFile(): boolean {
 		if (!this.isFileInputFilled) { return false; }
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
-		var ext = fileName.split('.').pop();
+		var ext = fileName.split('.').pop().toLowerCase();
 		for (var i = 0; i < allowedFileExtensions.length; i++) {
 			if (ext === allowedFileExtensions[i]) { return true; }
 		}
