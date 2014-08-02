@@ -802,7 +802,7 @@ var ThreadsWatcher = (function () {
 	};
 
 	ThreadsWatcher.prototype.getWatchedThreadsWindowCssPosition = function () {
-		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Posiotion');
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Position');
 		if (item === null || item === '') {
 			return 'absolute';
 		} else {
@@ -811,7 +811,7 @@ var ThreadsWatcher = (function () {
 	};
 
 	ThreadsWatcher.prototype.setWatchedThreadsWindowCssPosition = function (positionProperity) {
-		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Posiotion', positionProperity);
+		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Position', positionProperity);
 	};
 
 	/**
@@ -883,7 +883,7 @@ var ThreadsWatcher = (function () {
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
 
 		var threadsListWindowSticker = document.createElement('img');
-		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
+		threadsListWindowSticker.src = '/img/sticky.gif';
 		threadsListWindowSticker.style.position = 'absolute';
 		if (this.threadsListWindow.style.position === 'absolute') {
 			threadsListWindowSticker.style.opacity = '0.25';
