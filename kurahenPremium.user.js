@@ -51,7 +51,7 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (_this.getFileSize() > maxFileSize) {
+			if (_this.getFileSize() > _this.getMaxFileSize()) {
 				ev.preventDefault();
 				alert('Plik zbyt duży');
 				return;
@@ -98,6 +98,11 @@ var FormValidator = (function () {
 			return 0;
 		}
 		return document.getElementById('postFile').files[0].size;
+	};
+
+	FormValidator.prototype.getMaxFileSize = function () {
+		var valStr = document.getElementsByName('MAX_FILE_SIZE')[0].value;
+		return parseInt(valStr);
 	};
 
 	FormValidator.prototype.isCaptchaFilled = function () {
@@ -910,7 +915,7 @@ var ThreadsWatcher = (function () {
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
 			// this.getNumberOfNewPosts(boardName, id, lastReadPostId,
-			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -1185,7 +1190,9 @@ var wordfilters = [
 	['#Lasoupeauxchoux', 'kapuśniaczek'],
 	['#homoś', 'pedał'],
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
-	['#1%', 'groźny LEWAK wykryty']
+	['#1%', 'groźny LEWAK wykryty'],
+	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
+	['hizume', 'Mała Księżniczka']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
@@ -1211,7 +1218,6 @@ var colors = [
 	'#7bc8f6'
 ];
 
-var maxFileSize = 6072494;
 var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
 
 /* internal configuration flags */
