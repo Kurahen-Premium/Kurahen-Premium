@@ -63,7 +63,7 @@ class ThreadsWatcher {
 	}
 
 	getWatchedThreadsWindowCssPosition(): string {
-		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Posiotion');
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Position');
 		if (item === null || item === '') {
 			return 'absolute';
 		} else {
@@ -72,7 +72,7 @@ class ThreadsWatcher {
 	}
 
 	setWatchedThreadsWindowCssPosition(positionProperity) {
-		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Posiotion', positionProperity);
+		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Position', positionProperity);
 	}
 
 	/**
