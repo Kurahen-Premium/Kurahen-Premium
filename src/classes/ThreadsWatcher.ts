@@ -460,7 +460,7 @@ class ThreadsWatcher {
 			postMessage.removeChild(quoteLinks[i]);
 		}
 
-		var postContent = postMessage.textContent;
+		var postContent = postMessage.textContent.trim();
 		if (postContent === '') {
 			return '(brak treści posta)';
 		}
