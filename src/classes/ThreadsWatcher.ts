@@ -10,7 +10,7 @@ interface Post {
 class ThreadsWatcher {
 
 	watchedThreads;
-	threadsListWindow;
+	threadsListWindow: HTMLDivElement;
 	threadsHtmlList;
 
 	constructor() {
@@ -60,6 +60,19 @@ class ThreadsWatcher {
 
 	setWatchedThreadsWindowLeftPosition(position) {
 		localStorage.setItem('KurahenPremium_WatchedThreads_Left', position);
+	}
+
+	getWatchedThreadsWindowCssPosition(): string {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Posiotion');
+		if (item === null || item === '') {
+			return 'absolute';
+		} else {
+			return item;
+		}
+	}
+
+	setWatchedThreadsWindowCssPosition(positionProperity) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Posiotion', positionProperity);
 	}
 
 	/**
@@ -121,13 +134,43 @@ class ThreadsWatcher {
 		this.threadsListWindow.style.minHeight = '100px';
 		this.threadsListWindow.style.width = 'auto';
 		this.threadsListWindow.style.minWidth = '250px';
+		this.threadsListWindow.style.position = this.getWatchedThreadsWindowCssPosition();
 		this.threadsListWindow.style.top = this.getWatchedThreadsWindowTopPosition();
 		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
 
+
 		var threadsListWindowTitle = document.createElement('small');
 		threadsListWindowTitle.textContent = 'Obserwowane nitki';
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
+
+		var threadsListWindowSticker = document.createElement('img');
+		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
+		threadsListWindowSticker.style.position = 'absolute';
+		if (this.threadsListWindow.style.position === 'absolute') {
+			threadsListWindowSticker.style.opacity = '0.25';
+		} else {
+			threadsListWindowSticker.style.opacity = '1.0';
+		}
+		threadsListWindowSticker.style.right = '0px';
+		threadsListWindowSticker.style.cursor = 'default';
+		threadsListWindowSticker.onclick = (ev) => {
+			var stick = <HTMLImageElement> ev.toElement;
+			if (stick.style.opacity === '1') {
+				stick.style.opacity = '0.25';
+				this.threadsListWindow.style.position = 'absolute';
+				this.setWatchedThreadsWindowCssPosition('absolute');
+				var newtop = parseInt(this.threadsListWindow.style.top) + document.body.scrollTop;
+				this.threadsListWindow.style.top = newtop + 'px';
+			} else {
+				stick.style.opacity = '1';
+				this.threadsListWindow.style.position = 'fixed';
+				this.setWatchedThreadsWindowCssPosition('fixed');
+				newtop = parseInt(this.threadsListWindow.style.top) - document.body.scrollTop;
+				this.threadsListWindow.style.top = newtop + 'px';
+			}
+		};
+		this.threadsListWindow.appendChild(threadsListWindowSticker);
 
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';

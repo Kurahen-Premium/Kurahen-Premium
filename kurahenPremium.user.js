@@ -3,7 +3,7 @@
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
 // @version     1.4.0-pre
-// @downloadURL https://github.com/kucanon/Kurahen-Premium/raw/master/kurahenPremium.user.js
+// @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
 
@@ -32,8 +32,7 @@
 /*global GM_addStyle:false */
 
 var FormValidator = (function () {
-	function FormValidator(isCurrentWebpageThreadFunc) {
-		this.isCurrentWebpageThread = isCurrentWebpageThreadFunc;
+	function FormValidator() {
 		this.setSubmitAction();
 	}
 	FormValidator.prototype.setSubmitAction = function () {
@@ -57,7 +56,7 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (_this.isCurrentWebpageThread()) {
+			if (UrlChecker.isCurrentWebpageThread()) {
 				if (_this.isFileInputFilled() && !_this.isAllowedFile()) {
 					_this.reactToNotAllowedFile(ev);
 				}
@@ -69,7 +68,6 @@ var FormValidator = (function () {
 					_this.setNoFile();
 				} else {
 					ev.preventDefault();
-					return;
 				}
 			} else {
 				if (!_this.isAllowedFile()) {
@@ -138,10 +136,10 @@ var FormValidator = (function () {
 })();
 var KurahenPremium = (function () {
 	function KurahenPremium() {
-		this.formValidator = new FormValidator(this.isCurrentWebpageThread);
-		var currentBoardName = this.getCurrentBoardName();
+		this.formValidator = new FormValidator();
+		var currentBoardName = UrlChecker.getCurrentBoardName();
 
-		if (currentBoardName === '' || this.isCurrentPage404()) {
+		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
 			return;
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -158,7 +156,7 @@ var KurahenPremium = (function () {
 		this.fixAllHiders();
 		this.fixAllExpanders();
 
-		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
+		if (boardsWithId.indexOf(currentBoardName) > -1 && UrlChecker.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 
@@ -187,7 +185,7 @@ var KurahenPremium = (function () {
 		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (this.isCurrentWebpageThread()) {
+		if (UrlChecker.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;
@@ -211,21 +209,6 @@ var KurahenPremium = (function () {
 		var existingLink = document.getElementsByTagName('link')[0];
 		existingLink.parentNode.insertBefore(newLink, existingLink);
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
-	};
-
-	KurahenPremium.prototype.getCurrentBoardName = function () {
-		var shouldBeBoard = window.location.pathname.split('/')[1];
-		if (shouldBeBoard === 'menu.html') {
-			return '';
-		}
-		if (shouldBeBoard === 'news.html') {
-			return '';
-		}
-		return shouldBeBoard;
-	};
-
-	KurahenPremium.prototype.isCurrentWebpageThread = function () {
-		return window.location.pathname.split('/')[2] === 'res';
 	};
 
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
@@ -741,12 +724,34 @@ var KurahenPremium = (function () {
 		var container = counter.parentElement;
 		container.style.fontSize = '20px';
 	};
-
-	KurahenPremium.prototype.isCurrentPage404 = function () {
-		return document.title === '404 Not Found';
-	};
 	return KurahenPremium;
 })();
+var UrlChecker;
+(function (UrlChecker) {
+	'use strict';
+
+	function isCurrentWebpageThread() {
+		return window.location.pathname.split('/')[2] === 'res';
+	}
+	UrlChecker.isCurrentWebpageThread = isCurrentWebpageThread;
+
+	function isCurrentPage404() {
+		return document.title === '404 Not Found';
+	}
+	UrlChecker.isCurrentPage404 = isCurrentPage404;
+
+	function getCurrentBoardName() {
+		var shouldBeBoard = window.location.pathname.split('/')[1];
+		if (shouldBeBoard === 'menu.html') {
+			return '';
+		}
+		if (shouldBeBoard === 'news.html') {
+			return '';
+		}
+		return shouldBeBoard;
+	}
+	UrlChecker.getCurrentBoardName = getCurrentBoardName;
+})(UrlChecker || (UrlChecker = {}));
 var ThreadsWatcher = (function () {
 	function ThreadsWatcher() {
 		this.loadWatchedThreads();
@@ -794,6 +799,19 @@ var ThreadsWatcher = (function () {
 
 	ThreadsWatcher.prototype.setWatchedThreadsWindowLeftPosition = function (position) {
 		localStorage.setItem('KurahenPremium_WatchedThreads_Left', position);
+	};
+
+	ThreadsWatcher.prototype.getWatchedThreadsWindowCssPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Posiotion');
+		if (item === null || item === '') {
+			return 'absolute';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowCssPosition = function (positionProperity) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Posiotion', positionProperity);
 	};
 
 	/**
@@ -847,6 +865,7 @@ var ThreadsWatcher = (function () {
 	};
 
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
+		var _this = this;
 		this.threadsListWindow = document.createElement('div');
 		this.threadsListWindow.id = 'watcher_box';
 		this.threadsListWindow.className = 'movable';
@@ -854,6 +873,7 @@ var ThreadsWatcher = (function () {
 		this.threadsListWindow.style.minHeight = '100px';
 		this.threadsListWindow.style.width = 'auto';
 		this.threadsListWindow.style.minWidth = '250px';
+		this.threadsListWindow.style.position = this.getWatchedThreadsWindowCssPosition();
 		this.threadsListWindow.style.top = this.getWatchedThreadsWindowTopPosition();
 		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
@@ -861,6 +881,34 @@ var ThreadsWatcher = (function () {
 		var threadsListWindowTitle = document.createElement('small');
 		threadsListWindowTitle.textContent = 'Obserwowane nitki';
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
+
+		var threadsListWindowSticker = document.createElement('img');
+		threadsListWindowSticker.src = 'http://karachan.co/img/sticky.gif';
+		threadsListWindowSticker.style.position = 'absolute';
+		if (this.threadsListWindow.style.position === 'absolute') {
+			threadsListWindowSticker.style.opacity = '0.25';
+		} else {
+			threadsListWindowSticker.style.opacity = '1.0';
+		}
+		threadsListWindowSticker.style.right = '0px';
+		threadsListWindowSticker.style.cursor = 'default';
+		threadsListWindowSticker.onclick = function (ev) {
+			var stick = ev.toElement;
+			if (stick.style.opacity === '1') {
+				stick.style.opacity = '0.25';
+				_this.threadsListWindow.style.position = 'absolute';
+				_this.setWatchedThreadsWindowCssPosition('absolute');
+				var newtop = parseInt(_this.threadsListWindow.style.top) + document.body.scrollTop;
+				_this.threadsListWindow.style.top = newtop + 'px';
+			} else {
+				stick.style.opacity = '1';
+				_this.threadsListWindow.style.position = 'fixed';
+				_this.setWatchedThreadsWindowCssPosition('fixed');
+				newtop = parseInt(_this.threadsListWindow.style.top) - document.body.scrollTop;
+				_this.threadsListWindow.style.top = newtop + 'px';
+			}
+		};
+		this.threadsListWindow.appendChild(threadsListWindowSticker);
 
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';

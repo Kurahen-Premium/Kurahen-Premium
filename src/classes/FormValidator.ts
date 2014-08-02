@@ -1,8 +1,6 @@
 class FormValidator {
-	private isCurrentWebpageThread: () => void;
 
-	constructor(isCurrentWebpageThreadFunc: () => void) {
-		this.isCurrentWebpageThread = isCurrentWebpageThreadFunc;
+	constructor() {
 		this.setSubmitAction();
 	}
 
@@ -26,7 +24,7 @@ class FormValidator {
 				return;
 			}
 
-			if (this.isCurrentWebpageThread()) {
+			if (UrlChecker.isCurrentWebpageThread()) {
 				if (this.isFileInputFilled() && !this.isAllowedFile()) {
 					this.reactToNotAllowedFile(ev);
 				}
@@ -38,7 +36,6 @@ class FormValidator {
 					this.setNoFile();
 				} else {
 					ev.preventDefault();
-					return;
 				}
 			} else {
 				if (!this.isAllowedFile()) {
@@ -48,7 +45,7 @@ class FormValidator {
 		});
 	}
 
-	private reactToNotAllowedFile(ev: MouseEvent) {
+	reactToNotAllowedFile(ev: MouseEvent) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}

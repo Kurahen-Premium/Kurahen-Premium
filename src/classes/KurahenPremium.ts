@@ -2,12 +2,12 @@ class KurahenPremium {
 
 	nowHighlightedPostsUserId;
 	threadsWatcher;
-	formValidator = new FormValidator(this.isCurrentWebpageThread);
+	formValidator = new FormValidator();
 
 	constructor() {
-		var currentBoardName = this.getCurrentBoardName();
+		var currentBoardName = UrlChecker.getCurrentBoardName();
 
-		if (currentBoardName === '' || this.isCurrentPage404()) {
+		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
 			return; // We are not on any useful page
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -24,7 +24,7 @@ class KurahenPremium {
 		this.fixAllHiders();
 		this.fixAllExpanders();
 
-		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
+		if (boardsWithId.indexOf(currentBoardName) > -1 && UrlChecker.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 
@@ -54,7 +54,7 @@ class KurahenPremium {
 		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (this.isCurrentWebpageThread()) {
+		if (UrlChecker.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;
@@ -78,17 +78,6 @@ class KurahenPremium {
 		var existingLink = document.getElementsByTagName('link')[0];
 		existingLink.parentNode.insertBefore(newLink, existingLink);
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
-	}
-
-	getCurrentBoardName(): string {
-		var shouldBeBoard = window.location.pathname.split('/')[1];
-		if (shouldBeBoard === 'menu.html') { return ''; }
-		if (shouldBeBoard === 'news.html') { return ''; }
-		return shouldBeBoard;
-	}
-
-	isCurrentWebpageThread() {
-		return window.location.pathname.split('/')[2] === 'res';
 	}
 
 	getTopicFromFirstPostContent() {
@@ -605,7 +594,4 @@ class KurahenPremium {
 		container.style.fontSize = '20px';
 	}
 
-	isCurrentPage404() {
-		return document.title === '404 Not Found';
-	}
 }
