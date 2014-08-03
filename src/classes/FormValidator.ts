@@ -12,12 +12,10 @@ class FormValidator {
 				return;
 			}
 
-			if (document.cookie.indexOf('in_mod') === -1) {
-				if (this.getCaptchaFieldTextLenght() !== 6) {
-					ev.preventDefault();
-					alert('Ale kapcze to popraw');
-					return;
-				}
+			if (document.cookie.indexOf('in_mod') === -1 && this.getCaptchaFieldTextLenght() !== 6) {
+				ev.preventDefault();
+				alert('Ale kapcze to popraw');
+				return;
 			}
 
 			if (this.getFileSize() > this.getMaxFileSize()) {
@@ -72,7 +70,12 @@ class FormValidator {
 	}
 
 	getCaptchaFieldTextLenght(): number {
-		return (<HTMLInputElement> document.getElementById('captchaField')).value.length;
+		var captchaField = <HTMLInputElement> document.getElementById('captchaField');
+		if (captchaField) {
+			return captchaField.value.length;
+		} else {
+			return 0;
+		}
 	}
 
 	isFileInputFilled(): boolean {
