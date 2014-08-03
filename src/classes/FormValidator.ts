@@ -13,9 +13,9 @@ class FormValidator {
 			}
 
 			if (document.cookie.indexOf('in_mod') === -1) {
-				if (!this.isCaptchaFilled()) {
+				if (this.getCaptchaFieldTextLenght() !== 6) {
 					ev.preventDefault();
-					alert('Ale kapcze to wypełnij');
+					alert('Ale kapcze to popraw');
 					return;
 				}
 			}
@@ -71,8 +71,8 @@ class FormValidator {
 		return parseInt(valStr);
 	}
 
-	isCaptchaFilled(): boolean {
-		return (<HTMLInputElement> document.getElementById('captchaField')).value !== '';
+	getCaptchaFieldTextLenght(): number {
+		return (<HTMLInputElement> document.getElementById('captchaField')).value.length;
 	}
 
 	isFileInputFilled(): boolean {
