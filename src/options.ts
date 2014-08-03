@@ -29,7 +29,9 @@ var wordfilters = [
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
 	['#1%', 'groźny LEWAK wykryty'],
 	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
-	['hizume', 'Mała Księżniczka']
+	['hizume', 'Mała Księżniczka'],
+	['#tetetka', 'ALE ZAPIERDALA'],
+	['/r/pcmasterrace', '/r/pcmasterrace']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
