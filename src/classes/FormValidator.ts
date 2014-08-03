@@ -12,9 +12,9 @@ class FormValidator {
 				return;
 			}
 
-			if (!this.isCaptchaFilled()) {
+			if (document.cookie.indexOf('in_mod') === -1 && this.getCaptchaFieldTextLenght() !== 6) {
 				ev.preventDefault();
-				alert('Ale kapcze to wypełnij');
+				alert('Ale kapcze to popraw');
 				return;
 			}
 
@@ -69,8 +69,13 @@ class FormValidator {
 		return parseInt(valStr);
 	}
 
-	isCaptchaFilled(): boolean {
-		return (<HTMLInputElement> document.getElementById('captchaField')).value !== '';
+	getCaptchaFieldTextLenght(): number {
+		var captchaField = <HTMLInputElement> document.getElementById('captchaField');
+		if (captchaField) {
+			return captchaField.value.length;
+		} else {
+			return 0;
+		}
 	}
 
 	isFileInputFilled(): boolean {
