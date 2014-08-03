@@ -12,10 +12,12 @@ class FormValidator {
 				return;
 			}
 
-			if (!this.isCaptchaFilled()) {
-				ev.preventDefault();
-				alert('Ale kapcze to wypełnij');
-				return;
+			if (document.cookie.indexOf('in_mod') === -1) {
+				if (!this.isCaptchaFilled()) {
+					ev.preventDefault();
+					alert('Ale kapcze to wypełnij');
+					return;
+				}
 			}
 
 			if (this.getFileSize() > this.getMaxFileSize()) {
