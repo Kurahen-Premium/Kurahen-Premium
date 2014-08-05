@@ -12,9 +12,7 @@ Zaopatrz się w rozszerzenie do obsługi userscriptów dla swojej przeglądarki:
 * Firefox: [Greasemonkey](https://addons.mozilla.org/pl/firefox/addon/greasemonkey/)
 * Opera: [Violentmonkey](https://addons.opera.com/pl/extensions/details/violent-monkey/?display=pl)
 
-Pobierz [wersję stabilną](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js) (lub
-[wersję rozwojową](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/dev/kurahenPremium.user.js) jeśli jesteś kucem i wiesz
-co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienku które wyskoczy.
+Pobierz [wersję stabilną](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienku które wyskoczy.
 
 ## Najważniejsze funkcje
 * osobny, rozbudowany moduł do obserwowania tematów, zastępujący ten domyślny z Mitsuby
