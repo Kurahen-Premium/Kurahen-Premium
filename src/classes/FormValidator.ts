@@ -25,9 +25,15 @@ class FormValidator {
 			}
 
 			if (UrlChecker.isCurrentWebpageThread()) {
-				if (this.isFileInputFilled() && !this.isAllowedFile()) {
-					this.reactToNotAllowedFile(ev);
+				if (this.isFileInputFilled() && !this.isAllowedFileExt()) {
+					this.reactToNotAllowedFileExt(ev);
 				}
+				return;
+			}
+
+			if (!this.isNoFileAllowed() && !this.isFileInputFilled()) {
+				ev.preventDefault();
+				alert('Wybierz plik');
 				return;
 			}
 
@@ -37,15 +43,17 @@ class FormValidator {
 				} else {
 					ev.preventDefault();
 				}
-			} else {
-				if (!this.isAllowedFile()) {
-					this.reactToNotAllowedFile(ev);
-				}
+				return;
 			}
+
+			if (this.isFileInputFilled() && !this.isAllowedFileExt()) {
+				this.reactToNotAllowedFileExt(ev);
+			}
+
 		});
 	}
 
-	reactToNotAllowedFile(ev: MouseEvent) {
+	reactToNotAllowedFileExt(ev: MouseEvent) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}
@@ -59,13 +67,24 @@ class FormValidator {
 		return (<HTMLTextAreaElement> document.getElementsByName('com')[0]).value.length;
 	}
 
+	isFileInputFilled(): boolean {
+		var fileFile = <HTMLInputElement> document.getElementById('postFile');
+		if (fileFile) {
+			return fileFile.value !== '';
+		} else {
+			return false;
+		}
+	}
+
 	getFileSize(): number {
 		if (!this.isFileInputFilled()) { return 0; }
 		return (<HTMLInputElement> document.getElementById('postFile')).files[0].size;
 	}
 
 	getMaxFileSize(): number {
-		var valStr = (<HTMLInputElement> document.getElementsByName('MAX_FILE_SIZE')[0]).value;
+		var maxFileList = document.getElementsByName('MAX_FILE_SIZE');
+		if (maxFileList.length === 0) { return 0; }
+		var valStr = (<HTMLInputElement> maxFileList[0]).value;
 		return parseInt(valStr);
 	}
 
@@ -78,16 +97,24 @@ class FormValidator {
 		}
 	}
 
-	isFileInputFilled(): boolean {
-		return (<HTMLInputElement> document.getElementById('postFile')).value !== '';
-	}
-
 	isNoFileChecked(): boolean {
-		return (<HTMLInputElement>document.getElementById('nofile')).checked;
+		if (this.isNoFileAllowed()) {
+			return (<HTMLInputElement> document.getElementById('nofile')).checked;
+		} else {
+			return false;
+		}
 	}
 
-	isAllowedFile(): boolean {
-		if (!this.isFileInputFilled) { return false; }
+	isNoFileAllowed(): boolean {
+		if (document.getElementById('nofile')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	isAllowedFileExt(): boolean {
+		if (!this.isFileInputFilled()) { return false; }
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
 		var ext = fileName.split('.').pop().toLowerCase();
 		for (var i = 0; i < allowedFileExtensions.length; i++) {
