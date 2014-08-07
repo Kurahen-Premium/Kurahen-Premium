@@ -25,8 +25,8 @@ class FormValidator {
 			}
 
 			if (UrlChecker.isCurrentWebpageThread()) {
-				if (this.isFileInputFilled() && !this.isAllowedFile()) {
-					this.reactToNotAllowedFile(ev);
+				if (this.isFileInputFilled() && !this.isAllowedFileExt()) {
+					this.reactToNotAllowedFileExt(ev);
 				}
 				return;
 			}
@@ -42,18 +42,18 @@ class FormValidator {
 					this.setNoFile();
 				} else {
 					ev.preventDefault();
-					return;
 				}
+				return;
 			}
 
-			if (this.isFileInputFilled() && !this.isAllowedFile()) {
-				this.reactToNotAllowedFile(ev);
+			if (this.isFileInputFilled() && !this.isAllowedFileExt()) {
+				this.reactToNotAllowedFileExt(ev);
 			}
 
 		});
 	}
 
-	reactToNotAllowedFile(ev: MouseEvent) {
+	reactToNotAllowedFileExt(ev: MouseEvent) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}
@@ -98,7 +98,7 @@ class FormValidator {
 	}
 
 	isNoFileChecked(): boolean {
-		if (this.isAllowedFile) {
+		if (this.isNoFileAllowed()) {
 			return (<HTMLInputElement> document.getElementById('nofile')).checked;
 		} else {
 			return false;
@@ -106,10 +106,14 @@ class FormValidator {
 	}
 
 	isNoFileAllowed(): boolean {
-		return Boolean(document.getElementById('nofile'));
+		if (document.getElementById('nofile')) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	isAllowedFile(): boolean {
+	isAllowedFileExt(): boolean {
 		if (!this.isFileInputFilled()) { return false; }
 		var fileName = (<HTMLInputElement> document.getElementById('postFile')).files[0].name;
 		var ext = fileName.split('.').pop().toLowerCase();
