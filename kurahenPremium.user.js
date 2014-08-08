@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.3.2
+// @version     1.4.0
 // @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -26,80 +26,154 @@
 // @exclude     https://96.8.113.203/*/src/*
 // ==/UserScript==
 
-/*jshint nonew:true, curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single,
- eqeqeq:true, strict:true, undef:true, bitwise:true, newcap:false, browser:true, devel:true, maxlen:120, nonbsp:true */
+/*jshint curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single, eqeqeq:true,
+ undef:true, bitwise:true, browser:true, devel:true, nonbsp:true */
+
 /*global GM_addStyle:false */
 
-var main = function () {
-	'use strict';
+var FormValidator = (function () {
+	function FormValidator() {
+		this.setSubmitAction();
+	}
+	FormValidator.prototype.setSubmitAction = function () {
+		var _this = this;
+		document.getElementById('submit').addEventListener('click', function (ev) {
+			if (!_this.isFileInputFilled() && !_this.isPostTextFilled()) {
+				ev.preventDefault();
+				alert('Napisz post lub dodaj śmieszny obrazek');
+				return;
+			}
 
-	// Konfiguracja
-	var customBBoardTitle = '/b/ - Random';
-	var enableBetterFonts = true; // Podmienia domyślne czcionki na Roboto
-	var deleteTextUnderPostForm = false; // Usunięcie tekstu pod elementami do postowania
-	var biggerOnlineCountFont = false; // Większa czcionka liczby online
-	var hideThreadsWithNoNewPosts = false; // Ukrywa na liście obserwowanych nitki bez nowych postów
-	var enableHighlightPostsButton = true; // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich
-	                                       // postów danego użytkownika
-	var enableJumpButtons = true; // Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
+			if (document.cookie.indexOf('in_mod') === -1 && _this.getCaptchaFieldTextLenght() !== 6) {
+				ev.preventDefault();
+				alert('Ale kapcze to popraw');
+				return;
+			}
 
-	// Zaawansowana konfiguracja
-	var unhighlightedPostOpacity = 0.3; // Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego
-	                                    // użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
+			if (_this.getFileSize() > _this.getMaxFileSize()) {
+				ev.preventDefault();
+				alert('Plik zbyt duży');
+				return;
+			}
 
-	var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-	var specialCharacters = [
-		{contentToInsert: '\u2026', buttonTitle: 'Wielokropek', buttonLabel: '\u2026'},
-		{contentToInsert: '\u200b', buttonTitle: 'Spacja o zerowej szerokości', buttonLabel: 'ZWSP'}
-	];
+			if (UrlChecker.isCurrentWebpageThread()) {
+				if (_this.isFileInputFilled() && !_this.isAllowedFileExt()) {
+					_this.reactToNotAllowedFileExt(ev);
+				}
+				return;
+			}
 
-	var wordfilters = [
-		['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
-		['#gimbo', 'xD'],
-		['#penis', 'pisiorek'],
-		['#wagina', 'cipuszka'],
-		['#m__b', 'groźny WYKOPEK wykryty'],
-		['#Lasoupeauxchoux', 'kapuśniaczek'],
-		['#homoś', 'pedał'],
-		['#korwinkrulempolski', 'kongres nowej prawicy'],
-		['#1%', 'groźny LEWAK wykryty']
-	];
-	var boardsWithId = ['b', 'fz', 'z'];
-	var colors = [
-		'#ff8080',
-		'#ffdd80',
-		'#80ffb7',
-		'#80d0ff',
-		'#c680ff',
-		'#ffae80',
-		'#d5ff80',
-		'#80fffd',
-		'#8097ff',
-		'#ff80ca',
-		'#ff7f7f',
-		'#779aef',
-		'#b0de6f',
-		'#cc66c0',
-		'#5cb9a9',
-		'#f3bb79',
-		'#8d71e2',
-		'#6dd168',
-		'#be5f7e',
-		'#7bc8f6'
-	];
+			if (!_this.isNoFileAllowed() && !_this.isFileInputFilled()) {
+				ev.preventDefault();
+				alert('Wybierz plik');
+				return;
+			}
 
-	/* internal configuration flags */
-	var roundedIdBackground = true;
-	var showPostCountNearHighlightPostsButton = true;
-	var showPostCountNearId = false;
+			if (!_this.isFileInputFilled() && !_this.isNoFileChecked()) {
+				if (confirm('Wysłać bez pliku?')) {
+					_this.setNoFile();
+				} else {
+					ev.preventDefault();
+				}
+				return;
+			}
 
-	showPostCountNearId = !enableHighlightPostsButton;
+			if (_this.isFileInputFilled() && !_this.isAllowedFileExt()) {
+				_this.reactToNotAllowedFileExt(ev);
+			}
+		});
+	};
 
-	var KurahenPremium = function () {
-		var currentBoardName = this.getCurrentBoardName();
+	FormValidator.prototype.reactToNotAllowedFileExt = function (ev) {
+		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
+			ev.preventDefault();
+		}
+	};
 
-		if (currentBoardName === '' || this.isCurrentPage404()) {
-			return; // We are not on any useful page
+	FormValidator.prototype.isPostTextFilled = function () {
+		return this.getPostTextLength() > 0;
+	};
+
+	FormValidator.prototype.getPostTextLength = function () {
+		return document.getElementsByName('com')[0].value.length;
+	};
+
+	FormValidator.prototype.isFileInputFilled = function () {
+		var fileFile = document.getElementById('postFile');
+		if (fileFile) {
+			return fileFile.value !== '';
+		} else {
+			return false;
+		}
+	};
+
+	FormValidator.prototype.getFileSize = function () {
+		if (!this.isFileInputFilled()) {
+			return 0;
+		}
+		return document.getElementById('postFile').files[0].size;
+	};
+
+	FormValidator.prototype.getMaxFileSize = function () {
+		var maxFileList = document.getElementsByName('MAX_FILE_SIZE');
+		if (maxFileList.length === 0) {
+			return 0;
+		}
+		var valStr = maxFileList[0].value;
+		return parseInt(valStr);
+	};
+
+	FormValidator.prototype.getCaptchaFieldTextLenght = function () {
+		var captchaField = document.getElementById('captchaField');
+		if (captchaField) {
+			return captchaField.value.length;
+		} else {
+			return 0;
+		}
+	};
+
+	FormValidator.prototype.isNoFileChecked = function () {
+		if (this.isNoFileAllowed()) {
+			return document.getElementById('nofile').checked;
+		} else {
+			return false;
+		}
+	};
+
+	FormValidator.prototype.isNoFileAllowed = function () {
+		if (document.getElementById('nofile')) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	FormValidator.prototype.isAllowedFileExt = function () {
+		if (!this.isFileInputFilled()) {
+			return false;
+		}
+		var fileName = document.getElementById('postFile').files[0].name;
+		var ext = fileName.split('.').pop().toLowerCase();
+		for (var i = 0; i < allowedFileExtensions.length; i++) {
+			if (ext === allowedFileExtensions[i]) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	FormValidator.prototype.setNoFile = function () {
+		document.getElementById('nofile').checked = true;
+	};
+	return FormValidator;
+})();
+var KurahenPremium = (function () {
+	function KurahenPremium() {
+		this.formValidator = new FormValidator();
+		var currentBoardName = UrlChecker.getCurrentBoardName();
+
+		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
+			return;
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
 		}
@@ -115,7 +189,7 @@ var main = function () {
 		this.fixAllHiders();
 		this.fixAllExpanders();
 
-		if (boardsWithId.indexOf(currentBoardName) > -1 && this.isCurrentWebpageThread()) {
+		if (boardsWithId.indexOf(currentBoardName) > -1 && UrlChecker.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 
@@ -133,10 +207,8 @@ var main = function () {
 
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
-
 		this.threadsWatcher = new ThreadsWatcher();
-	};
-
+	}
 	KurahenPremium.prototype.changeBoardTitle = function (newTitle) {
 		document.title = newTitle;
 		document.getElementsByClassName('boardTitle')[0].textContent = newTitle;
@@ -146,7 +218,7 @@ var main = function () {
 		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (this.isCurrentWebpageThread()) {
+		if (UrlChecker.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;
@@ -172,14 +244,6 @@ var main = function () {
 		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
 	};
 
-	KurahenPremium.prototype.getCurrentBoardName = function () {
-		return window.location.pathname.split('/')[1];
-	};
-
-	KurahenPremium.prototype.isCurrentWebpageThread = function () {
-		return window.location.pathname.split('/')[2] === 'res';
-	};
-
 	KurahenPremium.prototype.getTopicFromFirstPostContent = function () {
 		var postMessage = document.querySelector('.thread .postMessage').cloneNode(true);
 
@@ -198,7 +262,7 @@ var main = function () {
 			postMessage.removeChild(quoteLinks[i]);
 		}
 
-		var postContent = postMessage.textContent;
+		var postContent = postMessage.textContent.trim();
 		if (postContent === '') {
 			return '(brak treści posta)';
 		}
@@ -221,7 +285,7 @@ var main = function () {
 		select.style.margin = '0';
 		select.style.width = '236px';
 		select.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			if (this.options[this.selectedIndex].value === 'custom') {
 				var textField = document.createElement('input');
 				textField.type = 'text';
@@ -311,32 +375,14 @@ var main = function () {
 	KurahenPremium.prototype.inlineVideoAndAudioLinks = function (links) {
 		for (var i = 0; i < links.length; i++) {
 			var url = links[i].getAttribute('href');
-
-//			if (url.indexOf('youtu') > -1) {
-//				var urlParameters = url.match(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/);
-//				if (urlParameters === null || urlParameters.length !== 2) {
-//					continue;
-//				}
-//
-//				var youtubeContainer = document.createElement('div');
-//				youtubeContainer.innerHTML = '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
-//					urlParameters[1] + '" frameborder="0" allowfullscreen></iframe>';
-//
-//				if (links[i].nextSibling) {
-//					links[i].parentNode.insertBefore(youtubeContainer, links[i].nextSibling);
-//				} else {
-//					links[i].parentNode.appendChild(youtubeContainer);
-//				}
-//				links[i].style.display = 'none';
-//			} else
 			if (url.indexOf('http://vocaroo.com') > -1) {
 				var vocarooId = url.substr(url.length - 12, 12);
 
 				var vocarooContainer = document.createElement('div');
 				vocarooContainer.innerHTML = '<object width="148" height="44"><param name="movie"' +
 					'value="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0"/>' +
-					'<param name="wmode" value="transparent"/>' +
-					'<embed src="http://vocaroo.com/player.swf?playMediaID=' + vocarooId + '&autoplay=0" width="148" ' +
+					'<param name="wmode" value="transparent"/>' + '<embed src="http://vocaroo.com/player.swf?playMediaID=' +
+					vocarooId + '&autoplay=0" width="148" ' +
 					'height="44" wmode="transparent" type="application/x-shockwave-flash"></embed></object>';
 
 				if (links[i].nextSibling) {
@@ -434,7 +480,7 @@ var main = function () {
 		if (colors.length > 0) {
 			return colors.shift();
 		} else {
-			return '#' + Math.random().toString(16).substr(-6); // Random color
+			return '#' + Math.random().toString(16).substr(-6);
 		}
 	};
 
@@ -629,7 +675,7 @@ var main = function () {
 		wordfiltersSelect.appendChild(defaultOption);
 
 		wordfiltersSelect.addEventListener('change', function () {
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			var textToInsert = this.options[this.selectedIndex].value;
 			var textBeforeEndOfSelection = textarea.value.substring(0, textarea.selectionEnd);
 			var textAfterEndOfSelection = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
@@ -640,7 +686,7 @@ var main = function () {
 			textarea.selectionStart = textBeforeEndOfSelection.length + textToInsert.length;
 			textarea.selectionEnd = textarea.selectionStart;
 
-			//noinspection JSPotentiallyInvalidUsageOfThis
+			// noinspection JSPotentiallyInvalidUsageOfThis
 			this.selectedIndex = 0;
 		}, false);
 
@@ -711,17 +757,40 @@ var main = function () {
 		var container = counter.parentElement;
 		container.style.fontSize = '20px';
 	};
+	return KurahenPremium;
+})();
+var UrlChecker;
+(function (UrlChecker) {
+	'use strict';
 
-	KurahenPremium.prototype.isCurrentPage404 = function () {
-		return document.title === '404 - karachan.org';
-	};
+	function isCurrentWebpageThread() {
+		return window.location.pathname.split('/')[2] === 'res';
+	}
+	UrlChecker.isCurrentWebpageThread = isCurrentWebpageThread;
 
-	var ThreadsWatcher = function () {
+	function isCurrentPage404() {
+		return document.title === '404 Not Found';
+	}
+	UrlChecker.isCurrentPage404 = isCurrentPage404;
+
+	function getCurrentBoardName() {
+		var shouldBeBoard = window.location.pathname.split('/')[1];
+		if (shouldBeBoard === 'menu.html') {
+			return '';
+		}
+		if (shouldBeBoard === 'news.html') {
+			return '';
+		}
+		return shouldBeBoard;
+	}
+	UrlChecker.getCurrentBoardName = getCurrentBoardName;
+})(UrlChecker || (UrlChecker = {}));
+var ThreadsWatcher = (function () {
+	function ThreadsWatcher() {
 		this.loadWatchedThreads();
 		this.insertThreadsListWindow();
 		this.addWatchButtonsToPosts();
-	};
-
+	}
 	ThreadsWatcher.prototype.loadWatchedThreads = function () {
 		var item = localStorage.getItem('KurahenPremium_WatchedThreads');
 		if (item === null || item === 'null') {
@@ -765,6 +834,19 @@ var main = function () {
 		localStorage.setItem('KurahenPremium_WatchedThreads_Left', position);
 	};
 
+	ThreadsWatcher.prototype.getWatchedThreadsWindowCssPosition = function () {
+		var item = localStorage.getItem('KurahenPremium_WatchedThreads_CSS_Position');
+		if (item === null || item === '') {
+			return 'absolute';
+		} else {
+			return item;
+		}
+	};
+
+	ThreadsWatcher.prototype.setWatchedThreadsWindowCssPosition = function (positionProperity) {
+		localStorage.setItem('KurahenPremium_WatchedThreads_CSS_Position', positionProperity);
+	};
+
 	/**
 	 * @private
 	 */
@@ -774,8 +856,7 @@ var main = function () {
 				// Add not removed threads
 				if (objectToAppend[item] !== null) {
 					originalObject[item] = objectToAppend[item];
-				} // Remove threads removed in current window, but existent in other windows
-				else if (originalObject[item] !== null) {
+				} else if (originalObject[item] !== null) {
 					delete originalObject[item];
 				}
 			}
@@ -804,7 +885,8 @@ var main = function () {
 	};
 
 	ThreadsWatcher.prototype.threadObjectExists = function (postId, boardName) {
-		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object';
+		return typeof this.watchedThreads['th_' + boardName + '_' + postId] === 'object' && this.watchedThreads['th_' +
+			boardName + '_' + postId] !== null;
 	};
 
 	ThreadsWatcher.prototype.threadsSize = function () {
@@ -816,6 +898,7 @@ var main = function () {
 	};
 
 	ThreadsWatcher.prototype.insertThreadsListWindow = function () {
+		var _this = this;
 		this.threadsListWindow = document.createElement('div');
 		this.threadsListWindow.id = 'watcher_box';
 		this.threadsListWindow.className = 'movable';
@@ -823,6 +906,7 @@ var main = function () {
 		this.threadsListWindow.style.minHeight = '100px';
 		this.threadsListWindow.style.width = 'auto';
 		this.threadsListWindow.style.minWidth = '250px';
+		this.threadsListWindow.style.position = this.getWatchedThreadsWindowCssPosition();
 		this.threadsListWindow.style.top = this.getWatchedThreadsWindowTopPosition();
 		this.threadsListWindow.style.left = this.getWatchedThreadsWindowLeftPosition();
 		this.threadsListWindow.style.padding = '5px';
@@ -831,6 +915,34 @@ var main = function () {
 		threadsListWindowTitle.textContent = 'Obserwowane nitki';
 		this.threadsListWindow.appendChild(threadsListWindowTitle);
 
+		var threadsListWindowSticker = document.createElement('img');
+		threadsListWindowSticker.src = '/img/sticky.gif';
+		threadsListWindowSticker.style.position = 'absolute';
+		if (this.threadsListWindow.style.position === 'absolute') {
+			threadsListWindowSticker.style.opacity = '0.25';
+		} else {
+			threadsListWindowSticker.style.opacity = '1.0';
+		}
+		threadsListWindowSticker.style.right = '0px';
+		threadsListWindowSticker.style.cursor = 'default';
+		threadsListWindowSticker.onclick = function (ev) {
+			var stick = ev.toElement;
+			if (stick.style.opacity === '1') {
+				stick.style.opacity = '0.25';
+				_this.threadsListWindow.style.position = 'absolute';
+				_this.setWatchedThreadsWindowCssPosition('absolute');
+				var newtop = parseInt(_this.threadsListWindow.style.top) + document.body.scrollTop;
+				_this.threadsListWindow.style.top = newtop + 'px';
+			} else {
+				stick.style.opacity = '1';
+				_this.threadsListWindow.style.position = 'fixed';
+				_this.setWatchedThreadsWindowCssPosition('fixed');
+				newtop = parseInt(_this.threadsListWindow.style.top) - document.body.scrollTop;
+				_this.threadsListWindow.style.top = newtop + 'px';
+			}
+		};
+		this.threadsListWindow.appendChild(threadsListWindowSticker);
+
 		this.threadsHtmlList = document.createElement('ul');
 		this.threadsHtmlList.id = 'watched_list';
 		this.threadsListWindow.appendChild(this.threadsHtmlList);
@@ -838,8 +950,8 @@ var main = function () {
 		var threads = this.getWatchedThreadsList();
 		for (var item in threads) {
 			if (threads.hasOwnProperty(item) && threads[item] !== null) {
-				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].lastReadPostId,
-					-1, threads[item].topic);
+				this.addThreadListWindowEntry(threads[item].id, threads[item].boardName, threads[item].lastReadPostId, -1,
+					threads[item].topic);
 			}
 		}
 
@@ -883,26 +995,25 @@ var main = function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
-				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
-					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
-						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
-					} else if (status === 200 && hideThreadsWithNoNewPosts && numberOfNewPosts === 0) {
-						self.removeThreadListWindowEntry(threadId, boardName);
-					} else if (status === 404) {
-						self.removeThreadListWindowEntry(threadId, boardName);
-						self.removeThreadObject(threadId, boardName);
-						self.saveWatchedThreads();
-					} else {
-						unreadPostsSpan.textContent = '[?] ';
-					}
-
-					if (forceUpdate) {
-						self.updateThreadObject(threadId, boardName, lastReadPostId);
-						self.saveWatchedThreads();
-					}
+			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+				numberOfNewPosts, forceUpdate, status) {
+				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
+					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
+				} else if (status === 200 && hideThreadsWithNoNewPosts && numberOfNewPosts === 0) {
+					self.removeThreadListWindowEntry(threadId, boardName);
+				} else if (status === 404) {
+					self.removeThreadListWindowEntry(threadId, boardName);
+					self.removeThreadObject(threadId, boardName);
+					self.saveWatchedThreads();
+				} else {
+					unreadPostsSpan.textContent = '[?] ';
 				}
-			);
+
+				if (forceUpdate) {
+					self.updateThreadObject(threadId, boardName, lastReadPostId);
+					self.saveWatchedThreads();
+				}
+			});
 		}
 	};
 
@@ -945,7 +1056,7 @@ var main = function () {
 			var postId = this.parsePostId(postsBars[i]);
 			var watchButton = document.createElement('a');
 			watchButton.style.cursor = 'pointer';
-			watchButton.setAttribute('data-post-id', postId);
+			watchButton.setAttribute('data-post-id', postId.toString());
 			watchButton.addEventListener('click', toggleWatchLabel, false);
 
 			var watchButtonContainer = document.createElement('span');
@@ -963,8 +1074,7 @@ var main = function () {
 			postNum.insertBefore(watchButtonContainer, postNum.querySelector('span'));
 		}
 
-		GM_addStyle('.watch-button-container:before {content: " [";}\n' +
-			'.watch-button-container:after{content: "] ";}');
+		GM_addStyle('.watch-button-container:before {content: " [";}\n' + '.watch-button-container:after{content: "] ";}');
 	};
 
 	ThreadsWatcher.prototype.addRemoveWatchedThread = function (postId, boardName) {
@@ -974,7 +1084,7 @@ var main = function () {
 			var topic = this.getTopicOfThread(postId);
 			this.addThreadObject(postId, boardName, newestPostId, topic);
 			this.addThreadListWindowEntry(postId, boardName, newestPostId, 0, topic);
-		} else { // Remove existing thread from watchlist
+		} else {
 			this.removeThreadListWindowEntry(postId, boardName);
 			this.removeThreadObject(postId, boardName);
 		}
@@ -1028,6 +1138,53 @@ var main = function () {
 		request.send();
 	};
 
+	ThreadsWatcher.prototype.getNumberOfNewPostsJSON = function (boardName, threadId, lastPostId, callback) {
+		var request = new XMLHttpRequest();
+
+		request.open('GET', '/' + boardName + '/res/' + threadId + '.json');
+		request.onload = function () {
+			var forceUpdate = false;
+
+			// On error
+			if (request.status !== 200) {
+				callback(boardName, threadId, lastPostId, -1, forceUpdate, request.status);
+				return;
+			}
+
+			// On success
+			var posts = JSON.parse(request.responseText).posts;
+			posts.shift();
+
+			// If only op post
+			if (posts.length === 0) {
+				callback(boardName, threadId, lastPostId, 0, forceUpdate, request.status);
+			}
+
+			posts.sort(function (a, b) {
+				return parseInt(a.no) - parseInt(b.no);
+			});
+
+			var numberOfNewPosts = 0;
+			for (var i = 0; i < posts.length; i++) {
+				if (parseInt(posts[i].no) === lastPostId) {
+					numberOfNewPosts = posts.length - 1 - i;
+					break;
+				}
+			}
+
+			// When last read post was deleted
+			if (numberOfNewPosts === 0) {
+				var lastDetectedPostId = parseInt(posts[posts.length - 1].no);
+				if (lastDetectedPostId !== lastPostId) {
+					lastPostId = lastDetectedPostId;
+					forceUpdate = true;
+				}
+			}
+			callback(boardName, threadId, lastPostId, numberOfNewPosts, forceUpdate, request.status);
+		};
+		request.send();
+	};
+
 	/**
 	 * @private
 	 */
@@ -1070,15 +1227,91 @@ var main = function () {
 			postMessage.removeChild(quoteLinks[i]);
 		}
 
-		var postContent = postMessage.textContent;
+		var postContent = postMessage.textContent.trim();
 		if (postContent === '') {
 			return '(brak treści posta)';
 		}
 		return postContent.substr(0, Math.min(postContent.length, 25));
 	};
+	return ThreadsWatcher;
+})();
+// Konfiguracja
+var customBBoardTitle = '/b/ - Random';
+var enableBetterFonts = true;
+var deleteTextUnderPostForm = false;
+var biggerOnlineCountFont = false;
+var hideThreadsWithNoNewPosts = false;
+var enableHighlightPostsButton = true;
 
-	// Initialize script
-	window.KurahenPremium = new KurahenPremium();
+// postów danego użytkownika
+var enableJumpButtons = true;
+
+// Zaawansowana konfiguracja
+var unhighlightedPostOpacity = 0.3;
+
+// użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
+var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
+var specialCharacters = [{
+	contentToInsert: '\u2026',
+	buttonTitle: 'Wielokropek',
+	buttonLabel: '\u2026'
+}, {
+	contentToInsert: '\u200b',
+	buttonTitle: 'Spacja o zerowej szerokości',
+	buttonLabel: 'ZWSP'
+}];
+
+var wordfilters = [
+	['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
+	['#gimbo', 'xD'],
+	['#penis', 'pisiorek'],
+	['#wagina', 'cipuszka'],
+	['#m__b', 'groźny WYKOPEK wykryty'],
+	['#Lasoupeauxchoux', 'kapuśniaczek'],
+	['#homoś', 'pedał'],
+	['#korwinkrulempolski', 'kongres nowej prawicy'],
+	['#1%', 'groźny LEWAK wykryty'],
+	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
+	['hizume', 'Mała Księżniczka'],
+	['#tetetka', 'ALE ZAPIERDALA'],
+	['/r/pcmasterrace', '/r/pcmasterrace']
+];
+var boardsWithId = ['b', 'fz', 'z'];
+var colors = [
+	'#ff8080',
+	'#ffdd80',
+	'#80ffb7',
+	'#80d0ff',
+	'#c680ff',
+	'#ffae80',
+	'#d5ff80',
+	'#80fffd',
+	'#8097ff',
+	'#ff80ca',
+	'#ff7f7f',
+	'#779aef',
+	'#b0de6f',
+	'#cc66c0',
+	'#5cb9a9',
+	'#f3bb79',
+	'#8d71e2',
+	'#6dd168',
+	'#be5f7e',
+	'#7bc8f6'
+];
+
+var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
+
+/* internal configuration flags */
+var roundedIdBackground = true;
+var showPostCountNearHighlightPostsButton = true;
+var showPostCountNearId = false;
+
+showPostCountNearId = !enableHighlightPostsButton;
+/// <reference path='./typeDefinitions/greasemonkey.d.ts'/>
+
+var main = function () {
+	window.kurahenPremium = new KurahenPremium();
 };
 
 if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
@@ -1086,5 +1319,5 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome/') > -1) {
 	main();
 } else {
 	// Firefox and others
-	window.addEventListener('load', main);
+	window.addEventListener('DOMContentLoaded', main);
 }

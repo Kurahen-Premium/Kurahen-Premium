@@ -3,11 +3,81 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			myFiles: ['kurahenPremium.user.js']
+		tslint: {
+			options: {
+				configuration: grunt.file.readJSON('src/.tslintrc.json')
+			},
+			build: {
+				src: ['src/*.ts', 'src/classes/*.ts']
+			}
+		},
+		ts: {
+			build: {
+				src: ['src/**/*.ts'],
+				out: 'kurahenPremium.user.js',
+				options: {
+					// 'es3' (default) | 'es5'
+					target: 'es5',
+					// true (default) | false
+					sourceMap: false,
+					// true (default) | false
+					removeComments: false,
+					htmlModuleTemplate: '<%= filename %>',
+					htmlVarTemplate: '<%= ext %>'
+				}
+			}
+		},
+		concat: {
+			build: {
+				src: ['src/userscriptMetadata.txt', 'src/jshintSettings.txt', 'kurahenPremium.user.js'],
+				dest: 'kurahenPremium.user.js'
+			}
+		},
+		'string-replace': {
+			version: {
+				files: {
+					'kurahenPremium.user.js': 'kurahenPremium.user.js'
+				},
+				options: {
+					replacements: [
+						{
+							pattern: /{{ VERSION }}/g,
+							replacement: '<%= pkg.version %>'
+						}
+					]
+				}
+			}
+		},
+		jsbeautifier: {
+			files: ['kurahenPremium.user.js'],
+			options: {
+				js: {
+					indentWithTabs: true,
+					jslintHappy: true,
+					wrapLineLength: 120
+				}
+			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.registerTask('default', ['jshint']);
+	grunt.loadNpmTasks('grunt-tslint');
+	grunt.loadNpmTasks('grunt-ts');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-string-replace');
+	grunt.loadNpmTasks('grunt-jsbeautifier');
+
+	grunt.registerTask('default', [
+		'tslint',
+		'ts:build',
+		'concat:build',
+		'string-replace:version',
+		'jsbeautifier'
+	]);
+
+	grunt.registerTask('debug-build', [
+		'ts:build',
+		'concat:build',
+		'string-replace:version',
+		'jsbeautifier'
+	]);
 };

@@ -1,4 +1,4 @@
-Kurahen Premium [![Build Status](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium "Status testów dla gałęzi dev")
+﻿Kurahen Premium [![Build Status](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium.svg?branch=dev)](https://travis-ci.org/Kurahen-Premium/Kurahen-Premium "Status testów dla gałęzi dev") [![devDependency Status](https://david-dm.org/Kurahen-Premium/Kurahen-Premium/dev-status.svg)](https://david-dm.org/Kurahen-Premium/Kurahen-Premium#info=devDependencies)
 ===============
 
 Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego.
@@ -12,9 +12,7 @@ Zaopatrz się w rozszerzenie do obsługi userscriptów dla swojej przeglądarki:
 * Firefox: [Greasemonkey](https://addons.mozilla.org/pl/firefox/addon/greasemonkey/)
 * Opera: [Violentmonkey](https://addons.opera.com/pl/extensions/details/violent-monkey/?display=pl)
 
-Pobierz [wersję stabilną](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js) (lub
-[wersję rozwojową](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/dev/kurahenPremium.user.js) jeśli jesteś kucem i wiesz
-co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienku które wyskoczy.
+Pobierz [wersję stabilną](https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienku które wyskoczy.
 
 ## Najważniejsze funkcje
 * osobny, rozbudowany moduł do obserwowania tematów, zastępujący ten domyślny z Mitsuby
@@ -30,3 +28,7 @@ co robisz) pliku `kurahenPremium.user.js` i zaakceptuj jego instalację w okienk
 * domyślna czcionka jest zmieniona na czytelniejszą na ekranach LCD (ale można ją wyłączyć)
 
 Pozostałe funkcje i najnowsze zmiany znajdziesz na [stronie z listą wydanych wersji](https://github.com/Kurahen-Premium/Kurahen-Premium/releases).
+
+## Jestem kucem i chcę pomóc
+Zapoznaj się z [instrukcją dla kucy](https://github.com/Kurahen-Premium/Kurahen-Premium/wiki/Protipy-dla-wannable-kuc%C3%B3w).
+Coś niejasne? [Zadaj pytanie](https://github.com/Kurahen-Premium/Kurahen-Premium/issues/new).

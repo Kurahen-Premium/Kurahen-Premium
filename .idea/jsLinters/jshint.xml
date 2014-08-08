@@ -32,7 +32,6 @@
     <option laxcomma="false" />
     <option loopfunc="false" />
     <option maxerr="50" />
-    <option maxlen="120" />
     <option mootools="false" />
     <option moz="false" />
     <option multistr="false" />
@@ -42,7 +41,7 @@
     <option noempty="true" />
     <option nomen="false" />
     <option nonbsp="true" />
-    <option nonew="true" />
+    <option nonew="false" />
     <option nonstandard="false" />
     <option notypeof="false" />
     <option noyield="false" />
@@ -58,7 +57,7 @@
     <option scripturl="false" />
     <option shadow="false" />
     <option smarttabs="false" />
-    <option strict="true" />
+    <option strict="false" />
     <option sub="false" />
     <option supernew="false" />
     <option trailing="true" />
