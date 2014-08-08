@@ -995,7 +995,7 @@ var ThreadsWatcher = (function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
