@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.4.0-pre
+// @version     1.4.0
 // @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -44,9 +44,9 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (!_this.isCaptchaFilled()) {
+			if (document.cookie.indexOf('in_mod') === -1 && _this.getCaptchaFieldTextLenght() !== 6) {
 				ev.preventDefault();
-				alert('Ale kapcze to wypełnij');
+				alert('Ale kapcze to popraw');
 				return;
 			}
 
@@ -57,9 +57,15 @@ var FormValidator = (function () {
 			}
 
 			if (UrlChecker.isCurrentWebpageThread()) {
-				if (_this.isFileInputFilled() && !_this.isAllowedFile()) {
-					_this.reactToNotAllowedFile(ev);
+				if (_this.isFileInputFilled() && !_this.isAllowedFileExt()) {
+					_this.reactToNotAllowedFileExt(ev);
 				}
+				return;
+			}
+
+			if (!_this.isNoFileAllowed() && !_this.isFileInputFilled()) {
+				ev.preventDefault();
+				alert('Wybierz plik');
 				return;
 			}
 
@@ -69,15 +75,16 @@ var FormValidator = (function () {
 				} else {
 					ev.preventDefault();
 				}
-			} else {
-				if (!_this.isAllowedFile()) {
-					_this.reactToNotAllowedFile(ev);
-				}
+				return;
+			}
+
+			if (_this.isFileInputFilled() && !_this.isAllowedFileExt()) {
+				_this.reactToNotAllowedFileExt(ev);
 			}
 		});
 	};
 
-	FormValidator.prototype.reactToNotAllowedFile = function (ev) {
+	FormValidator.prototype.reactToNotAllowedFileExt = function (ev) {
 		if (!confirm('Plik najprawdopodobniej nie jest obsługiwany, pomimo to chcesz procedować dalej?')) {
 			ev.preventDefault();
 		}
@@ -91,6 +98,15 @@ var FormValidator = (function () {
 		return document.getElementsByName('com')[0].value.length;
 	};
 
+	FormValidator.prototype.isFileInputFilled = function () {
+		var fileFile = document.getElementById('postFile');
+		if (fileFile) {
+			return fileFile.value !== '';
+		} else {
+			return false;
+		}
+	};
+
 	FormValidator.prototype.getFileSize = function () {
 		if (!this.isFileInputFilled()) {
 			return 0;
@@ -99,24 +115,41 @@ var FormValidator = (function () {
 	};
 
 	FormValidator.prototype.getMaxFileSize = function () {
-		var valStr = document.getElementsByName('MAX_FILE_SIZE')[0].value;
+		var maxFileList = document.getElementsByName('MAX_FILE_SIZE');
+		if (maxFileList.length === 0) {
+			return 0;
+		}
+		var valStr = maxFileList[0].value;
 		return parseInt(valStr);
 	};
 
-	FormValidator.prototype.isCaptchaFilled = function () {
-		return document.getElementById('captchaField').value !== '';
-	};
-
-	FormValidator.prototype.isFileInputFilled = function () {
-		return document.getElementById('postFile').value !== '';
+	FormValidator.prototype.getCaptchaFieldTextLenght = function () {
+		var captchaField = document.getElementById('captchaField');
+		if (captchaField) {
+			return captchaField.value.length;
+		} else {
+			return 0;
+		}
 	};
 
 	FormValidator.prototype.isNoFileChecked = function () {
-		return document.getElementById('nofile').checked;
+		if (this.isNoFileAllowed()) {
+			return document.getElementById('nofile').checked;
+		} else {
+			return false;
+		}
 	};
 
-	FormValidator.prototype.isAllowedFile = function () {
-		if (!this.isFileInputFilled) {
+	FormValidator.prototype.isNoFileAllowed = function () {
+		if (document.getElementById('nofile')) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	FormValidator.prototype.isAllowedFileExt = function () {
+		if (!this.isFileInputFilled()) {
 			return false;
 		}
 		var fileName = document.getElementById('postFile').files[0].name;
@@ -229,7 +262,7 @@ var KurahenPremium = (function () {
 			postMessage.removeChild(quoteLinks[i]);
 		}
 
-		var postContent = postMessage.textContent;
+		var postContent = postMessage.textContent.trim();
 		if (postContent === '') {
 			return '(brak treści posta)';
 		}
@@ -962,8 +995,7 @@ var ThreadsWatcher = (function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			// this.getNumberOfNewPosts(boardName, id, lastReadPostId,
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -1195,7 +1227,7 @@ var ThreadsWatcher = (function () {
 			postMessage.removeChild(quoteLinks[i]);
 		}
 
-		var postContent = postMessage.textContent;
+		var postContent = postMessage.textContent.trim();
 		if (postContent === '') {
 			return '(brak treści posta)';
 		}
@@ -1240,7 +1272,9 @@ var wordfilters = [
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
 	['#1%', 'groźny LEWAK wykryty'],
 	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
-	['hizume', 'Mała Księżniczka']
+	['hizume', 'Mała Księżniczka'],
+	['#tetetka', 'ALE ZAPIERDALA'],
+	['/r/pcmasterrace', '/r/pcmasterrace']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
