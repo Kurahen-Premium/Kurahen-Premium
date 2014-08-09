@@ -5,6 +5,7 @@ class FormValidator {
 	}
 
 	setSubmitAction(): void {
+		if (!PageChecker.hasCurrentPagePostForm()) { return; }
 		document.getElementById('submit').addEventListener('click', (ev) => {
 			if (!this.isFileInputFilled() && !this.isPostTextFilled()) {
 				ev.preventDefault();
@@ -24,7 +25,7 @@ class FormValidator {
 				return;
 			}
 
-			if (UrlChecker.isCurrentWebpageThread()) {
+			if (PageChecker.isCurrentWebpageThread()) {
 				if (this.isFileInputFilled() && !this.isAllowedFileExt()) {
 					this.reactToNotAllowedFileExt(ev);
 				}

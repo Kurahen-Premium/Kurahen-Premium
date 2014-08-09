@@ -1,4 +1,4 @@
-module UrlChecker {
+module PageChecker {
 	'use strict';
 
 	export function isCurrentWebpageThread(): boolean {
@@ -7,6 +7,10 @@ module UrlChecker {
 
 	export function isCurrentPage404(): boolean {
 		return document.title === '404 Not Found';
+	}
+
+	export function hasCurrentPagePostForm(): boolean {
+		return document.getElementById('postform') !== null;
 	}
 
 	export function getCurrentBoardName(): string {
