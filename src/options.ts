@@ -31,7 +31,8 @@ var wordfilters = [
 	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
 	['hizume', 'Mała Księżniczka'],
 	['#tetetka', 'ALE ZAPIERDALA'],
-	['/r/pcmasterrace', '/r/pcmasterrace']
+	['/r/pcmasterrace', '/r/pcmasterrace'],
+	['#shrek', 'ORK']
 ];
 var boardsWithId = ['b', 'fz', 'z'];
 var colors = [
