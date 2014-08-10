@@ -5,9 +5,9 @@ class KurahenPremium {
 	formValidator = new FormValidator();
 
 	constructor() {
-		var currentBoardName = UrlChecker.getCurrentBoardName();
+		var currentBoardName = PageChecker.getCurrentBoardName();
 
-		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
+		if (currentBoardName === '' || PageChecker.isCurrentPage404()) {
 			return; // We are not on any useful page
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -15,8 +15,6 @@ class KurahenPremium {
 		this.updatePageTitle();
 		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
-		this.insertButtonBar();
-		this.replaceEmailFieldWithSelect();
 		this.showAllPostersEmails();
 
 		this.fixScrollingToTarget();
@@ -24,7 +22,12 @@ class KurahenPremium {
 		this.fixAllHiders();
 		this.fixAllExpanders();
 
-		if (boardsWithId.indexOf(currentBoardName) > -1 && UrlChecker.isCurrentWebpageThread()) {
+		if (PageChecker.hasCurrentPagePostForm()) {
+			this.replaceEmailFieldWithSelect();
+			this.insertButtonBar();
+		}
+
+		if (boardsWithId.indexOf(currentBoardName) > -1 && PageChecker.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 
@@ -54,7 +57,7 @@ class KurahenPremium {
 		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (UrlChecker.isCurrentWebpageThread()) {
+		if (PageChecker.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;

@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		},
 		ts: {
 			build: {
-				src: ['src/**/*.ts'],
+				src: ['src/options.ts','src/**/*.ts'],
 				out: 'kurahenPremium.user.js',
 				options: {
 					// 'es3' (default) | 'es5'
