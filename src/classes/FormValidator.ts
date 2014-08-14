@@ -7,6 +7,7 @@ class FormValidator {
 	setSubmitAction(): void {
 		if (!PageChecker.hasCurrentPagePostForm()) { return; }
 		if (document.cookie.indexOf('in_mod') !== -1) { return; }
+		if (PageChecker.getCurrentBoardName() === 'rs') { return; }
 
 		document.getElementById('submit').addEventListener('click', (ev) => {
 			if (!this.isFileInputFilled() && !this.isPostTextFilled()) {
