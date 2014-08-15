@@ -6,6 +6,9 @@ class FormValidator {
 
 	setSubmitAction(): void {
 		if (!PageChecker.hasCurrentPagePostForm()) { return; }
+		if (document.cookie.indexOf('in_mod') !== -1) { return; }
+		if (PageChecker.getCurrentBoardName() === 'rs') { return; }
+
 		document.getElementById('submit').addEventListener('click', (ev) => {
 			if (!this.isFileInputFilled() && !this.isPostTextFilled()) {
 				ev.preventDefault();
@@ -13,7 +16,7 @@ class FormValidator {
 				return;
 			}
 
-			if (document.cookie.indexOf('in_mod') === -1 && this.getCaptchaFieldTextLenght() !== 6) {
+			if (this.getCaptchaFieldTextLenght() !== 6) {
 				ev.preventDefault();
 				alert('Ale kapcze to popraw');
 				return;
