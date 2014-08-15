@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.4.0
+// @version     1.4.1
 // @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -31,12 +31,108 @@
 
 /*global GM_addStyle:false */
 
+/* Konfiguracja */
+// Tytuł deski /b/
+var customBBoardTitle = '/b/ - Random';
+
+// Podmienia domyślne czcionki na Roboto
+var enableBetterFonts = true;
+
+// Usunięcie tekstu pod elementami do postowania
+var deleteTextUnderPostForm = false;
+
+// Większa czcionka liczby online
+var biggerOnlineCountFont = false;
+
+// Ukrywa na liście obserwowanych nitki bez nowych postów
+var hideThreadsWithNoNewPosts = false;
+
+// Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
+var enableHighlightPostsButton = true;
+
+// Włącz/wyłącz przyciski przeskakujące do następnego/poprzedniego posta
+var enableJumpButtons = true;
+
+/* Zaawansowana konfiguracja */
+// Przezroczystość postów niepodświetlonych przy pokazywaniu postów danego użytkownika:
+// 0 - niewidoczny, 1 - nieprzezroczysty
+var unhighlightedPostOpacity = 0.3;
+
+var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
+var specialCharacters = [{
+	contentToInsert: '\u2026',
+	buttonTitle: 'Wielokropek',
+	buttonLabel: '\u2026'
+}, {
+	contentToInsert: '\u200b',
+	buttonTitle: 'Spacja o zerowej szerokości',
+	buttonLabel: 'ZWSP'
+}];
+
+var wordfilters = [
+	['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
+	['#gimbo', 'xD'],
+	['#penis', 'pisiorek'],
+	['#wagina', 'cipuszka'],
+	['#m__b', 'groźny WYKOPEK wykryty'],
+	['#Lasoupeauxchoux', 'kapuśniaczek'],
+	['#homoś', 'pedał'],
+	['#korwinkrulempolski', 'kongres nowej prawicy'],
+	['#1%', 'groźny LEWAK wykryty'],
+	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
+	['hizume', 'Mała Księżniczka'],
+	['#tetetka', 'ALE ZAPIERDALA'],
+	['/r/pcmasterrace', '/r/pcmasterrace'],
+	['#shrek', 'ORK']
+];
+var boardsWithId = ['b', 'fz', 'z'];
+var colors = [
+	'#ff8080',
+	'#ffdd80',
+	'#80ffb7',
+	'#80d0ff',
+	'#c680ff',
+	'#ffae80',
+	'#d5ff80',
+	'#80fffd',
+	'#8097ff',
+	'#ff80ca',
+	'#ff7f7f',
+	'#779aef',
+	'#b0de6f',
+	'#cc66c0',
+	'#5cb9a9',
+	'#f3bb79',
+	'#8d71e2',
+	'#6dd168',
+	'#be5f7e',
+	'#7bc8f6'
+];
+
+var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
+
+/* Internal configuration flags */
+var roundedIdBackground = true;
+var showPostCountNearHighlightPostsButton = true;
+var showPostCountNearId = false;
+
+showPostCountNearId = !enableHighlightPostsButton;
 var FormValidator = (function () {
 	function FormValidator() {
 		this.setSubmitAction();
 	}
 	FormValidator.prototype.setSubmitAction = function () {
 		var _this = this;
+		if (!PageChecker.hasCurrentPagePostForm()) {
+			return;
+		}
+		if (document.cookie.indexOf('in_mod') !== -1) {
+			return;
+		}
+		if (PageChecker.getCurrentBoardName() === 'rs') {
+			return;
+		}
+
 		document.getElementById('submit').addEventListener('click', function (ev) {
 			if (!_this.isFileInputFilled() && !_this.isPostTextFilled()) {
 				ev.preventDefault();
@@ -44,7 +140,7 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (document.cookie.indexOf('in_mod') === -1 && _this.getCaptchaFieldTextLenght() !== 6) {
+			if (_this.getCaptchaFieldTextLenght() !== 6) {
 				ev.preventDefault();
 				alert('Ale kapcze to popraw');
 				return;
@@ -56,7 +152,7 @@ var FormValidator = (function () {
 				return;
 			}
 
-			if (UrlChecker.isCurrentWebpageThread()) {
+			if (PageChecker.isCurrentWebpageThread()) {
 				if (_this.isFileInputFilled() && !_this.isAllowedFileExt()) {
 					_this.reactToNotAllowedFileExt(ev);
 				}
@@ -170,9 +266,9 @@ var FormValidator = (function () {
 var KurahenPremium = (function () {
 	function KurahenPremium() {
 		this.formValidator = new FormValidator();
-		var currentBoardName = UrlChecker.getCurrentBoardName();
+		var currentBoardName = PageChecker.getCurrentBoardName();
 
-		if (currentBoardName === '' || UrlChecker.isCurrentPage404()) {
+		if (currentBoardName === '' || PageChecker.isCurrentPage404()) {
 			return;
 		} else if (currentBoardName === 'b') {
 			this.changeBoardTitle(customBBoardTitle);
@@ -180,8 +276,6 @@ var KurahenPremium = (function () {
 		this.updatePageTitle();
 		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
-		this.insertButtonBar();
-		this.replaceEmailFieldWithSelect();
 		this.showAllPostersEmails();
 
 		this.fixScrollingToTarget();
@@ -189,7 +283,12 @@ var KurahenPremium = (function () {
 		this.fixAllHiders();
 		this.fixAllExpanders();
 
-		if (boardsWithId.indexOf(currentBoardName) > -1 && UrlChecker.isCurrentWebpageThread()) {
+		if (PageChecker.hasCurrentPagePostForm()) {
+			this.replaceEmailFieldWithSelect();
+			this.insertButtonBar();
+		}
+
+		if (boardsWithId.indexOf(currentBoardName) > -1 && PageChecker.isCurrentWebpageThread()) {
 			this.colorizeAndNamePosters();
 		}
 
@@ -218,7 +317,7 @@ var KurahenPremium = (function () {
 		var page = parseInt(window.location.pathname.split('/')[2]);
 		var prefix = '';
 
-		if (UrlChecker.isCurrentWebpageThread()) {
+		if (PageChecker.isCurrentWebpageThread()) {
 			prefix = this.getTopicFromFirstPostContent();
 		} else if (!isNaN(page)) {
 			prefix = 'Strona ' + page;
@@ -759,19 +858,24 @@ var KurahenPremium = (function () {
 	};
 	return KurahenPremium;
 })();
-var UrlChecker;
-(function (UrlChecker) {
+var PageChecker;
+(function (PageChecker) {
 	'use strict';
 
 	function isCurrentWebpageThread() {
 		return window.location.pathname.split('/')[2] === 'res';
 	}
-	UrlChecker.isCurrentWebpageThread = isCurrentWebpageThread;
+	PageChecker.isCurrentWebpageThread = isCurrentWebpageThread;
 
 	function isCurrentPage404() {
 		return document.title === '404 Not Found';
 	}
-	UrlChecker.isCurrentPage404 = isCurrentPage404;
+	PageChecker.isCurrentPage404 = isCurrentPage404;
+
+	function hasCurrentPagePostForm() {
+		return document.getElementById('postform') !== null;
+	}
+	PageChecker.hasCurrentPagePostForm = hasCurrentPagePostForm;
 
 	function getCurrentBoardName() {
 		var shouldBeBoard = window.location.pathname.split('/')[1];
@@ -783,8 +887,8 @@ var UrlChecker;
 		}
 		return shouldBeBoard;
 	}
-	UrlChecker.getCurrentBoardName = getCurrentBoardName;
-})(UrlChecker || (UrlChecker = {}));
+	PageChecker.getCurrentBoardName = getCurrentBoardName;
+})(PageChecker || (PageChecker = {}));
 var ThreadsWatcher = (function () {
 	function ThreadsWatcher() {
 		this.loadWatchedThreads();
@@ -995,7 +1099,7 @@ var ThreadsWatcher = (function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -1158,6 +1262,7 @@ var ThreadsWatcher = (function () {
 			// If only op post
 			if (posts.length === 0) {
 				callback(boardName, threadId, lastPostId, 0, forceUpdate, request.status);
+				return;
 			}
 
 			posts.sort(function (a, b) {
@@ -1235,79 +1340,6 @@ var ThreadsWatcher = (function () {
 	};
 	return ThreadsWatcher;
 })();
-// Konfiguracja
-var customBBoardTitle = '/b/ - Random';
-var enableBetterFonts = true;
-var deleteTextUnderPostForm = false;
-var biggerOnlineCountFont = false;
-var hideThreadsWithNoNewPosts = false;
-var enableHighlightPostsButton = true;
-
-// postów danego użytkownika
-var enableJumpButtons = true;
-
-// Zaawansowana konfiguracja
-var unhighlightedPostOpacity = 0.3;
-
-// użytkownika; 0 - niewidoczny, 1 - nieprzezroczysty
-var bbCodes = ['b', 'i', 'u', 'code', 'spoiler'];
-var specialCharacters = [{
-	contentToInsert: '\u2026',
-	buttonTitle: 'Wielokropek',
-	buttonLabel: '\u2026'
-}, {
-	contentToInsert: '\u200b',
-	buttonTitle: 'Spacja o zerowej szerokości',
-	buttonLabel: 'ZWSP'
-}];
-
-var wordfilters = [
-	['#nowocioty', 'STAROCIOTY PAMIĘTAJĄ'],
-	['#gimbo', 'xD'],
-	['#penis', 'pisiorek'],
-	['#wagina', 'cipuszka'],
-	['#m__b', 'groźny WYKOPEK wykryty'],
-	['#Lasoupeauxchoux', 'kapuśniaczek'],
-	['#homoś', 'pedał'],
-	['#korwinkrulempolski', 'kongres nowej prawicy'],
-	['#1%', 'groźny LEWAK wykryty'],
-	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
-	['hizume', 'Mała Księżniczka'],
-	['#tetetka', 'ALE ZAPIERDALA'],
-	['/r/pcmasterrace', '/r/pcmasterrace']
-];
-var boardsWithId = ['b', 'fz', 'z'];
-var colors = [
-	'#ff8080',
-	'#ffdd80',
-	'#80ffb7',
-	'#80d0ff',
-	'#c680ff',
-	'#ffae80',
-	'#d5ff80',
-	'#80fffd',
-	'#8097ff',
-	'#ff80ca',
-	'#ff7f7f',
-	'#779aef',
-	'#b0de6f',
-	'#cc66c0',
-	'#5cb9a9',
-	'#f3bb79',
-	'#8d71e2',
-	'#6dd168',
-	'#be5f7e',
-	'#7bc8f6'
-];
-
-var allowedFileExtensions = ['gif', 'jpeg', 'jpg', 'png', 'webm'];
-
-/* internal configuration flags */
-var roundedIdBackground = true;
-var showPostCountNearHighlightPostsButton = true;
-var showPostCountNearId = false;
-
-showPostCountNearId = !enableHighlightPostsButton;
 /// <reference path='./typeDefinitions/greasemonkey.d.ts'/>
 
 var main = function () {
