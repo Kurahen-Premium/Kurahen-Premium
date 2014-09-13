@@ -223,7 +223,7 @@ class ThreadsWatcher {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId,
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId,
 				function (boardName, threadId, lastReadPostId, numberOfNewPosts, forceUpdate, status) {
 					if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 						self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -367,6 +367,9 @@ class ThreadsWatcher {
 		request.send();
 	}
 
+	/**
+	 * DO NOT USE: JSON API is currently broken and unmaintained.
+	 */
 	getNumberOfNewPostsJSON(boardName: string, threadId: number, lastPostId: number, callback: (boardName: string,
 		threadId: number, lastPostId: number, numberOfNewPosts: number, forceUpdate: boolean,
 		reqStatus: number) => void) {
@@ -457,7 +460,7 @@ class ThreadsWatcher {
 
 		var quoteLinks = postMessage.getElementsByClassName('quotelink');
 		for (var j = 0; j < quoteLinks.length; j++) {
-			postMessage.removeChild(quoteLinks[i]);
+			postMessage.removeChild(quoteLinks[j]);
 		}
 
 		var postContent = postMessage.textContent.trim();
