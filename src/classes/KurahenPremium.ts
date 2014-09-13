@@ -13,7 +13,6 @@ class KurahenPremium {
 			this.changeBoardTitle(customBBoardTitle);
 		}
 		this.updatePageTitle();
-		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.showAllPostersEmails();
 
@@ -106,14 +105,6 @@ class KurahenPremium {
 			return '(brak treści posta)';
 		}
 		return postContent.substr(0, Math.min(postContent.length, 70));
-	}
-
-	disableNightStyle() {
-		var optionNight = <HTMLElement>document.querySelector('#stylechanger option[value$="night.css"]');
-		optionNight.disabled = true;
-
-		var optionNight2 = <HTMLElement>document.querySelector('#stylechanger option[value$="night2.css"]');
-		optionNight2.disabled = true;
 	}
 
 	replaceEmailFieldWithSelect() {
