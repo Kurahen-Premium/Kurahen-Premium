@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.4.1
+// @version     1.4.2
 // @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -274,7 +274,6 @@ var KurahenPremium = (function () {
 			this.changeBoardTitle(customBBoardTitle);
 		}
 		this.updatePageTitle();
-		this.disableNightStyle();
 		this.setCookie('regulamin', 'accepted');
 		this.showAllPostersEmails();
 
@@ -358,7 +357,7 @@ var KurahenPremium = (function () {
 
 		var quoteLinks = postMessage.getElementsByClassName('quotelink');
 		for (var j = 0; j < quoteLinks.length; j++) {
-			postMessage.removeChild(quoteLinks[i]);
+			postMessage.removeChild(quoteLinks[j]);
 		}
 
 		var postContent = postMessage.textContent.trim();
@@ -366,14 +365,6 @@ var KurahenPremium = (function () {
 			return '(brak treści posta)';
 		}
 		return postContent.substr(0, Math.min(postContent.length, 70));
-	};
-
-	KurahenPremium.prototype.disableNightStyle = function () {
-		var optionNight = document.querySelector('#stylechanger option[value$="night.css"]');
-		optionNight.disabled = true;
-
-		var optionNight2 = document.querySelector('#stylechanger option[value$="night2.css"]');
-		optionNight2.disabled = true;
 	};
 
 	KurahenPremium.prototype.replaceEmailFieldWithSelect = function () {
@@ -868,7 +859,7 @@ var PageChecker;
 	PageChecker.isCurrentWebpageThread = isCurrentWebpageThread;
 
 	function isCurrentPage404() {
-		return document.title === '404 Not Found';
+		return document.title === '404 Not Found' || document.title === '404 - karachan.org';
 	}
 	PageChecker.isCurrentPage404 = isCurrentPage404;
 
@@ -1099,7 +1090,7 @@ var ThreadsWatcher = (function () {
 			self.updateThreadObject(id, boardName, lastReadPostId);
 			this.saveWatchedThreads();
 		} else if (unreadPostsNumber < 0) {
-			this.getNumberOfNewPostsJSON(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
+			this.getNumberOfNewPosts(boardName, id, lastReadPostId, function (boardName, threadId, lastReadPostId,
 				numberOfNewPosts, forceUpdate, status) {
 				if (status === 200 && (numberOfNewPosts > 0 || !hideThreadsWithNoNewPosts)) {
 					self.updateThreadListWindowEntry(threadId, boardName, lastReadPostId, numberOfNewPosts);
@@ -1242,6 +1233,9 @@ var ThreadsWatcher = (function () {
 		request.send();
 	};
 
+	/**
+	 * DO NOT USE: JSON API is currently broken and unmaintained.
+	 */
 	ThreadsWatcher.prototype.getNumberOfNewPostsJSON = function (boardName, threadId, lastPostId, callback) {
 		var request = new XMLHttpRequest();
 
@@ -1329,7 +1323,7 @@ var ThreadsWatcher = (function () {
 
 		var quoteLinks = postMessage.getElementsByClassName('quotelink');
 		for (var j = 0; j < quoteLinks.length; j++) {
-			postMessage.removeChild(quoteLinks[i]);
+			postMessage.removeChild(quoteLinks[j]);
 		}
 
 		var postContent = postMessage.textContent.trim();
