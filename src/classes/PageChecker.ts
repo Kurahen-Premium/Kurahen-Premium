@@ -6,7 +6,7 @@ module PageChecker {
 	}
 
 	export function isCurrentPage404(): boolean {
-		return document.title === '404 Not Found';
+		return document.title === '404 Not Found' || document.title === '404 - karachan.org';
 	}
 
 	export function hasCurrentPagePostForm(): boolean {
