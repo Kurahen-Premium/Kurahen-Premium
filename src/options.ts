@@ -2,9 +2,6 @@
 // Tytuł deski /b/
 var customBBoardTitle = '/b/ - Random';
 
-// Podmienia domyślne czcionki na Roboto
-var enableBetterFonts = true;
-
 // Usunięcie tekstu pod elementami do postowania
 var deleteTextUnderPostForm = false;
 
