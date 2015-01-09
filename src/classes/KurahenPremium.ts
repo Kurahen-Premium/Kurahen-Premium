@@ -1,7 +1,6 @@
 class KurahenPremium {
 
 	nowHighlightedPostsUserId;
-	formValidator = new FormValidator();
 
 	constructor() {
 		var currentBoardName = PageChecker.getCurrentBoardName();
