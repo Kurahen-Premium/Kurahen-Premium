@@ -1,7 +1,6 @@
 class KurahenPremium {
 
 	nowHighlightedPostsUserId;
-	threadsWatcher;
 	formValidator = new FormValidator();
 
 	constructor() {
@@ -40,7 +39,6 @@ class KurahenPremium {
 
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
-		this.threadsWatcher = new ThreadsWatcher();
 	}
 
 	changeBoardTitle(newTitle) {
