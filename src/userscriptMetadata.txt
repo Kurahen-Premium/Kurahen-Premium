@@ -19,9 +19,9 @@
 // @exclude     http://karachan.co/*/src/*
 // @exclude     https://karachan.co/*/src/*
 
-// @match       *://96.8.113.203/*
-// @exclude     http://96.8.113.203/*/src/*
-// @exclude     https://96.8.113.203/*/src/*
-// @exclude     http://96.8.113.203/*/src/*
-// @exclude     https://96.8.113.203/*/src/*
+// @match       *://96.8.113.206/*
+// @exclude     http://96.8.113.206/*/src/*
+// @exclude     https://96.8.113.206/*/src/*
+// @exclude     http://96.8.113.206/*/src/*
+// @exclude     https://96.8.113.206/*/src/*
 // ==/UserScript==

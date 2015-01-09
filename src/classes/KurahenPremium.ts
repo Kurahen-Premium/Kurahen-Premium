@@ -1,8 +1,6 @@
 class KurahenPremium {
 
 	nowHighlightedPostsUserId;
-	threadsWatcher;
-	formValidator = new FormValidator();
 
 	constructor() {
 		var currentBoardName = PageChecker.getCurrentBoardName();
@@ -30,10 +28,6 @@ class KurahenPremium {
 			this.colorizeAndNamePosters();
 		}
 
-		if (enableBetterFonts) {
-			this.changeFonts();
-		}
-
 		if (deleteTextUnderPostForm) {
 			this.removeTextUnderPostForm();
 		}
@@ -44,7 +38,6 @@ class KurahenPremium {
 
 		/* variable used to change "highlight posts" button state */
 		this.nowHighlightedPostsUserId = false;
-		this.threadsWatcher = new ThreadsWatcher();
 	}
 
 	changeBoardTitle(newTitle) {
@@ -71,15 +64,6 @@ class KurahenPremium {
 
 	setCookie(name, value) {
 		document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + '; path=/; max-age=2592000';
-	}
-
-	changeFonts() {
-		var newLink = document.createElement('link');
-		newLink.href = '//fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext';
-		newLink.rel = 'stylesheet';
-		var existingLink = document.getElementsByTagName('link')[0];
-		existingLink.parentNode.insertBefore(newLink, existingLink);
-		document.body.style.fontFamily = 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif';
 	}
 
 	getTopicFromFirstPostContent() {

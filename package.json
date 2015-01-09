@@ -1,6 +1,6 @@
 {
   "name": "kurahenPremium",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Kurahen-Premium/Kurahen-Premium.git"
@@ -10,9 +10,9 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-jsbeautifier": "^0.2.7",
-    "grunt-string-replace": "^0.2.7",
-    "grunt-ts": "^1.11.6",
-    "grunt-tslint": "^0.4.2"
+    "grunt-string-replace": "^1.0.0",
+    "grunt-ts": "^2.0.0",
+    "grunt-tslint": "^1.0.1"
   },
   "scripts": {
     "test": "grunt --verbose"

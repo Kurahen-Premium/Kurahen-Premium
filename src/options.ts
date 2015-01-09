@@ -2,17 +2,11 @@
 // Tytuł deski /b/
 var customBBoardTitle = '/b/ - Random';
 
-// Podmienia domyślne czcionki na Roboto
-var enableBetterFonts = true;
-
 // Usunięcie tekstu pod elementami do postowania
 var deleteTextUnderPostForm = false;
 
 // Większa czcionka liczby online
 var biggerOnlineCountFont = false;
-
-// Ukrywa na liście obserwowanych nitki bez nowych postów
-var hideThreadsWithNoNewPosts = false;
 
 // Dodaje przycisk obok id posta który pozwala na podświetlenie wszystkich postów danego użytkownika
 var enableHighlightPostsButton = true;
