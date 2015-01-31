@@ -35,14 +35,14 @@ var wordfilters = [
 	['#Lasoupeauxchoux', 'kapuśniaczek'],
 	['#homoś', 'pedał'],
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
+	['#korwin', 'KORWiN'],
 	['#1%', 'groźny LEWAK wykryty'],
 	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
-	['hizume', 'Mała Księżniczka'],
 	['#tetetka', 'ALE ZAPIERDALA'],
 	['/r/pcmasterrace', '/r/pcmasterrace'],
 	['#shrek', 'ORK']
 ];
-var boardsWithId = ['b', 'fz', 'z'];
+var boardsWithId = ['fz', 'z'];
 var colors = [
 	'#ff8080',
 	'#ffdd80',

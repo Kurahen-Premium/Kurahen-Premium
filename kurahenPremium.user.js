@@ -2,7 +2,7 @@
 // @name        Kurahen Premium
 // @namespace   karachan.org
 // @description Zestaw dodatkowych funkcji dla forum młodzieżowo-katolickiego
-// @version     1.5.0
+// @version     1.5.1
 // @downloadURL https://github.com/Kurahen-Premium/Kurahen-Premium/raw/master/kurahenPremium.user.js
 
 // @grant       GM_addStyle
@@ -13,17 +13,11 @@
 // @exclude     http://karachan.org/*/src/*
 // @exclude     https://karachan.org/*/src/*
 
-// @match       *://*.karachan.co/*
-// @exclude     http://www.karachan.co/*/src/*
-// @exclude     https://www.karachan.co/*/src/*
-// @exclude     http://karachan.co/*/src/*
-// @exclude     https://karachan.co/*/src/*
-
-// @match       *://96.8.113.206/*
-// @exclude     http://96.8.113.206/*/src/*
-// @exclude     https://96.8.113.206/*/src/*
-// @exclude     http://96.8.113.206/*/src/*
-// @exclude     https://96.8.113.206/*/src/*
+// @match       *://kara.8ch.net/*
+// @exclude     http://kara.8ch.net/*/src/*
+// @exclude     https://kara.8ch.net/*/src/*
+// @exclude     http://kara.8ch.net/*/src/*
+// @exclude     https://kara.8ch.net/*/src/*
 // ==/UserScript==
 
 /*jshint curly:true, noarg:true, indent:4, trailing:true, forin:true, noempty:true, quotmark:single, eqeqeq:true,
@@ -72,14 +66,14 @@ var wordfilters = [
 	['#Lasoupeauxchoux', 'kapuśniaczek'],
 	['#homoś', 'pedał'],
 	['#korwinkrulempolski', 'kongres nowej prawicy'],
+	['#korwin', 'KORWiN'],
 	['#1%', 'groźny LEWAK wykryty'],
 	['#mylittlefaggot', 'PRZYJAŹŃ JEST MAGIĄ'],
-	['hizume', 'Mała Księżniczka'],
 	['#tetetka', 'ALE ZAPIERDALA'],
 	['/r/pcmasterrace', '/r/pcmasterrace'],
 	['#shrek', 'ORK']
 ];
-var boardsWithId = ['b', 'fz', 'z'];
+var boardsWithId = ['fz', 'z'];
 var colors = [
 	'#ff8080',
 	'#ffdd80',
