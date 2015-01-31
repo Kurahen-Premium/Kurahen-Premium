@@ -42,7 +42,7 @@ var wordfilters = [
 	['/r/pcmasterrace', '/r/pcmasterrace'],
 	['#shrek', 'ORK']
 ];
-var boardsWithId = ['b', 'fz', 'z'];
+var boardsWithId = ['fz', 'z'];
 var colors = [
 	'#ff8080',
 	'#ffdd80',
